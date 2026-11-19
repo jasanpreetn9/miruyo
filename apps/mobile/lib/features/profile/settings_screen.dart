@@ -99,10 +99,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     // a Material, so the tiles' ripples show
     Widget group(List<Widget> children) => Material(
-      color: Surface.s1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Corner.md),
-        side: const BorderSide(color: Surface.line),
+      color: Colors.transparent,
+      // a ruled group: ink above, a hairline below
+      shape: const Border(
+        top: BorderSide(color: Surface.rule),
+        bottom: BorderSide(color: Surface.line),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(

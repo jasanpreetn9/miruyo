@@ -372,22 +372,12 @@ class _SearchField extends StatelessWidget {
                   },
                 ),
         ),
-        filled: true,
-        fillColor: Surface.s1,
+        filled: false,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 12),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(Corner.sm),
-          borderSide: const BorderSide(color: Surface.line),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(Corner.sm),
-          borderSide: const BorderSide(color: Surface.line),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(Corner.sm),
-          borderSide: const BorderSide(color: TextTone.high, width: 2),
-        ),
+        border: UnderlineInputBorder(borderSide: const BorderSide(color: Surface.line)),
+        enabledBorder: UnderlineInputBorder(borderSide: const BorderSide(color: Surface.line)),
+        focusedBorder: UnderlineInputBorder(borderSide: const BorderSide(color: TextTone.high, width: 2)),
       ),
     );
   }
@@ -428,7 +418,7 @@ class _ChipsHeader extends SliverPersistentHeaderDelegate {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
-          color: const Color(0xE6090B11),
+          color: const Color(0xE613110F),
           child: Row(
             children: [
               Expanded(
@@ -441,18 +431,18 @@ class _ChipsHeader extends SliverPersistentHeaderDelegate {
                         avatar: Icon(
                           Symbols.tune_rounded,
                           size: 18,
-                          color: chips.isEmpty ? TextTone.high : accent.onAccent,
+                          color: chips.isEmpty ? TextTone.high : Surface.base,
                         ),
                         label: Text(chips.isEmpty ? 'Filters' : 'Filters · ${chips.length}'),
                         onPressed: onFilters,
                         labelStyle: AppType.body.copyWith(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: chips.isEmpty ? TextTone.high : accent.onAccent,
+                          color: chips.isEmpty ? TextTone.high : Surface.base,
                         ),
-                        backgroundColor: chips.isEmpty ? Surface.s2 : accent.accent,
+                        backgroundColor: chips.isEmpty ? Colors.transparent : TextTone.high,
                         side: BorderSide(color: chips.isEmpty ? Surface.line : Colors.transparent),
-                        shape: const StadiumBorder(),
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                       ),
                     ),
                     const SizedBox(width: Space.x2),
@@ -462,9 +452,9 @@ class _ChipsHeader extends SliverPersistentHeaderDelegate {
                         label: Text(state.sort.label),
                         onPressed: onFilters,
                         labelStyle: AppType.body.copyWith(fontSize: 13, color: TextTone.high),
-                        backgroundColor: Surface.s1,
+                        backgroundColor: Colors.transparent,
                         side: const BorderSide(color: Surface.line),
-                        shape: const StadiumBorder(),
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                       ),
                     ),
                     for (final c in chips) ...[
@@ -478,9 +468,9 @@ class _ChipsHeader extends SliverPersistentHeaderDelegate {
                           deleteIconColor: TextTone.mid,
                           deleteButtonTooltipMessage: 'Remove ${c.label}',
                           labelStyle: AppType.body.copyWith(fontSize: 13, color: TextTone.high),
-                          backgroundColor: Surface.s1,
+                          backgroundColor: Colors.transparent,
                           side: const BorderSide(color: Surface.line),
-                          shape: const StadiumBorder(),
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                         ),
                       ),
                     ],
@@ -491,7 +481,7 @@ class _ChipsHeader extends SliverPersistentHeaderDelegate {
                 tooltip: toList ? 'Show as list' : 'Show as grid',
                 onPressed: onDensity,
                 style: IconButton.styleFrom(
-                  backgroundColor: Surface.s1,
+                  backgroundColor: Colors.transparent,
                   side: const BorderSide(color: Surface.line),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Corner.sm)),
                 ),
@@ -598,7 +588,7 @@ class _ResultRow extends ConsumerWidget {
               height: 78,
               child: hidden
                   ? Container(
-                      decoration: BoxDecoration(color: Surface.s2, borderRadius: BorderRadius.circular(6)),
+                      decoration: BoxDecoration(color: Surface.s2, borderRadius: BorderRadius.circular(2)),
                       child: const Icon(Symbols.visibility_off_rounded, size: 18, color: TextTone.low),
                     )
                   : CoverImage(title: title, thumb: true, radius: 6, showMissing: false),
@@ -761,7 +751,7 @@ class _Empty extends ConsumerWidget {
               if (suggestion != null)
                 FilledButton.icon(
                   onPressed: () => searchFor(suggestion),
-                  style: FilledButton.styleFrom(backgroundColor: mode.accent, foregroundColor: mode.onAccent),
+                  style: FilledButton.styleFrom(backgroundColor: TextTone.high, foregroundColor: mode.onAccent),
                   icon: const Icon(Symbols.search_rounded, size: 18),
                   label: Text('Search “$suggestion”'),
                 )
@@ -793,7 +783,7 @@ class _RankBadge extends StatelessWidget {
       label: 'Rank $rank',
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(color: const Color(0xB3000000), borderRadius: BorderRadius.circular(6)),
+        decoration: BoxDecoration(color: const Color(0xB3000000), borderRadius: BorderRadius.circular(2)),
         child: Text(
           '#$rank',
           style: AppType.numeric.copyWith(fontSize: 12, fontWeight: FontWeight.w700, color: TextTone.high),
@@ -835,10 +825,10 @@ class _Presets extends StatelessWidget {
               color: on ? mode.onAccent : TextTone.high,
               fontWeight: on ? FontWeight.w600 : FontWeight.w400,
             ),
-            selectedColor: mode.accent,
-            backgroundColor: Surface.s1,
+            selectedColor: TextTone.high,
+            backgroundColor: Colors.transparent,
             side: BorderSide(color: on ? Colors.transparent : Surface.line),
-            shape: const StadiumBorder(),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
           );
         },
       ),

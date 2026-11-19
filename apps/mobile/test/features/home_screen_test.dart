@@ -91,20 +91,24 @@ void main() {
     container.dispose();
   }
 
-  testWidgets('a pick with its reason first, then Trending, then Continue; Not this hides it, with Undo', (
+  testWidgets('Continue first, then a pick with its reason, then Trending; Not this hides it, with Undo', (
     tester,
   ) async {
     final container = await pump(
       tester,
       forYou: ForYou(coldStart: false, scored: 5, seeds: seeds, picks: picks),
     );
-    // Trending leads, Continue right under it
-    final continueY = tester.getTopLeft(find.text('Continue watching')).dy;
-    expect(tester.getTopLeft(find.text('Trending now')).dy, lessThan(continueY));
-    final reason = find.text('Because you rated Frieren 9.5/10');
+    // the masthead and Continue lead; the pick follows, then Trending
+    final scroll = find.byType(Scrollable).first;
+    expect(find.text('Continue watching'), findsOneWidget);
+    final reason = find.text('BECAUSE YOU RATED FRIEREN 9.5/10');
+    await tester.scrollUntilVisible(reason, 200, scrollable: scroll);
     expect(reason, findsOneWidget);
-    // the picks lead Home, above Trending
-    expect(tester.getTopLeft(reason).dy, lessThan(tester.getTopLeft(find.text('Trending now')).dy));
+    final atPick = tester.state<ScrollableState>(scroll).position.pixels;
+    expect(atPick, greaterThan(0));
+    await tester.scrollUntilVisible(find.text('Trending now'), 200, scrollable: scroll);
+    expect(tester.state<ScrollableState>(scroll).position.pixels, greaterThanOrEqualTo(atPick));
+    await tester.scrollUntilVisible(reason, -200, scrollable: scroll);
     expect(find.text('Mushishi'), findsOneWidget);
     expect(find.text('Plan to watch'), findsOneWidget);
     // with picks, the popular row still shows
@@ -142,5 +146,71 @@ void main() {
     // not a For You pick: nothing to hide
     expect(find.byTooltip('Not this: hide Show 7'), findsNothing);
     await close(tester, container);
+  });
+
+  testWidgets('at the largest text (1.3×) on a narrow phone, the masthead and a four-digit lead still fit', (
+    tester,
+  ) async {
+    final container = await testContainer(
+      overrides: [
+        sessionProvider.overrideWith(_SignedIn.new),
+        clockProvider.overrideWith((ref) => Stream.value(now)),
+        // a long-running show leads: four-digit counts in the counter and the totals
+        homeListProvider.overrideWith(
+          (ref, mode) async =>
+              HomeList(titles: [show(5, nextEp: 1181, eps: 2000), show(6, nextEp: 9)], hasAnyEntry: true),
+        ),
+        homeFeedProvider.overrideWith(
+          (ref, mode) async => FeedContent(
+            trending: [show(20)],
+            popularHeading: 'Popular this season',
+            popularSubtitle: 'Fall 2026',
+            popular: [show(7)],
+            upcomingHeading: 'Upcoming',
+            upcoming: const [],
+          ),
+        ),
+        forYouProvider.overrideWith(
+          (ref, mode) async => const ForYou(coldStart: true, scored: 1, seeds: [], picks: []),
+        ),
+      ],
+    );
+    container.read(listStoreProvider.notifier).sync = false;
+    container.read(listStoreProvider.notifier).seed(const [
+      ListEntry(id: 50, mediaId: 5, status: MediaListStatus.current, progress: 1155),
+      ListEntry(id: 60, mediaId: 6, status: MediaListStatus.current, progress: 2),
+    ]);
+    await tester.binding.setSurfaceSize(const Size(375, 1600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (_, _) => const Scaffold(body: HomeScreen()),
+        ),
+      ],
+    );
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(
+          theme: buildTheme(Mode.anime),
+          routerConfig: router,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.3)),
+            child: child!,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.text('FURTHEST BEHIND'), findsOneWidget);
+    expect(find.text('1155'), findsOneWidget);
+    expect(find.text('1156'), findsOneWidget);
+    expect(find.text('TO WATCH'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 10));
+    await tester.pumpWidget(const SizedBox());
+    container.dispose();
   });
 }

@@ -35,11 +35,8 @@ class CountdownChip extends ConsumerWidget {
       excludeSemantics: true,
       child: Container(
         height: 24,
-        padding: EdgeInsets.only(left: compact ? 8 : 6, right: compact ? 8 : 9),
-        decoration: BoxDecoration(
-          color: hot ? mode.tint : const Color(0x245AB0FF),
-          borderRadius: BorderRadius.circular(Corner.full),
-        ),
+        // no fill: words in mono, vermilion when it's soon
+        padding: EdgeInsets.zero,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

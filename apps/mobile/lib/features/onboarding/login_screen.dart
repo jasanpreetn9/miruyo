@@ -102,8 +102,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 onPressed: _busy ? null : _signIn,
                 style: FilledButton.styleFrom(
                   minimumSize: const Size.fromHeight(48),
-                  backgroundColor: mode.accent,
-                  foregroundColor: mode.onAccent,
+                  backgroundColor: TextTone.high,
+                  foregroundColor: Surface.base,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Corner.sm)),
                   textStyle: AppType.title.copyWith(fontSize: 16),
                 ),

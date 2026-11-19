@@ -27,8 +27,9 @@ List<TabSpec> tabsFor({required bool isAnime}) => [
   const TabSpec('Profile', Symbols.person_rounded),
 ];
 
-/// The phone tab bar (TabBar.dc.html): 52px tabs over a blurred bar, the
-/// active one with a tinted pill, a filled icon and the mode accent.
+/// The phone tab bar (TabBar.dc.html), editorial: 52px tabs over a blurred
+/// bar; the active one in ink with a filled icon, under a rule in the mode
+/// accent (no pill).
 class AppTabBar extends ConsumerWidget {
   const AppTabBar({super.key, required this.index, required this.onSelect});
 
@@ -52,8 +53,8 @@ class AppTabBar extends ConsumerWidget {
         child: Container(
           padding: EdgeInsets.fromLTRB(8, 6, 8, bottom > 0 ? bottom : 8),
           decoration: const BoxDecoration(
-            color: Color(0xEB0C0E15), // rgba(12,14,21,.92)
-            border: Border(top: BorderSide(color: Color(0x12FFFFFF))),
+            color: Color(0xEB13110F), // the page at 92%
+            border: Border(top: BorderSide(color: Surface.line)),
           ),
           child: Row(
             children: [
@@ -62,7 +63,7 @@ class AppTabBar extends ConsumerWidget {
                   child: _Tab(
                     spec: tab,
                     active: i == index,
-                    accent: mode.accentText,
+                    accent: mode.accent,
                     tint: mode.tint,
                     onTap: () => onSelect(i),
                   ),
@@ -86,7 +87,7 @@ class _Tab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = active ? accent : TextTone.mid;
+    final color = active ? TextTone.high : TextTone.low;
     return Semantics(
       button: true,
       selected: active,
@@ -100,15 +101,18 @@ class _Tab extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // the rule over the active tab, drawn out from the middle
               AnimatedContainer(
-                duration: Motion.overlay,
+                duration: Motion.lift,
                 curve: Motion.enter,
+                width: active ? 28 : 0,
+                height: 2,
+                color: accent,
+              ),
+              const SizedBox(height: 4),
+              SizedBox(
                 width: 56,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: active ? tint : Colors.transparent,
-                  borderRadius: BorderRadius.circular(Corner.full),
-                ),
+                height: 28,
                 child: Icon(spec.icon, size: 24, color: color, fill: active ? 1 : 0),
               ),
               const SizedBox(height: 3),

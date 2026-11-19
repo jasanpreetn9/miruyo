@@ -39,7 +39,7 @@ Future<void> showListEditor(BuildContext context, WidgetRef ref, Title title) as
     useSafeArea: true,
     showDragHandle: true,
     backgroundColor: Surface.s2,
-    barrierColor: const Color(0x99090B11),
+    barrierColor: const Color(0x9913110F),
     builder: (_) => _ListEditor(title: title),
   );
 }
@@ -381,13 +381,13 @@ class _ListEditorState extends ConsumerState<_ListEditor> {
                     onSelected: (_) => _status(s),
                     showCheckmark: false,
                     selectedColor: statusColor[s]!.withValues(alpha: 0.18),
-                    backgroundColor: Surface.s1,
+                    backgroundColor: Colors.transparent,
                     side: BorderSide(color: onList && _draft.status == s ? statusColor[s]! : Surface.line),
                     labelStyle: AppType.body.copyWith(
                       fontSize: 13,
                       fontWeight: onList && _draft.status == s ? FontWeight.w600 : FontWeight.w400,
                     ),
-                    shape: const StadiumBorder(),
+                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                   ),
               ],
             ),
@@ -399,7 +399,7 @@ class _ListEditorState extends ConsumerState<_ListEditor> {
                 padding: const EdgeInsets.fromLTRB(Space.x3, Space.x1, Space.x1, Space.x1),
                 decoration: BoxDecoration(
                   color: Accent.green.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(2),
                 ),
                 child: Row(
                   children: [
@@ -474,16 +474,9 @@ class _ListEditorState extends ConsumerState<_ListEditor> {
                 decoration: InputDecoration(
                   hintText: 'Only you can see these',
                   hintStyle: AppType.body.copyWith(color: TextTone.low),
-                  filled: true,
-                  fillColor: Surface.s1,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(Corner.sm),
-                    borderSide: const BorderSide(color: Surface.line),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(Corner.sm),
-                    borderSide: const BorderSide(color: Surface.line),
-                  ),
+                  filled: false,
+                  border: UnderlineInputBorder(borderSide: const BorderSide(color: Surface.line)),
+                  enabledBorder: UnderlineInputBorder(borderSide: const BorderSide(color: Surface.line)),
                 ),
               ),
             ),
@@ -509,15 +502,15 @@ class _ListEditorState extends ConsumerState<_ListEditor> {
                             }
                           : null,
                       showCheckmark: true,
-                      checkmarkColor: mode.accentText,
-                      selectedColor: mode.tint,
-                      backgroundColor: Surface.s1,
-                      side: BorderSide(color: _draft.customLists.contains(name) ? mode.accent : Surface.line),
+                      checkmarkColor: Surface.base,
+                      selectedColor: TextTone.high,
+                      backgroundColor: Colors.transparent,
+                      side: BorderSide(color: _draft.customLists.contains(name) ? TextTone.high : Surface.line),
                       labelStyle: AppType.body.copyWith(
                         fontSize: 13,
-                        color: _draft.customLists.contains(name) ? mode.accentText : TextTone.high,
+                        color: _draft.customLists.contains(name) ? Surface.base : TextTone.high,
                       ),
-                      shape: const StadiumBorder(),
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                       materialTapTargetSize: MaterialTapTargetSize.padded,
                     ),
                 ],

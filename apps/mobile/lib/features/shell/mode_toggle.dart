@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/auth/session.dart';
 import '../../core/catalog/mode.dart';
@@ -11,11 +10,11 @@ import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/tokens.dart';
 
-/// The Anime/Manga toggle (Gestures · Navigation, 13). Mode changes only
-/// here: tap either side, or drag the thumb. The thumb follows the finger,
-/// takes the accent of the nearer side as it passes halfway (with a
-/// Selection haptic), and snaps on release. Landing is silent. On phones
-/// only the active side shows its label.
+/// The Anime/Manga toggle (Gestures · Navigation, 13), editorial: two words
+/// with a slash, the current one in ink over a rule in its accent. Mode
+/// changes only here: tap either word, or drag the rule. It follows the
+/// finger, takes the accent of the nearer side as it passes halfway (with a
+/// Selection haptic), and snaps on release. Landing is silent.
 class ModeToggle extends ConsumerStatefulWidget {
   const ModeToggle({super.key, this.showInactiveLabel = false});
 
@@ -35,9 +34,9 @@ class _ModeToggleState extends ConsumerState<ModeToggle> {
   static const _height = 32.0;
   static const _pad = 3.0;
   static const _target = 44.0;
-  static const _iconOnly = 44.0;
+  static const _slash = 14.0;
 
-  TextStyle get _label => AppType.caption.copyWith(fontSize: 12, fontWeight: FontWeight.w600);
+  TextStyle get _label => AppType.sans(13, 1.2, FontWeight.w600);
 
   double _labelled(String text) {
     final painter = TextPainter(
@@ -46,7 +45,7 @@ class _ModeToggleState extends ConsumerState<ModeToggle> {
       textScaler: MediaQuery.textScalerOf(context),
     )..layout();
     // +1 so a font that loads after this measure can't nudge it over
-    return 10 + 16 + 4 + painter.width.ceilToDouble() + 10 + 1;
+    return 4 + painter.width.ceilToDouble() + 4 + 1;
   }
 
   void _select(Mode mode) {
@@ -64,19 +63,20 @@ class _ModeToggleState extends ConsumerState<ModeToggle> {
     final showing = t < 0.5 ? Mode.anime : Mode.manga;
     final colors = ModeColors.of(showing);
 
-    final animeW = showing.isAnime || widget.showInactiveLabel ? _labelled('Anime') : _iconOnly;
-    final mangaW = !showing.isAnime || widget.showInactiveLabel ? _labelled('Manga') : _iconOnly;
-    final thumbLeft = t * (animeW + 2);
+    final animeW = _labelled('Anime');
+    final mangaW = _labelled('Manga');
+    final thumbLeft = t * (animeW + _slash);
     final thumbW = animeW + (mangaW - animeW) * t;
     final dragging = _drag != null;
 
-    Widget segment(Mode m, IconData icon, String label, double width) {
+    Widget segment(Mode m, String label, double width) {
       final active = m == showing;
-      final fg = active ? colors.onAccent : TextTone.mid;
+      final fg = active ? TextTone.high : TextTone.low;
       return Semantics(
         button: true,
         selected: m == mode,
         label: '$label mode',
+        excludeSemantics: true,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () => _select(m),
@@ -85,29 +85,20 @@ class _ModeToggleState extends ConsumerState<ModeToggle> {
             curve: Motion.enter,
             width: width,
             height: _target,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, size: 16, color: fg, fill: active ? 1 : 0),
-                if (active || widget.showInactiveLabel) ...[
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: Text(
-                      label,
-                      maxLines: 1,
-                      overflow: TextOverflow.clip,
-                      style: _label.copyWith(color: fg),
-                    ),
-                  ),
-                ],
-              ],
+            child: Center(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.clip,
+                style: _label.copyWith(color: fg, fontWeight: active ? FontWeight.w600 : FontWeight.w400),
+              ),
             ),
           ),
         ),
       );
     }
 
-    final trackW = animeW + mangaW + 2;
+    final trackW = animeW + mangaW + _slash;
     return GestureDetector(
       onHorizontalDragStart: (_) => setState(() => _drag = rest),
       onHorizontalDragUpdate: (d) {
@@ -129,18 +120,6 @@ class _ModeToggleState extends ConsumerState<ModeToggle> {
         height: _target,
         child: Stack(
           children: [
-            // the track: the thumb plus its padding and border, 40pt tall
-            Positioned.fill(
-              top: (_target - _height) / 2 - _pad - 1,
-              bottom: (_target - _height) / 2 - _pad - 1,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Surface.s1,
-                  borderRadius: BorderRadius.circular(Corner.full),
-                  border: Border.all(color: Surface.line),
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: _pad + 1),
               // animates with the segments, so their sum always fits the track
@@ -158,19 +137,25 @@ class _ModeToggleState extends ConsumerState<ModeToggle> {
                       width: thumbW,
                       top: (_target - _height) / 2,
                       bottom: (_target - _height) / 2,
-                      child: AnimatedContainer(
-                        duration: Motion.overlay,
-                        decoration: BoxDecoration(
-                          color: colors.accent,
-                          borderRadius: BorderRadius.circular(Corner.full),
-                        ),
+                      // the rule under the current word
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: AnimatedContainer(duration: Motion.overlay, height: 1.5, color: colors.accent),
                       ),
                     ),
                     Row(
                       children: [
-                        segment(Mode.anime, Symbols.play_circle_rounded, 'Anime', animeW),
-                        const SizedBox(width: 2),
-                        segment(Mode.manga, Symbols.menu_book_rounded, 'Manga', mangaW),
+                        segment(Mode.anime, 'Anime', animeW),
+                        SizedBox(
+                          width: _slash,
+                          child: Center(
+                            child: Text(
+                              '/',
+                              style: _label.copyWith(color: TextTone.low, fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                        ),
+                        segment(Mode.manga, 'Manga', mangaW),
                       ],
                     ),
                   ],

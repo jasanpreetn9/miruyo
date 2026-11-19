@@ -65,9 +65,7 @@ class _ChartCardState extends State<ChartCard> {
     return Container(
       padding: const EdgeInsets.all(Space.x4),
       decoration: BoxDecoration(
-        color: Surface.s1,
-        borderRadius: BorderRadius.circular(Corner.md),
-        border: Border.all(color: Surface.line),
+        border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

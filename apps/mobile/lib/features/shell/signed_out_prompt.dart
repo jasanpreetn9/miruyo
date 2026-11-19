@@ -47,9 +47,9 @@ class SignedOutPrompt extends ConsumerWidget {
           onPressed: () => context.push('/login'),
           style: FilledButton.styleFrom(
             minimumSize: const Size.fromHeight(48),
-            backgroundColor: mode.accent,
-            foregroundColor: mode.onAccent,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            backgroundColor: TextTone.high,
+            foregroundColor: Surface.base,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
             textStyle: AppType.body.copyWith(fontSize: 15, fontWeight: FontWeight.w600),
           ),
           child: const Text('Log in with AniList'),

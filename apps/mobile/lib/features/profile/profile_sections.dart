@@ -83,9 +83,9 @@ class FavouritesView extends StatelessWidget {
                 for (final s in p.studios)
                   ActionChip(
                     label: Text(s.name),
-                    backgroundColor: Surface.s1,
+                    backgroundColor: Colors.transparent,
                     side: const BorderSide(color: Surface.line),
-                    shape: const StadiumBorder(),
+                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                     onPressed: () => context.push(s.href),
                   ),
               ],
@@ -219,9 +219,9 @@ class StatsPanel extends ConsumerWidget {
                   onSelected: (_) => onRange(r),
                   showCheckmark: false,
                   selectedColor: accent.tint,
-                  backgroundColor: Surface.s1,
+                  backgroundColor: Colors.transparent,
                   side: BorderSide(color: r == range ? accent.accent : Surface.line),
-                  shape: const StadiumBorder(),
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                 ),
             ],
           ),
@@ -495,9 +495,7 @@ class _Card extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Surface.s1,
-        borderRadius: BorderRadius.circular(Corner.md),
-        border: Border.all(color: Surface.line),
+        border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -507,7 +505,7 @@ class _Card extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(card.value, style: AppType.heading.copyWith(fontSize: 28, height: 1)),
+            child: Text(card.value, style: AppType.serif(34, height: 1, weight: FontWeight.w300, tracking: -0.045)),
           ),
           Text(
             card.detail,

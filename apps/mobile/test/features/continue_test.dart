@@ -280,7 +280,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text("You're caught up"), findsOneWidget);
+    expect(find.text("You're caught up."), findsOneWidget);
     expect(find.text('EP 3 in 2h 00m'), findsOneWidget);
     expect(find.text('Schedule'), findsOneWidget);
     expect(find.text('ALSO ON ITS WAY'), findsOneWidget);

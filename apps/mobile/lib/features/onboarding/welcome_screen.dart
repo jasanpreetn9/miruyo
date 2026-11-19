@@ -221,10 +221,11 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
       label('Show titles in'),
       Material(
         // a Material, so the tiles' ripples show
-        color: Surface.s1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Corner.md),
-          side: const BorderSide(color: Surface.line),
+        color: Colors.transparent,
+        // a ruled group: ink above, a hairline below
+        shape: const Border(
+          top: BorderSide(color: Surface.rule),
+          bottom: BorderSide(color: Surface.line),
         ),
         clipBehavior: Clip.antiAlias,
         child: Column(
@@ -247,10 +248,11 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
       const SizedBox(height: Space.x3),
       Material(
         // a Material, so the tiles' ripples show
-        color: Surface.s1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Corner.md),
-          side: const BorderSide(color: Surface.line),
+        color: Colors.transparent,
+        // a ruled group: ink above, a hairline below
+        shape: const Border(
+          top: BorderSide(color: Surface.rule),
+          bottom: BorderSide(color: Surface.line),
         ),
         child: SwitchListTile.adaptive(
           value: adult,
@@ -272,9 +274,9 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
         onPressed: _saving ? null : () => _continue(listed: listed),
         style: FilledButton.styleFrom(
           minimumSize: const Size.fromHeight(52),
-          backgroundColor: colors.accent,
-          foregroundColor: colors.onAccent,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          backgroundColor: TextTone.high,
+          foregroundColor: Surface.base,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
           textStyle: AppType.body.copyWith(fontSize: 15, fontWeight: FontWeight.w600),
         ),
         child: Text(_saving ? 'Saving…' : 'Continue'),

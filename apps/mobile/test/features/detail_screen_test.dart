@@ -69,6 +69,7 @@ void main() {
     expect(find.text('WHERE TO WATCH'), findsOneWidget);
     expect(find.text('Muse'), findsNothing);
     await tester.ensureVisible(find.text('1 more'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('1 more'));
     await tester.pumpAndSettle();
     expect(find.text('Muse'), findsOneWidget);

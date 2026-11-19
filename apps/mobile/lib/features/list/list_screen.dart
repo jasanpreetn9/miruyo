@@ -651,7 +651,13 @@ class _Header extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(heading, style: AppType.heading, maxLines: 1, overflow: TextOverflow.ellipsis),
+                // a page title: large and light, as on the web
+                Text(
+                  heading,
+                  style: AppType.displayL.copyWith(fontSize: 40),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 2),
                 Text(
                   summary ?? ' ',
@@ -667,10 +673,11 @@ class _Header extends StatelessWidget {
             onPressed: editing || canEdit ? onEdit : null,
             style: TextButton.styleFrom(
               minimumSize: const Size(64, 36),
-              backgroundColor: editing ? TextTone.high : const Color(0x0FFFFFFF),
+              backgroundColor: editing ? TextTone.high : Colors.transparent,
+              side: editing ? null : const BorderSide(color: Surface.line),
               foregroundColor: editing ? Surface.base : TextTone.high,
               disabledForegroundColor: TextTone.low,
-              shape: const StadiumBorder(),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
               textStyle: AppType.body.copyWith(fontWeight: FontWeight.w600),
             ),
             child: Text(editing ? 'Done' : 'Edit'),
@@ -833,7 +840,7 @@ class _TabChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = on ? Surface.base : const Color(0xFFD7DBE6);
+    final color = on ? Surface.base : const Color(0xFFDDD3C3);
     return Semantics(
       selected: on,
       button: true,
@@ -846,8 +853,8 @@ class _TabChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: on ? TextTone.high : Surface.s1,
-            borderRadius: BorderRadius.circular(Corner.full),
+            color: on ? TextTone.high : Colors.transparent,
+            borderRadius: BorderRadius.circular(Corner.sm),
             border: Border.all(color: on ? TextTone.high : Surface.line),
           ),
           child: Row(
@@ -890,10 +897,7 @@ class _Toolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(Corner.sm),
-      borderSide: const BorderSide(color: Surface.line),
-    );
+    final border = UnderlineInputBorder(borderSide: const BorderSide(color: Surface.line));
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.gutter, Space.x2, Space.gutter, 0),
       child: Row(
@@ -923,10 +927,10 @@ class _Toolbar extends StatelessWidget {
                             },
                           ),
                   ),
-                  filled: true,
-                  fillColor: Surface.s1,
+                  filled: false,
                   isDense: true,
-                  contentPadding: EdgeInsets.zero,
+                  // centred on the rule's line now there's no box around it
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                   border: border,
                   enabledBorder: border,
                   focusedBorder: border.copyWith(borderSide: const BorderSide(color: TextTone.high, width: 2)),
@@ -952,9 +956,7 @@ class _Toolbar extends StatelessWidget {
               height: Space.minTarget,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: Surface.s1,
-                borderRadius: BorderRadius.circular(Corner.sm),
-                border: Border.all(color: Surface.line),
+                border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
               ),
               child: Row(
                 children: [
@@ -971,7 +973,7 @@ class _Toolbar extends StatelessWidget {
             label: grid ? 'Show as list' : 'Show as grid',
             excludeSemantics: true,
             child: Material(
-              color: Surface.s1,
+              color: Colors.transparent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(Corner.sm),
                 side: const BorderSide(color: Surface.line),
@@ -1068,7 +1070,7 @@ class _Empty extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Space.x6, vertical: Space.x10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(2),
         border: Border.all(color: Surface.line),
       ),
       child: Column(
@@ -1076,7 +1078,9 @@ class _Empty extends StatelessWidget {
           Container(
             width: 64,
             height: 64,
-            decoration: BoxDecoration(color: Surface.s1, borderRadius: BorderRadius.circular(20)),
+            decoration: BoxDecoration(
+              border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
+            ),
             child: const Icon(Symbols.inventory_2_rounded, size: 32, color: TextTone.low),
           ),
           const SizedBox(height: Space.x3),
@@ -1111,7 +1115,7 @@ class _Empty extends StatelessWidget {
                 foregroundColor: TextTone.high,
                 backgroundColor: Surface.s3,
                 side: const BorderSide(color: Surface.line),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
               ),
               child: Text(isAnime ? 'Browse seasonal' : 'Browse manga'),
             ),

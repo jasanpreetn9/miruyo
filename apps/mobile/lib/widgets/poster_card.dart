@@ -228,7 +228,7 @@ class HiddenCover extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
         child: Container(
-          color: const Color(0x73090B11),
+          color: const Color(0x7313110F),
           padding: const EdgeInsets.all(Space.x3),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -243,9 +243,9 @@ class HiddenCover extends StatelessWidget {
                   minimumSize: const Size(0, 32),
                   tapTargetSize: MaterialTapTargetSize.padded,
                   foregroundColor: TextTone.high,
-                  backgroundColor: const Color(0x99090B11),
+                  backgroundColor: const Color(0x9913110F),
                   side: const BorderSide(color: Color(0x33FFFFFF)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                   textStyle: AppType.caption.copyWith(fontWeight: FontWeight.w600),
                 ),
                 child: const Text('Reveal'),

@@ -28,7 +28,7 @@ Future<void> showFilterSheet(BuildContext context, WidgetRef ref) async {
     useSafeArea: true,
     showDragHandle: true,
     backgroundColor: Surface.s2,
-    barrierColor: const Color(0x99090B11),
+    barrierColor: const Color(0x9913110F),
     builder: (_) => _FilterSheet(initial: current),
   );
   if (applied != null) {
@@ -107,10 +107,10 @@ class _FilterSheetState extends ConsumerState<_FilterSheet> {
         color: selected ? mode.onAccent : TextTone.high,
         fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
       ),
-      selectedColor: mode.accent,
-      backgroundColor: Surface.s1,
+      selectedColor: TextTone.high,
+      backgroundColor: Colors.transparent,
       side: BorderSide(color: selected ? Colors.transparent : Surface.line),
-      shape: const StadiumBorder(),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
     );
 
     Widget section(String title, Widget child, {String? hint}) => Padding(
@@ -153,7 +153,7 @@ class _FilterSheetState extends ConsumerState<_FilterSheet> {
         ),
         backgroundColor: Colors.transparent,
         side: const BorderSide(color: TextTone.low),
-        shape: const StadiumBorder(),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
       ),
     );
 
@@ -364,9 +364,11 @@ class _FilterSheetState extends ConsumerState<_FilterSheet> {
                                 InputChip(
                                   label: Text(t),
                                   labelStyle: AppType.body.copyWith(fontSize: 13),
-                                  backgroundColor: Surface.s1,
+                                  backgroundColor: Colors.transparent,
                                   side: const BorderSide(color: Surface.line),
-                                  shape: const StadiumBorder(),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(2)),
+                                  ),
                                   onPressed: () {
                                     unawaited(ref.read(hapticsProvider).play(Haptic.selection));
                                     _tagQuery.clear();
@@ -394,7 +396,9 @@ class _FilterSheetState extends ConsumerState<_FilterSheet> {
                                   labelStyle: AppType.body.copyWith(fontSize: 13),
                                   backgroundColor: Surface.s3,
                                   side: BorderSide.none,
-                                  shape: const StadiumBorder(),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(2)),
+                                  ),
                                   deleteIcon: const Icon(Symbols.close_rounded, size: 16),
                                   deleteButtonTooltipMessage: 'Remove tag $t',
                                   onDeleted: () => _set(_draft.copyWith(tags: [..._draft.tags]..remove(t))),
@@ -416,7 +420,9 @@ class _FilterSheetState extends ConsumerState<_FilterSheet> {
                                   ),
                                   backgroundColor: Colors.transparent,
                                   side: const BorderSide(color: TextTone.low),
-                                  shape: const StadiumBorder(),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(2)),
+                                  ),
                                   deleteIcon: const Icon(Symbols.close_rounded, size: 16),
                                   deleteButtonTooltipMessage: 'Stop excluding $t',
                                   onDeleted: () => _set(_draft.copyWith(notTags: [..._draft.notTags]..remove(t))),
@@ -442,9 +448,9 @@ class _FilterSheetState extends ConsumerState<_FilterSheet> {
                     },
                     style: FilledButton.styleFrom(
                       minimumSize: const Size.fromHeight(48),
-                      backgroundColor: mode.accent,
-                      foregroundColor: mode.onAccent,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      backgroundColor: TextTone.high,
+                      foregroundColor: Surface.base,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                       textStyle: AppType.body.copyWith(fontSize: 15, fontWeight: FontWeight.w600),
                     ),
                     child: Row(

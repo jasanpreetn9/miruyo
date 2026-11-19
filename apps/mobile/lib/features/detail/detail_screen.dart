@@ -28,6 +28,7 @@ import '../../core/theme/tokens.dart';
 import '../../core/ui/clock.dart';
 import '../../core/ui/toast.dart';
 import '../../widgets/cover_image.dart';
+import '../../widgets/halftone.dart';
 import '../../widgets/motion.dart';
 import '../../widgets/section_error.dart';
 import '../../widgets/skeleton.dart';
@@ -358,7 +359,7 @@ class _RoundButton extends StatelessWidget {
             child: Container(
               width: Space.minTarget,
               height: Space.minTarget,
-              color: const Color(0x99090B11),
+              color: const Color(0x9913110F),
               child: Icon(icon, size: 22, color: TextTone.high),
             ),
           ),
@@ -368,8 +369,9 @@ class _RoundButton extends StatelessWidget {
   }
 }
 
-/// The banner bleeds edge to edge and fades into the page. Without one, the
-/// cover stands in, blurred and enlarged.
+/// The banner bleeds edge to edge and fades into the page, editorial: the
+/// art in two tones (the cover's colour and the page), under a dot screen.
+/// Without one, the cover stands in, blurred and enlarged.
 class _Banner extends StatelessWidget {
   const _Banner({required this.title});
 
@@ -382,7 +384,21 @@ class _Banner extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         if (image != null)
-          CachedNetworkImage(imageUrl: image, fit: BoxFit.cover)
+          // duotone: the art in greys, multiplied by the cover's colour
+          ColorFiltered(
+            // modulate, not multiply: transparent pixels (before the image loads, or
+            // past its edges) stay transparent instead of filling with the colour
+            colorFilter: ColorFilter.mode(title.colors.accent, BlendMode.modulate),
+            child: ColorFiltered(
+              colorFilter: const ColorFilter.matrix([
+                0.2126, 0.7152, 0.0722, 0, 0, //
+                0.2126, 0.7152, 0.0722, 0, 0, //
+                0.2126, 0.7152, 0.0722, 0, 0, //
+                0, 0, 0, 1, 0,
+              ]),
+              child: CachedNetworkImage(imageUrl: image, fit: BoxFit.cover),
+            ),
+          )
         else
           ClipRect(
             child: ImageFiltered(
@@ -395,11 +411,13 @@ class _Banner extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
-              colors: [Surface.base, Color(0x8C090B11), Color(0x33090B11)],
-              stops: [0, 0.45, 1],
+              colors: [Surface.base, Color(0x8013110F), Color(0x1A13110F)],
+              stops: [0, 0.5, 1],
             ),
           ),
         ),
+        // the dot screen over it
+        const Halftone(color: Surface.base, spacing: 5, radius: 0.8, fade: 1.4, opacity: 0.55),
       ],
     );
   }
@@ -419,13 +437,9 @@ class _Headline extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(
-          width: 96,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Corner.sm),
-            boxShadow: [
-              BoxShadow(color: title.colors.glow, blurRadius: 40, spreadRadius: -14, offset: const Offset(0, 18)),
-            ],
-          ),
+          width: 104,
+          margin: const EdgeInsets.only(right: 6, bottom: 6),
+          decoration: BoxDecoration(boxShadow: offsetShadow(title.colors.accent)),
           child: AspectRatio(
             aspectRatio: 2 / 3,
             child: CoverImage(title: title),
@@ -445,7 +459,7 @@ class _Headline extends StatelessWidget {
                     title.title,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: AppType.heading.copyWith(fontSize: 22, height: 1.1),
+                    style: AppType.serif(30, height: 0.98, weight: FontWeight.w600, tracking: -0.03),
                   ),
                 ),
                 if (altTitles.isNotEmpty) ...[
@@ -458,23 +472,12 @@ class _Headline extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(Symbols.star_rounded, size: 14, fill: 1, color: Accent.gold),
-                    const SizedBox(width: 2),
-                    Text(
-                      title.score > 0 ? title.score.toStringAsFixed(1) : '—',
-                      style: AppType.numeric.copyWith(fontSize: 12, fontWeight: FontWeight.w600),
-                    ),
-                    Flexible(
-                      child: Text(
-                        ' · ${[title.knownFormat, title.knownCount].whereType<String>().join(' · ')}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppType.caption.copyWith(color: TextTone.mid, fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ],
+                // the score is in the row below, large
+                Text(
+                  [title.knownFormat, title.knownCount].whereType<String>().join(' · '),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppType.caption.copyWith(color: TextTone.mid, fontWeight: FontWeight.w400),
                 ),
               ],
             ),
@@ -503,7 +506,9 @@ class _CountdownStrip extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Space.x3, vertical: 10),
-      decoration: BoxDecoration(color: Surface.s1, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+        border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
+      ),
       child: Row(
         children: [
           Container(
@@ -517,7 +522,7 @@ class _CountdownStrip extends ConsumerWidget {
               phase == AiringPhase.live
                   ? 'EP ${next.ep} is airing now'
                   : 'EP ${next.ep} airs ${formatAiringLong(next.airingAt)}',
-              style: AppType.body.copyWith(fontSize: 13, color: const Color(0xFFD7DBE6)),
+              style: AppType.body.copyWith(fontSize: 13, color: const Color(0xFFDDD3C3)),
             ),
           ),
           if (phase != AiringPhase.live) ...[
@@ -631,15 +636,15 @@ class _FavouriteButton extends ConsumerWidget {
       excludeSemantics: true,
       child: Material(
         color: Surface.s3,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(2),
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(2),
           onTap: () => unawaited(toggle()),
           child: Container(
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(2),
               border: Border.all(color: const Color(0x1FFFFFFF)),
             ),
             child: AnimatedSwitcher(
@@ -673,7 +678,6 @@ class _StatusPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final entry = ref.watch(listStoreProvider.select((s) => s.entryFor(title)));
-    final mode = context.mode;
     final actions = ref.read(listActionsProvider);
 
     void act(void Function() run) {
@@ -682,10 +686,11 @@ class _StatusPanel extends ConsumerWidget {
 
     final color = entry == null ? null : statusColor[entry.status]!;
     final statusButton = Material(
-      color: color?.withValues(alpha: 0.12) ?? mode.accent,
-      borderRadius: BorderRadius.circular(12),
+      // not on the list: Add to list, filled in ink (the page's one main action)
+      color: color?.withValues(alpha: 0.12) ?? TextTone.high,
+      borderRadius: BorderRadius.circular(2),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(2),
         // opens the editor (signed out, Log In); a title not on the list is
         // added as Planning by the editor's first change
         onTap: () => unawaited(showListEditor(context, ref, title)),
@@ -693,7 +698,7 @@ class _StatusPanel extends ConsumerWidget {
           height: 48,
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(2),
             border: Border.all(color: color?.withValues(alpha: 0.35) ?? Colors.transparent),
           ),
           child: Row(
@@ -705,18 +710,18 @@ class _StatusPanel extends ConsumerWidget {
                   decoration: BoxDecoration(color: color, shape: BoxShape.circle),
                 )
               else
-                Icon(Symbols.add_rounded, size: 20, color: mode.onAccent),
+                Icon(Symbols.add_rounded, size: 20, color: Surface.base),
               const SizedBox(width: Space.x2),
               Expanded(
                 child: Text(
                   entry == null ? 'Add to list' : statusLabel(entry.status, isAnime: title.isAnime),
                   style: AppType.body.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: entry == null ? mode.onAccent : TextTone.high,
+                    color: entry == null ? Surface.base : TextTone.high,
                   ),
                 ),
               ),
-              Icon(Symbols.edit_rounded, size: 20, color: entry == null ? mode.onAccent : TextTone.high),
+              Icon(Symbols.edit_rounded, size: 20, color: entry == null ? Surface.base : TextTone.high),
             ],
           ),
         ),
@@ -746,7 +751,7 @@ class _StatusPanel extends ConsumerWidget {
               style: FilledButton.styleFrom(
                 backgroundColor: TextTone.high,
                 foregroundColor: Surface.s1,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                 textStyle: AppType.body.copyWith(fontSize: 15, fontWeight: FontWeight.w600),
               ),
               icon: const Icon(Symbols.play_arrow_rounded, fill: 1, size: 22),
@@ -808,9 +813,7 @@ class _ProgressCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(Space.x4),
       decoration: BoxDecoration(
-        color: Surface.s1,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Surface.line),
+        border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
       ),
       child: Column(
         children: [
@@ -818,7 +821,7 @@ class _ProgressCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text('${entry.progress}', style: AppType.heading.copyWith(fontSize: 26, height: 1)),
+              Text('${entry.progress}', style: AppType.mono(26)),
               Text(' / ${total ?? '?'}', style: AppType.body.copyWith(fontSize: 15, color: TextTone.low)),
               const SizedBox(width: Space.x2),
               // what's out that you haven't seen, in Home's words
@@ -911,7 +914,7 @@ class _ProgressCard extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       backgroundColor: Surface.s3,
                       side: const BorderSide(color: Surface.line),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                     ),
                     child: Icon(Symbols.remove_rounded, color: TextTone.high, semanticLabel: 'One less $unit'),
                   ),
@@ -927,7 +930,7 @@ class _ProgressCard extends StatelessWidget {
                         backgroundColor: Quiet.fill,
                         foregroundColor: TextTone.high,
                         side: const BorderSide(color: Quiet.border),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                         textStyle: AppType.numeric.copyWith(fontSize: 14, fontWeight: FontWeight.w700),
                       ),
                       icon: const Icon(Symbols.add_rounded, size: 20),
@@ -952,97 +955,99 @@ class _Stats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = content.title;
-    final stars = title.score / 2;
-    final small = AppType.caption.copyWith(color: TextTone.low, fontWeight: FontWeight.w400);
-
-    return Wrap(
-      spacing: 28,
-      runSpacing: Space.x3,
-      crossAxisAlignment: WrapCrossAlignment.center,
+    final small = AppType.overline.copyWith(color: TextTone.low, fontWeight: FontWeight.w500);
+    Widget fact(String value, String label) => Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              title.score > 0 ? title.score.toStringAsFixed(1) : '—',
-              style: AppType.displayL.copyWith(fontSize: 36, height: 1),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ExcludeSemantics(
-                  child: Row(
-                    children: [
-                      for (var i = 0; i < 5; i++)
-                        Icon(
-                          stars >= i + 0.75
-                              ? Symbols.star_rounded
-                              : stars >= i + 0.25
-                              ? Symbols.star_half_rounded
-                              : Symbols.star_rounded,
-                          size: 16,
-                          fill: stars >= i + 0.25 ? 1 : 0,
-                          color: Accent.gold,
-                        ),
-                    ],
-                  ),
+        Text(value, style: AppType.mono(17)),
+        const SizedBox(height: 4),
+        Text(label.toUpperCase(), style: small),
+      ],
+    );
+
+    // editorial: one large number in the cover's colour, the rest as small
+    // labelled facts, between two rules; genres as words
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: Space.x4),
+      decoration: const BoxDecoration(
+        border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            spacing: 28,
+            runSpacing: Space.x4,
+            crossAxisAlignment: WrapCrossAlignment.end,
+            children: [
+              Semantics(
+                label: 'Average score ${title.score > 0 ? title.score.toStringAsFixed(1) : 'none'}',
+                excludeSemantics: true,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title.score > 0 ? title.score.toStringAsFixed(1) : '—',
+                      style: AppType.serif(
+                        56,
+                        height: 0.85,
+                        weight: FontWeight.w200,
+                        tracking: -0.06,
+                        color: title.colors.accent,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text('AVERAGE SCORE', style: small),
+                  ],
                 ),
-                const SizedBox(height: 2),
-                Text('Average score', style: small),
+              ),
+              if (content.rank != null) fact(content.rank!.value, content.rank!.label),
+              fact(content.members, 'Members'),
+              if (content.trailer != null)
+                OutlinedButton.icon(
+                  onPressed: () => launchUrl(content.trailer!, mode: LaunchMode.externalApplication),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(0, Space.minTarget),
+                    foregroundColor: TextTone.high,
+                    side: const BorderSide(color: Surface.line),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Corner.sm)),
+                    textStyle: AppType.body.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  icon: const Icon(Symbols.play_arrow_rounded, fill: 1, size: 20),
+                  label: const Text('Trailer'),
+                ),
+            ],
+          ),
+          if (title.genres.isNotEmpty) ...[
+            const SizedBox(height: Space.x3),
+            // genres as words, not pills; each opens Browse
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                for (final (i, g) in title.genres.indexed) ...[
+                  if (i > 0)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2),
+                      child: Text('/', style: TextStyle(color: TextTone.low)),
+                    ),
+                  TextButton(
+                    onPressed: () => context.go('/browse?genre=${Uri.encodeComponent(g)}'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: TextTone.mid,
+                      minimumSize: const Size(Space.minTarget, Space.minTarget),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Text(g, style: AppType.body.copyWith(color: TextTone.mid)),
+                  ),
+                ],
               ],
             ),
           ],
-        ),
-        if (content.rank != null)
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(content.rank!.value, style: AppType.title.copyWith(fontSize: 18)),
-              Text(content.rank!.label, style: small),
-            ],
-          ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(content.members, style: AppType.title.copyWith(fontSize: 18)),
-            Text('Members', style: small),
-          ],
-        ),
-        if (content.trailer != null)
-          OutlinedButton.icon(
-            onPressed: () => launchUrl(content.trailer!, mode: LaunchMode.externalApplication),
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size(0, Space.minTarget),
-              backgroundColor: Surface.s3,
-              foregroundColor: TextTone.high,
-              side: const BorderSide(color: Color(0x24FFFFFF)),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              textStyle: AppType.body.copyWith(fontWeight: FontWeight.w600),
-            ),
-            icon: const Icon(Symbols.play_arrow_rounded, fill: 1, size: 20),
-            label: const Text('Trailer'),
-          ),
-        Wrap(
-          spacing: 6,
-          runSpacing: 6,
-          children: [
-            for (final g in title.genres)
-              ActionChip(
-                label: Text(g),
-                onPressed: () => context.go('/browse?genre=${Uri.encodeComponent(g)}'),
-                labelStyle: AppType.caption.copyWith(color: const Color(0xFFD7DBE6), fontWeight: FontWeight.w400),
-                backgroundColor: Surface.s1,
-                side: const BorderSide(color: Surface.line),
-                shape: const StadiumBorder(),
-                // a 48pt tap area around the chip (compact made it 40)
-                materialTapTargetSize: MaterialTapTargetSize.padded,
-              ),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -1067,7 +1072,7 @@ class _Synopsis extends StatelessWidget {
             text,
             maxLines: open ? null : 3,
             overflow: open ? TextOverflow.visible : TextOverflow.ellipsis,
-            style: AppType.bodyL.copyWith(fontSize: 15, color: const Color(0xFFC4C9D6)),
+            style: AppType.bodyL.copyWith(fontSize: 15, color: const Color(0xFFC9BFAE)),
           ),
         ),
         TextButton.icon(
@@ -1107,7 +1112,7 @@ class _TabsHeader extends SliverPersistentHeaderDelegate {
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           decoration: const BoxDecoration(
-            color: Color(0xE6090B11),
+            color: Color(0xE613110F),
             border: Border(bottom: BorderSide(color: Surface.line)),
           ),
           child: _TabStrip(selected: selected, accent: accent, onSelect: onSelect),

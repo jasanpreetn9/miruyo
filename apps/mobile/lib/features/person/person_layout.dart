@@ -24,13 +24,14 @@ import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/ui/toast.dart';
+import '../../widgets/poster_row.dart';
 import '../detail/detail_data.dart' show InfoRow, favouritesProvider;
 import '../detail/detail_sections.dart' show InfoTable;
 import 'markdown.dart';
 import 'person_data.dart';
 
-const _soft = Color(0xFFD7DBE6);
-const _spoilerInk = Color(0xFFFF8A78);
+const _soft = Color(0xFFDDD3C3);
+const _spoilerInk = Color(0xFFF07A63);
 const _pink = Color(0xFFFF8FA8);
 
 /// Where a page lives on the web, for Share.
@@ -207,7 +208,7 @@ class _Band extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
-                colors: [Surface.base, Color(0x8C090B11), Color(0x40090B11)],
+                colors: [Surface.base, Color(0x8C13110F), Color(0x4013110F)],
                 stops: [0, 0.55, 1],
               ),
             ),
@@ -300,7 +301,7 @@ class Portrait extends StatelessWidget {
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF262C3D), Color(0xFF161A26)],
+            colors: [Color(0xFF2D2822), Color(0xFF1D1A16)],
           ),
         ),
         child: image == null
@@ -411,10 +412,10 @@ class _FavouriteButton extends ConsumerWidget {
         onPressed: toggle,
         style: OutlinedButton.styleFrom(
           minimumSize: const Size(double.infinity, Space.minTarget),
-          backgroundColor: Surface.s1,
+          backgroundColor: Colors.transparent,
           foregroundColor: on ? _pink : TextTone.high,
           side: const BorderSide(color: Surface.line),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -579,7 +580,7 @@ class RoundIconButton extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
           child: Material(
-            color: const Color(0x99090B11),
+            color: const Color(0x9913110F),
             child: InkWell(
               onTap: onTap,
               child: SizedBox.square(
@@ -605,13 +606,9 @@ class PersonSectionHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: Space.x8, bottom: Space.x4),
-      child: Row(
-        children: [
-          Expanded(
-            child: Semantics(header: true, child: Text(text, style: AppType.section.copyWith(fontSize: 22))),
-          ),
-          ?trailing,
-        ],
+      child: Semantics(
+        header: true,
+        child: SectionHeading(heading: text, trailing: trailing, padding: EdgeInsets.zero),
       ),
     );
   }
@@ -671,7 +668,7 @@ class RoleCard extends ConsumerWidget {
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
-                                color: const Color(0xCC090B11),
+                                color: const Color(0xCC13110F),
                                 borderRadius: BorderRadius.circular(Corner.full),
                               ),
                               child: Row(
@@ -823,10 +820,10 @@ class LoadMore extends StatelessWidget {
             onPressed: loading ? null : onTap,
             style: OutlinedButton.styleFrom(
               minimumSize: const Size(double.infinity, Space.minTarget),
-              backgroundColor: Surface.s1,
+              backgroundColor: Colors.transparent,
               foregroundColor: TextTone.high,
               side: const BorderSide(color: Surface.line),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
             ),
             child: Text(
               loading ? 'Loading…' : (failed ? 'Try again' : 'Load more'),

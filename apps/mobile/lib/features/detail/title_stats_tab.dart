@@ -78,9 +78,7 @@ class _Heading extends StatelessWidget {
 }
 
 BoxDecoration get _card => BoxDecoration(
-  color: Surface.s1,
-  borderRadius: BorderRadius.circular(Corner.md),
-  border: Border.all(color: Surface.line),
+  border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
 );
 
 /// Two to a row, as the web lays them out on a phone.
@@ -124,7 +122,7 @@ class _Stats extends StatelessWidget {
               children: [
                 ExcludeSemantics(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(2),
                     child: SizedBox(
                       height: 12,
                       child: Row(
@@ -212,7 +210,7 @@ class _Ranking extends StatelessWidget {
       button: href != null,
       excludeSemantics: true,
       child: Material(
-        color: Surface.s1,
+        color: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Corner.sm),
           side: const BorderSide(color: Surface.line),

@@ -110,7 +110,7 @@ class _CountStepperState extends ConsumerState<CountStepper> {
               height: 48,
               decoration: BoxDecoration(
                 color: plus ? TextTone.high : Surface.s3,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(2),
                 border: plus ? null : Border.all(color: Surface.line),
               ),
               child: Row(
@@ -165,7 +165,7 @@ class _CountStepperState extends ConsumerState<CountStepper> {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        Text('${widget.value}', style: AppType.heading.copyWith(fontSize: 26, height: 1)),
+                        Text('${widget.value}', style: AppType.mono(26)),
                         Text(
                           ' / ${widget.max ?? '?'}',
                           style: AppType.body.copyWith(fontSize: 15, color: TextTone.low),

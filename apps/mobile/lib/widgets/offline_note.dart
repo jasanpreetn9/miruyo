@@ -61,7 +61,7 @@ class OfflineNote extends ConsumerWidget {
                       ),
                       TextSpan(
                         text: '$shown$kept',
-                        style: AppType.body.copyWith(color: const Color(0xFFC4C9D6)),
+                        style: AppType.body.copyWith(color: const Color(0xFFC9BFAE)),
                       ),
                     ],
                   ),
@@ -151,7 +151,7 @@ class NeedsConnection extends StatelessWidget {
 class _DashedBorder extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final rrect = RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(16));
+    final rrect = RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(2));
     final paint = Paint()
       ..color = const Color(0x24FFFFFF)
       ..style = PaintingStyle.stroke

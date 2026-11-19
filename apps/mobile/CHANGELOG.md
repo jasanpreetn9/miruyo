@@ -4,6 +4,10 @@ What changed in the Flutter app, newest first. The website (`apps/web`) is the r
 
 ## Next
 
+### The editorial redesign, as on the web
+
+The app takes the website's editorial look (mockups in [`design/mockups`](../../design/mockups)). Tokens: the warm palette and cream ink, vermilion for anime, square corners (`Corner` 2–6), and the quiet grey lifted to `#938979` so it passes AA on every surface up to S3 (the web's `--color-dim` follows). Type: Fraunces, Schibsted Grotesk and JetBrains Mono, bundled as variable fonts in `fonts/` (pubspec `fonts:`; `google_fonts` dropped), weights and Fraunces's optical size set through font variations; tests load them (`flutter_test_config.dart`). Shared: `SectionHeading` (serif, a Japanese gloss, a hairline that draws in), `Halftone`, `Tick`, `offsetShadow`; the mode toggle and tab bar as words over a rule; main actions in ink, chips square, fields underlined, cards ruled. Home: a masthead, Continue first with a lead card (its +1 counter ticks; it keeps the row's swipes), the pick ruled over a halftone. The title page: a duotone banner (modulate, so empty pixels stay clear), the score large in the cover's colour, genres and tags as words. Seasonal: the season's kanji, text season tabs, ruled entries. A Home test runs at 1.3× text on a 375pt phone. Checked in the iOS Simulator (Home, the title page, Seasonal, My List, Browse and its filters, the editor, Profile, manga mode); not yet on Android.
+
 ### For You measures your taste against your own scores
 
 Web and app together. `lovedFrom` (half a deviation above your mean, 7 to 9; 7.5 under 10 scores) decides seeds and favourite studios; `genreLift` replaces the five most frequent genres, so a pick's genres move it by how far you rate them above your usual (−30% to +40%), and Why this pick's "Shares …" lists only genres clearly above it. Recommendations voted to nothing are left out; `forYouQuery` asks for 20 a seed instead of 8 (checked against the live API). The data tests are ported from the web's.

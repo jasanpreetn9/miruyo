@@ -89,10 +89,12 @@ class ListRowTile extends ConsumerWidget {
         duration: Motion.press,
         height: listRowHeight,
         padding: const EdgeInsets.fromLTRB(0, 6, 10, 6),
+        // a ruled row, not a card; a selected row (editing) lifts and is outlined
         decoration: BoxDecoration(
-          color: editing && selected ? Surface.s2 : Surface.s1,
-          borderRadius: BorderRadius.circular(Corner.md),
-          border: Border.all(color: editing && selected ? accent.accent.withValues(alpha: 0.45) : Colors.transparent),
+          color: editing && selected ? Surface.s2 : Colors.transparent,
+          border: editing && selected
+              ? Border.all(color: accent.accent.withValues(alpha: 0.45))
+              : const Border(bottom: BorderSide(color: Surface.line)),
         ),
         child: Row(
           children: [

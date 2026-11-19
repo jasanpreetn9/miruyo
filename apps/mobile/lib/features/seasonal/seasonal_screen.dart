@@ -8,6 +8,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/anilist/types.dart';
 import '../../core/auth/session.dart';
+import '../../core/catalog/humanize.dart';
 import '../../core/catalog/season.dart';
 import '../../core/catalog/status.dart';
 import '../../core/gestures/haptics.dart';
@@ -26,6 +27,7 @@ import '../../widgets/cover_grid.dart';
 import '../../widgets/cover_image.dart';
 import '../../widgets/motion.dart';
 import '../../widgets/poster_card.dart';
+import '../../widgets/poster_row.dart' show SectionHeading;
 import '../../widgets/section_error.dart';
 import '../../widgets/skeleton.dart';
 import '../editor/quick_actions.dart';
@@ -91,12 +93,14 @@ class _SeasonalScreenState extends ConsumerState<SeasonalScreen> {
               selected: {_view},
               showSelectedIcon: false,
               onSelectionChanged: (v) => setState(() => _view = v.first),
+              // the chosen side in ink, square, as the page's main buttons are
               style: SegmentedButton.styleFrom(
-                selectedBackgroundColor: context.mode.accent,
-                selectedForegroundColor: context.mode.onAccent,
-                backgroundColor: Surface.s1,
+                selectedBackgroundColor: TextTone.high,
+                selectedForegroundColor: Surface.base,
+                backgroundColor: Colors.transparent,
                 foregroundColor: TextTone.mid,
                 side: const BorderSide(color: Surface.line),
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Corner.sm))),
                 textStyle: AppType.body.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
@@ -171,20 +175,30 @@ class _SeasonChart extends ConsumerWidget {
                       for (final s in tabs)
                         Padding(
                           padding: const EdgeInsets.only(right: Space.x2),
-                          child: ChoiceChip(
-                            label: Text(seasonName(s)),
+                          // the seasons as words, the one on show over a rule in the accent
+                          child: Semantics(
+                            button: true,
                             selected: s == season,
-                            onSelected: (_) => onSeason(s),
-                            showCheckmark: false,
-                            selectedColor: mode.tint,
-                            backgroundColor: Surface.s1,
-                            side: BorderSide(color: s == season ? mode.accent : Surface.line),
-                            labelStyle: AppType.body.copyWith(
-                              fontSize: 13,
-                              fontWeight: s == season ? FontWeight.w600 : FontWeight.w400,
-                              color: s == season ? mode.accentText : TextTone.high,
+                            child: InkWell(
+                              onTap: () => onSeason(s),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: Space.x2),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(color: s == season ? mode.accent : Colors.transparent, width: 2),
+                                  ),
+                                ),
+                                child: Text(
+                                  seasonName(s),
+                                  style: AppType.body.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: s == season ? FontWeight.w600 : FontWeight.w400,
+                                    color: s == season ? TextTone.high : TextTone.mid,
+                                  ),
+                                ),
+                              ),
                             ),
-                            shape: const StadiumBorder(),
                           ),
                         ),
                     ],
@@ -240,18 +254,17 @@ class _SeasonChart extends ConsumerWidget {
           ];
         }
         return [
+          SliverToBoxAdapter(
+            child: _Masthead(season: season, premiering: value.media.length, leftovers: value.leftovers.length),
+          ),
           for (final section in sections) ...[
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(Space.gutter, Space.x6, Space.gutter, Space.x3),
+              padding: const EdgeInsets.fromLTRB(0, Space.x8, 0, Space.x1),
               sliver: SliverToBoxAdapter(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(section.label, style: AppType.section),
-                    const SizedBox(width: Space.x2),
-                    Text('${section.cards.length}', style: AppType.numeric.copyWith(color: TextTone.low)),
-                  ],
+                child: SectionHeading(
+                  heading: section.label,
+                  jp: _gloss[section.key],
+                  subtitle: '${section.cards.length}',
                 ),
               ),
             ),
@@ -266,9 +279,8 @@ class _SeasonChart extends ConsumerWidget {
                         childCount: section.cards.length,
                       ),
                     )
-                  : SliverList.separated(
+                  : SliverList.builder(
                       itemCount: section.cards.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: Space.x3),
                       itemBuilder: (_, i) => SeasonCardView(card: section.cards[i]),
                     ),
             ),
@@ -293,7 +305,7 @@ class _SeasonChart extends ConsumerWidget {
           sliver: SliverList.separated(
             itemCount: 4,
             separatorBuilder: (_, _) => const SizedBox(height: Space.x3),
-            itemBuilder: (_, _) => const Skeleton(height: 196, radius: Corner.md),
+            itemBuilder: (_, _) => const Skeleton(height: 160, radius: Corner.sm),
           ),
         ),
       ],
@@ -310,6 +322,107 @@ class _SeasonChart extends ConsumerWidget {
           ...body,
           const SliverToBoxAdapter(child: SizedBox(height: 120)),
         ],
+      ),
+    );
+  }
+}
+
+/// Each section's Japanese gloss (テレビ), as on the web.
+const _gloss = {'tv': 'テレビ', 'short': 'ショート', 'leftovers': '継続', 'movie': '劇場', 'other': 'OVA・配信'};
+
+/// The season's masthead (design/mockups/seasonal-editorial): its kanji in
+/// vermilion beside the season set large, and what's premiering.
+class _Masthead extends StatelessWidget {
+  const _Masthead({required this.season, required this.premiering, required this.leftovers});
+
+  final SeasonYear season;
+  final int premiering;
+  final int leftovers;
+
+  static const _kanji = {
+    MediaSeason.winter: '冬',
+    MediaSeason.spring: '春',
+    MediaSeason.summer: '夏',
+    MediaSeason.fall: '秋',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final strong = AppType.body.copyWith(color: TextTone.high, fontWeight: FontWeight.w600);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(Space.gutter, Space.x5, Space.gutter, 0),
+      child: Container(
+        padding: const EdgeInsets.only(bottom: Space.x5),
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Surface.line, width: 3)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Appear(
+              child: ExcludeSemantics(
+                child: Text(
+                  _kanji[season.season] ?? '',
+                  style: const TextStyle(
+                    fontFamilyFallback: AppType.jpFallback,
+                    fontSize: 72,
+                    height: 0.9,
+                    fontWeight: FontWeight.w700,
+                    color: Accent.beni,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: Space.x4),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Appear(
+                    delay: const Duration(milliseconds: 80),
+                    child: Semantics(
+                      header: true,
+                      child: Text.rich(
+                        TextSpan(
+                          text: '${humanizeSeason(season.season)} ',
+                          children: [
+                            TextSpan(
+                              text: '${season.year}',
+                              style: AppType.displayL.copyWith(
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        style: AppType.displayL,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: Space.x2),
+                  Appear(
+                    delay: const Duration(milliseconds: 160),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(text: '$premiering ${premiering == 1 ? 'title' : 'titles'}', style: strong),
+                          const TextSpan(text: ' premiering'),
+                          if (leftovers > 0) ...[
+                            const TextSpan(text: ', '),
+                            TextSpan(text: '$leftovers still airing', style: strong),
+                            const TextSpan(text: ' from earlier seasons'),
+                          ],
+                          const TextSpan(text: '.'),
+                        ],
+                      ),
+                      style: AppType.body.copyWith(color: TextTone.mid),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -575,21 +688,21 @@ class _ScheduleState extends ConsumerState<_Schedule> with SingleTickerProviderS
                           Symbols.bookmarks_rounded,
                           size: 18,
                           fill: _mineOnly ? 1 : 0,
-                          color: _mineOnly ? mode.accentText : TextTone.mid,
+                          color: _mineOnly ? Surface.base : TextTone.mid,
                         ),
                         label: const Text('My list'),
                         labelStyle: AppType.body.copyWith(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: _mineOnly ? mode.accentText : TextTone.high,
+                          color: _mineOnly ? Surface.base : TextTone.high,
                         ),
                         selected: _mineOnly,
                         onSelected: (v) => setState(() => _mineOnly = v),
                         showCheckmark: false,
-                        selectedColor: mode.tint,
-                        backgroundColor: Surface.s1,
-                        shape: const StadiumBorder(),
-                        side: BorderSide(color: _mineOnly ? mode.accent : Surface.line),
+                        selectedColor: TextTone.high,
+                        backgroundColor: Colors.transparent,
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
+                        side: BorderSide(color: _mineOnly ? TextTone.high : Surface.line),
                       ),
                     ),
                   ),
@@ -646,9 +759,9 @@ class _ScheduleState extends ConsumerState<_Schedule> with SingleTickerProviderS
                               fontWeight: FontWeight.w600,
                               color: mode.onAccent,
                             ),
-                            backgroundColor: mode.accent,
+                            backgroundColor: TextTone.high,
                             side: BorderSide.none,
-                            shape: const StadiumBorder(),
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                             elevation: 4,
                             onPressed: _backToNow,
                           )
@@ -860,13 +973,13 @@ class _DayChip extends StatelessWidget {
       label: '${day.weekday}, ${day.slots.length} airing',
       excludeSemantics: true,
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(2),
         onTap: onTap,
         child: AnimatedContainer(
           duration: Motion.overlay,
           decoration: BoxDecoration(
             color: day.isToday ? mode.tint : Surface.s1,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(2),
             border: Border.all(
               color: current ? mode.accent : (day.isToday ? mode.accent.withValues(alpha: 0.4) : Surface.line),
               width: current ? 1.5 : 1,
@@ -1016,7 +1129,7 @@ class _SlotRow extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: Space.x2, vertical: 6),
           decoration: BoxDecoration(
             color: slot.mine ? title.colors.tint : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(2),
             border: Border.all(color: slot.mine ? title.colors.accent.withValues(alpha: 0.4) : Colors.transparent),
           ),
           child: Row(

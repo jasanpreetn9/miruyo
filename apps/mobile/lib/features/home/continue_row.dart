@@ -17,7 +17,9 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/ui/clock.dart';
 import '../../widgets/cover_image.dart';
+import '../../widgets/motion.dart' show Tick;
 import '../../widgets/poster_card.dart' show StatusBar;
+import '../../widgets/poster_row.dart' show SectionHeading;
 import '../editor/quick_actions.dart';
 import 'home_list.dart';
 
@@ -33,29 +35,18 @@ class _CaughtUpCard extends ConsumerWidget {
     final now = ref.watch(clockProvider).value ?? DateTime.now().millisecondsSinceEpoch ~/ 1000;
     final next = title.next!;
     return Material(
-      color: Surface.s1,
-      borderRadius: BorderRadius.circular(Corner.md),
+      color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(Corner.md),
         onTap: () => context.push('/title/${title.id}'),
         child: Container(
-          padding: const EdgeInsets.all(Space.x3),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Corner.md),
-            border: Border.all(color: Surface.line),
+          padding: const EdgeInsets.symmetric(vertical: Space.x3),
+          decoration: const BoxDecoration(
+            border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                children: [
-                  const Icon(Symbols.done_all_rounded, size: 20, color: Accent.green),
-                  const SizedBox(width: Space.x2),
-                  Expanded(
-                    child: Text("You're caught up", style: AppType.body.copyWith(fontWeight: FontWeight.w600)),
-                  ),
-                ],
-              ),
+              Text("You're caught up.", style: AppType.serif(20, italic: true)),
               const SizedBox(height: Space.x3),
               Text('NEXT TO AIR ON YOUR LIST', style: AppType.overline.copyWith(color: TextTone.low)),
               const SizedBox(height: Space.x2),
@@ -64,7 +55,7 @@ class _CaughtUpCard extends ConsumerWidget {
                   SizedBox(
                     width: 44,
                     height: 66,
-                    child: CoverImage(title: title, thumb: true, radius: 6, showMissing: false),
+                    child: CoverImage(title: title, thumb: true, radius: Corner.sm, showMissing: false),
                   ),
                   const SizedBox(width: Space.x3),
                   Expanded(
@@ -93,11 +84,175 @@ class _CaughtUpCard extends ConsumerWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: TextTone.high,
                       minimumSize: const Size(0, Space.minTarget),
-                      side: const BorderSide(color: Color(0x24FFFFFF)),
+                      side: const BorderSide(color: Surface.line),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Corner.sm)),
                     ),
                   ),
                 ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Continue's lead (design/mockups/home-editorial): the title you're furthest
+/// behind on, its cover large with an offset shadow in its colour, and a +1
+/// that says where it lands ("4 / 26 · +1 → 5"); the numbers tick on a +1.
+class _LeadCard extends ConsumerWidget {
+  const _LeadCard({super.key, required this.title});
+
+  final Title title;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final entry = ref.watch(listStoreProvider.select((s) => s.entryFor(title)));
+    final progress = entry?.progress ?? title.me?.progress ?? 0;
+    final total = title.total;
+    final behind = newEpisodesFor(title, progress) ?? 0;
+    final atTotal = total != null && total > 0 && progress >= total;
+    final actions = ref.read(listActionsProvider);
+    final unit = title.isAnime ? 'episode' : 'chapter';
+    final status = entry?.status ?? title.me?.status ?? MediaListStatus.current;
+    final onInk = AppType.sans(13, 1, FontWeight.w700).copyWith(color: Surface.base);
+    final now = ref.watch(clockProvider).value ?? DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    final left = (total ?? 0) - progress;
+    final minutes = title.duration;
+    final next = title.next;
+    // the row's other end, as rows have it: when the next one airs, or the time left
+    final aside = next != null
+        ? '${title.unit} ${next.ep} in ${countdown(next.airingAt - now)}'
+        : minutes != null && minutes > 0 && left > 0
+        ? '${hoursMinutes(left * minutes)} left'
+        : null;
+
+    void act(void Function() run) {
+      if (canEditList(context, ref)) run();
+    }
+
+    // the row grammar, as Continue's rows have it: right +1, short left −1,
+    // long left or a hold for quick actions
+    return RowSwipe(
+      borderRadius: 0,
+      onPositive: atTotal ? null : () => act(() => unawaited(actions.plusOne(title))),
+      onNegative: progress > 0 ? () => act(() => unawaited(actions.minusOne(title))) : null,
+      onMore: () => unawaited(showQuickActions(context, ref, title)),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => context.push('/title/${title.id}'),
+        child: Container(
+          padding: const EdgeInsets.only(bottom: Space.x5),
+          decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: Surface.line)),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 6, bottom: 6),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(boxShadow: offsetShadow(title.colors.accent)),
+                  child: SizedBox(
+                    width: 100,
+                    height: 150,
+                    child: CoverImage(title: title, radius: Corner.sm, showMissing: false),
+                  ),
+                ),
+              ),
+              const SizedBox(width: Space.x4),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      behind > 1 ? 'FURTHEST BEHIND' : 'PICK UP WHERE YOU LEFT OFF',
+                      style: AppType.overline.copyWith(color: title.colors.accent),
+                    ),
+                    const SizedBox(height: Space.x2),
+                    Text(
+                      title.title,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppType.serif(24, height: 1.0, weight: FontWeight.w600, tracking: -0.03),
+                    ),
+                    const SizedBox(height: Space.x2),
+                    Text(
+                      behind > 0
+                          ? '$behind ${title.next == null ? 'left' : 'new'} · ${title.unit} $progress / ${total ?? '?'}'
+                          : '${title.unit} $progress / ${total ?? '?'}',
+                      style: AppType.caption.copyWith(
+                        color: behind > 0 ? Accent.green : TextTone.mid,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if (aside != null) ...[
+                      const SizedBox(height: 2),
+                      Text(aside, style: AppType.numeric.copyWith(fontSize: 11, color: TextTone.low)),
+                    ],
+                    const SizedBox(height: Space.x3),
+                    if (atTotal)
+                      _RowButton(
+                        icon: Symbols.task_alt_rounded,
+                        label: 'Mark ${title.title} as completed',
+                        fill: Accent.green,
+                        ink: Accent.greenInk,
+                        onTap: () => act(() => unawaited(actions.changeStatus(title, MediaListStatus.completed))),
+                      )
+                    else
+                      // a tally counter: where you are, and the number +1 lands on
+                      FittedBox(
+                        // it shrinks a little rather than overflow at the largest text
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Semantics(
+                          button: true,
+                          label: 'Add one $unit to ${title.title}',
+                          excludeSemantics: true,
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => act(() => unawaited(actions.plusOne(title))),
+                            child: Container(
+                              height: Space.minTarget,
+                              decoration: BoxDecoration(border: Border.all(color: TextTone.high)),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: Space.x3),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                                      textBaseline: TextBaseline.alphabetic,
+                                      children: [
+                                        Tick(value: progress, style: AppType.mono(18)),
+                                        Text(' / ${total ?? '?'}', style: AppType.mono(11, color: TextTone.low)),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    color: TextTone.high,
+                                    padding: const EdgeInsets.symmetric(horizontal: Space.x3),
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      children: [
+                                        Text('+1 → ', style: onInk),
+                                        Tick(value: progress + 1, style: onInk),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (progress > 0) ...[
+                      const SizedBox(height: Space.x3),
+                      StatusBar(status: status, progress: progress, total: total),
+                    ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -141,9 +296,12 @@ class _ContinueSectionState extends ConsumerState<ContinueSection> {
     final summary = continueSummary(plan, isAnime: mode.isAnime);
     // caught up: the next to air leads, as a card; the rest follow as rows
     final lead = plan.caughtUp ? plan.waiting.first : null;
+    // otherwise the title you're furthest behind on leads, large (ready is
+    // sorted most new first); the rest follow as ruled rows
+    final featured = lead == null && plan.ready.isNotEmpty ? plan.ready.first : null;
     final rows = [
       for (final t in [...plan.ready, ...plan.waiting])
-        if (t.id != lead?.id) t,
+        if (t.id != lead?.id && t.id != featured?.id) t,
     ];
     final visible = _all ? rows : rows.take(ContinueSection.shown).toList();
 
@@ -166,38 +324,35 @@ class _ContinueSectionState extends ConsumerState<ContinueSection> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // what these rows hold, over them
-        Padding(
+        SectionHeading(
+          heading: continueHeading(mode),
+          jp: mode.isAnime ? '視聴中' : '読書中',
           padding: const EdgeInsets.fromLTRB(Space.gutter, 0, Space.x2, 0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(continueHeading(mode), style: AppType.section),
-                    if (summary.isNotEmpty)
-                      Text(
-                        summary,
-                        style: AppType.caption.copyWith(
-                          color: plan.newEpisodes > 0 ? Accent.green : TextTone.mid,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () => context.go('/list'),
-                style: TextButton.styleFrom(minimumSize: const Size(0, Space.minTarget)),
-                child: Text(
-                  'My List →',
-                  style: AppType.body.copyWith(color: TextTone.mid, fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
+          trailing: TextButton(
+            onPressed: () => context.go('/list'),
+            style: TextButton.styleFrom(minimumSize: const Size(0, Space.minTarget)),
+            child: Text(
+              'My List →',
+              style: AppType.body.copyWith(color: TextTone.mid, fontWeight: FontWeight.w500),
+            ),
           ),
         ),
+        if (summary.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
+            child: Text(
+              summary,
+              style: AppType.caption.copyWith(
+                color: plan.newEpisodes > 0 ? Accent.green : TextTone.mid,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        if (featured != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(Space.gutter, Space.x4, Space.gutter, 0),
+            child: _LeadCard(key: ValueKey('lead-${featured.id}'), title: featured),
+          ),
         if (lead != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(Space.gutter, Space.x3, Space.gutter, 0),
@@ -333,9 +488,9 @@ class _ContinueRow extends ConsumerWidget {
         icon: Symbols.add_rounded,
         text: starts ? 'Start' : null,
         label: starts ? 'Start ${title.title}' : 'Add one ${title.isAnime ? 'episode' : 'chapter'} to ${title.title}',
-        fill: fresh ? Accent.green.withValues(alpha: 0.12) : Quiet.fill,
-        border: fresh ? Accent.green.withValues(alpha: 0.4) : Quiet.border,
-        ink: fresh ? Accent.green : TextTone.high,
+        fill: fresh ? TextTone.high : Quiet.fill,
+        border: fresh ? TextTone.high : Quiet.border,
+        ink: fresh ? Surface.base : TextTone.mid,
         onTap: () => act(() => unawaited(actions.plusOne(title))),
       );
     }
@@ -347,14 +502,18 @@ class _ContinueRow extends ConsumerWidget {
       onMore: () => unawaited(showQuickActions(context, ref, title)),
       child: InkWell(
         onTap: () => context.push('/title/${title.id}'),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Space.gutter, vertical: Space.x2),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: Space.gutter),
+          padding: const EdgeInsets.symmetric(vertical: Space.x2 + 2),
+          decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: Surface.line)),
+          ),
           child: Row(
             children: [
               SizedBox(
                 width: 44,
                 height: 66,
-                child: CoverImage(title: title, thumb: true, radius: 6, showMissing: false),
+                child: CoverImage(title: title, thumb: true, radius: Corner.sm, showMissing: false),
               ),
               const SizedBox(width: Space.x3),
               Expanded(
@@ -441,7 +600,7 @@ class _ContinueRow extends ConsumerWidget {
   }
 }
 
-/// The row's one button: a 40×32 pill in a 44px target.
+/// The row's one button: a 34pt circle (a word on a square tag) in a 44px target.
 class _RowButton extends StatelessWidget {
   const _RowButton({
     required this.icon,
@@ -476,13 +635,14 @@ class _RowButton extends StatelessWidget {
           constraints: const BoxConstraints(minWidth: Space.minTarget, minHeight: Space.minTarget),
           child: Center(
             child: Container(
-              width: text == null ? 40 : null,
-              height: 32,
+              width: text == null ? 34 : null,
+              height: text == null ? 34 : 32,
               padding: text == null ? null : const EdgeInsets.symmetric(horizontal: Space.x3),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: fill,
-                borderRadius: BorderRadius.circular(Corner.sm),
+                shape: text == null ? BoxShape.circle : BoxShape.rectangle,
+                borderRadius: text == null ? null : BorderRadius.circular(Corner.sm),
                 border: border == null ? null : Border.all(color: border!),
               ),
               child: text == null

@@ -25,7 +25,7 @@ Future<void> showPeek(BuildContext context, Title title) {
     context: context,
     barrierDismissible: true,
     barrierLabel: 'Close',
-    barrierColor: const Color(0x99090B11),
+    barrierColor: const Color(0x9913110F),
     transitionDuration: reduceMotion ? Motion.overlay : Motion.panel,
     pageBuilder: (context, _, _) => _Peek(title: title),
     transitionBuilder: (context, animation, _, child) {

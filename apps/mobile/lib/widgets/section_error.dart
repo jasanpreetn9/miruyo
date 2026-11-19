@@ -64,10 +64,12 @@ class _SectionErrorState extends State<SectionError> {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(Space.x5),
-        decoration: BoxDecoration(
-          color: Surface.s1,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0x59FF6B8B)),
+        decoration: const BoxDecoration(
+          border: Border(
+            left: BorderSide(color: Color(0xFFFF8FA8), width: 2),
+            top: BorderSide(color: Surface.line),
+            bottom: BorderSide(color: Surface.line),
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +77,7 @@ class _SectionErrorState extends State<SectionError> {
             Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(color: const Color(0x24FF6B8B), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: const Color(0x24FF6B8B), borderRadius: BorderRadius.circular(2)),
               child: const Icon(Symbols.cloud_off_rounded, size: 22, color: Color(0xFFFF8FA8)),
             ),
             const SizedBox(height: Space.x3),
@@ -105,7 +107,7 @@ class _SectionErrorState extends State<SectionError> {
                 const SizedBox(height: Space.x2),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(color: const Color(0x4D000000), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: const Color(0x4D000000), borderRadius: BorderRadius.circular(2)),
                   child: Text(_err!.message, style: AppType.numeric.copyWith(fontSize: 12, color: TextTone.low)),
                 ),
               ],
@@ -121,7 +123,7 @@ class _SectionErrorState extends State<SectionError> {
                 backgroundColor: Surface.s3,
                 foregroundColor: TextTone.high,
                 side: const BorderSide(color: Surface.line),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                 textStyle: AppType.body.copyWith(fontWeight: FontWeight.w600),
               ),
               icon: const Icon(Symbols.refresh_rounded, size: 20),

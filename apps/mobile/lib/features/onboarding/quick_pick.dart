@@ -246,7 +246,6 @@ class _QuickPickState extends ConsumerState<QuickPick> {
 
   @override
   Widget build(BuildContext context) {
-    final mode = context.mode;
     final n = widget.picked.length;
     final isAnime = ref.watch(modeProvider).isAnime;
     return Column(
@@ -270,11 +269,11 @@ class _QuickPickState extends ConsumerState<QuickPick> {
           onPressed: n == 0 || _saving ? null : _add,
           style: FilledButton.styleFrom(
             minimumSize: const Size.fromHeight(52),
-            backgroundColor: mode.accent,
-            foregroundColor: mode.onAccent,
+            backgroundColor: TextTone.high,
+            foregroundColor: Surface.base,
             disabledBackgroundColor: Surface.s3,
             disabledForegroundColor: TextTone.low,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
             textStyle: AppType.body.copyWith(fontSize: 15, fontWeight: FontWeight.w600),
           ),
           child: Text(

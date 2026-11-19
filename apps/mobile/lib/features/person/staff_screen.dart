@@ -197,9 +197,9 @@ class PersonSortControl extends StatelessWidget {
         fontWeight: sort == value ? FontWeight.w600 : FontWeight.w400,
       ),
       selectedColor: TextTone.high,
-      backgroundColor: Surface.s1,
+      backgroundColor: Colors.transparent,
       side: BorderSide(color: sort == value ? TextTone.high : Surface.line),
-      shape: const StadiumBorder(),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
     );
     return Row(
       mainAxisSize: MainAxisSize.min,

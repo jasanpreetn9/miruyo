@@ -1,69 +1,110 @@
 import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../catalog/mode.dart';
 import 'tokens.dart';
 
-/// The type scale from the design system. Bricolage Grotesque for display,
-/// Geist for the UI, Geist Mono wherever digits change (countdowns, progress)
-/// so they don't jitter.
+/// The editorial type scale (design/mockups): Fraunces, a serif, for display
+/// and headings; Schibsted Grotesk for the UI; JetBrains Mono wherever digits
+/// change (countdowns, progress) so they don't jitter.
 abstract final class AppType {
-  static TextStyle _bricolage(double size, double height, FontWeight weight, double tracking) =>
-      GoogleFonts.bricolageGrotesque(
-        fontSize: size,
-        height: height,
-        fontWeight: weight,
-        letterSpacing: size * tracking,
-        color: TextTone.high,
-      );
+  /// The bundled families (pubspec `fonts:`), variable fonts all three.
+  static const serifFamily = 'Fraunces';
+  static const sansFamily = 'Schibsted Grotesk';
+  static const monoFamily = 'JetBrains Mono';
 
-  static TextStyle _geist(double size, double height, FontWeight weight, [double tracking = 0]) => GoogleFonts.geist(
+  /// Japanese glosses (視聴中, 秋): the phone's own Japanese font.
+  static const jpFallback = ['Hiragino Sans', 'Noto Sans CJK JP', 'Noto Sans JP'];
+
+  static List<FontVariation> _axes(FontWeight weight, [double? opsz]) => [
+    FontVariation('wght', weight.value.toDouble()),
+    if (opsz != null) FontVariation('opsz', opsz),
+  ];
+
+  /// Fraunces at [size]: the optical size follows the point size (capped at
+  /// the font's 144), so display lines get the thin, high-contrast cut.
+  static TextStyle serif(
+    double size, {
+    double height = 1.1,
+    FontWeight weight = FontWeight.w500,
+    double tracking = -0.02,
+    bool italic = false,
+    Color color = TextTone.high,
+  }) => TextStyle(
+    fontFamily: serifFamily,
+    fontFamilyFallback: jpFallback,
     fontSize: size,
     height: height,
     fontWeight: weight,
+    fontStyle: italic ? FontStyle.italic : FontStyle.normal,
+    fontVariations: _axes(weight, size.clamp(9, 144).toDouble()),
+    letterSpacing: size * tracking,
+    color: color,
+  );
+
+  static TextStyle sans(double size, double height, FontWeight weight, [double tracking = 0]) => TextStyle(
+    fontFamily: sansFamily,
+    fontFamilyFallback: jpFallback,
+    fontSize: size,
+    height: height,
+    fontWeight: weight,
+    fontVariations: _axes(weight),
     letterSpacing: size * tracking,
     color: TextTone.high,
   );
 
-  /// Bricolage 700 · 64/64 · −3.5%
-  static final displayXL = _bricolage(64, 1, FontWeight.w700, -0.035);
-
-  /// Bricolage 700 · 44/48 · −3%
-  static final displayL = _bricolage(44, 1.1, FontWeight.w700, -0.03);
-
-  /// Bricolage 650 · 28/34 · −2% (650 rounds to the nearest static weight)
-  static final heading = _bricolage(28, 1.2, FontWeight.w600, -0.02);
-
-  /// Smaller section headings on phones ("Continue watching").
-  static final section = _bricolage(20, 1.2, FontWeight.w600, -0.02);
-
-  /// Geist 600 · 18/24
-  static final title = _geist(18, 1.33, FontWeight.w600, -0.01);
-
-  /// Geist 400 · 16/26
-  static final bodyL = _geist(16, 1.6, FontWeight.w400);
-
-  /// Geist 400 · 14/20
-  static final body = _geist(14, 1.45, FontWeight.w400);
-
-  /// Geist 500 · 12/16
-  static final caption = _geist(12, 1.33, FontWeight.w500);
-
-  /// Geist 600 · 11/14 · +8% · caps (uppercase the string itself)
-  static final overline = _geist(11, 1.3, FontWeight.w600, 0.08);
-
-  /// Geist Mono 500 · 13/16
-  static final numeric = GoogleFonts.geistMono(
-    fontSize: 13,
+  static TextStyle mono(double size, {FontWeight weight = FontWeight.w400, Color color = TextTone.high}) => TextStyle(
+    fontFamily: monoFamily,
+    fontSize: size,
     height: 1.2,
-    fontWeight: FontWeight.w500,
-    color: TextTone.high,
+    fontWeight: weight,
+    fontVariations: _axes(weight),
+    fontFeatures: const [FontFeature.tabularFigures()],
+    color: color,
   );
 
+  /// A Japanese gloss beside a heading (視聴中).
+  static const jp = TextStyle(fontFamilyFallback: jpFallback, fontSize: 12, color: TextTone.low);
+
+  /// Fraunces 300 · 64/60 · −4.5%: a masthead ("Good evening.").
+  static final displayXL = serif(64, height: 0.94, weight: FontWeight.w300, tracking: -0.045);
+
+  /// Fraunces 300 · 44/42 · −4%: page titles.
+  static final displayL = serif(44, height: 0.95, weight: FontWeight.w300, tracking: -0.04);
+
+  /// Fraunces 600 · 30/32 · −3%: a feature's title (the pick, the lead).
+  static final heading = serif(30, height: 1.02, weight: FontWeight.w600, tracking: -0.03);
+
+  /// Fraunces 500 · 22/26 · −2%: section headings on phones ("Continue watching").
+  static final section = serif(22, height: 1.15, weight: FontWeight.w500, tracking: -0.02);
+
+  /// Schibsted 700 · 17/22
+  static final title = sans(17, 1.3, FontWeight.w700, -0.01);
+
+  /// Schibsted 400 · 16/26
+  static final bodyL = sans(16, 1.6, FontWeight.w400);
+
+  /// Schibsted 400 · 14/20
+  static final body = sans(14, 1.45, FontWeight.w400);
+
+  /// Schibsted 500 · 12/16
+  static final caption = sans(12, 1.33, FontWeight.w500);
+
+  /// Schibsted 600 · 11/14 · +12% · caps (uppercase the string itself): kickers, labels.
+  static final overline = sans(11, 1.3, FontWeight.w600, 0.12);
+
+  /// JetBrains Mono 500 · 13/16: wherever digits change (countdowns, progress).
+  static final numeric = mono(13, weight: FontWeight.w500);
+
   /// The logo wordmark.
-  static final wordmark = _bricolage(20, 1, FontWeight.w700, -0.02);
+  static final wordmark = serif(21, height: 1, weight: FontWeight.w700, tracking: -0.02);
 }
+
+/// The editorial offset shadow behind a cover: its colour half-mixed into
+/// the page, set [d] down and right, with no blur.
+List<BoxShadow> offsetShadow(Color accent, [double d = 6]) => [
+  BoxShadow(color: Color.lerp(accent, Surface.base, 0.5)!, offset: Offset(d, d)),
+];
 
 /// The colours that follow the Anime/Manga mode. Only the accent changes
 /// between modes; structure doesn't.
@@ -76,7 +117,7 @@ class ModeColors extends ThemeExtension<ModeColors> {
       accent: Accent.beni,
       onAccent: Accent.beniInk,
       accentText: Accent.beniText,
-      tint: Color(0x29FF6A55), // 16%
+      tint: Color(0x29E8452C), // 16%
     ),
     Mode.manga => const ModeColors(
       accent: Accent.fuji,
@@ -133,7 +174,7 @@ ThemeData buildTheme(Mode mode) {
     canvasColor: Surface.base,
     splashFactory: NoSplash.splashFactory,
     // a faint wash while pressed, so every tap answers
-    highlightColor: const Color(0x0FFFFFFF),
+    highlightColor: const Color(0x0FEFE7DA),
     colorScheme: ColorScheme.dark(
       primary: colors.accent,
       onPrimary: colors.onAccent,

@@ -103,7 +103,7 @@ class ListEditBar extends ConsumerWidget {
                 foregroundColor: Surface.base,
                 disabledBackgroundColor: Surface.s3,
                 disabledForegroundColor: TextTone.low,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                 textStyle: AppType.body.copyWith(fontSize: 15, fontWeight: FontWeight.w600),
               ),
               icon: const Icon(Symbols.drive_file_move_rounded, size: 20),
@@ -144,7 +144,7 @@ Future<void> showMoveTo(BuildContext context, WidgetRef ref) async {
     useSafeArea: true,
     showDragHandle: true,
     backgroundColor: Surface.s2,
-    barrierColor: const Color(0x80050609),
+    barrierColor: const Color(0x8013110F),
     builder: (context) => SafeArea(
       top: false,
       child: Padding(
@@ -244,7 +244,7 @@ class StatusPanel extends StatelessWidget {
                   style: AppType.body.copyWith(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: isHere ? const Color(0xFF5C6378) : TextTone.high,
+                    color: isHere ? const Color(0xFF938979) : TextTone.high,
                   ),
                 ),
               ],

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +16,7 @@ import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/tokens.dart';
 import '../../widgets/cover_image.dart';
+import '../../widgets/halftone.dart';
 import '../editor/list_editor.dart';
 import 'home_list.dart';
 
@@ -158,7 +158,7 @@ class _HeroCarouselState extends ConsumerState<HeroCarousel> {
                             width: i == _index ? 28 : 12,
                             height: 4,
                             decoration: BoxDecoration(
-                              color: i == _index ? TextTone.high : const Color(0x40FFFFFF),
+                              color: i == _index ? TextTone.high : const Color(0x40EFE7DA),
                               borderRadius: BorderRadius.circular(Corner.full),
                             ),
                           ),
@@ -186,18 +186,15 @@ class _HeroCard extends ConsumerWidget {
 
   static const cover = (w: 96.0, h: 144.0);
 
-  /// The reason's coral, as on the web.
-  static const _reason = Color(0xFFFFB3A6);
-
-  static final reasonStyle = AppType.caption.copyWith(fontSize: 11, fontWeight: FontWeight.w600, color: _reason);
-  static final titleStyle = AppType.heading.copyWith(fontSize: 22, height: 1.1);
-  static final metaStyle = AppType.body.copyWith(fontSize: 13, color: const Color(0xFFC4C9D6));
+  /// The reason, in small caps over the title (its colour is the cover's).
+  static final reasonStyle = AppType.overline;
+  static final titleStyle = AppType.serif(24, height: 1.02, weight: FontWeight.w600, tracking: -0.03);
+  static final metaStyle = AppType.body.copyWith(fontSize: 13, color: TextTone.mid);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final title = slide.title;
     final entry = ref.watch(listStoreProvider.select((s) => s.entryFor(title)));
-    final mode = context.mode;
     final isAnime = title.isAnime;
     final count = isAnime
         ? (title.eps != null && title.eps! > 0 ? '${title.eps} episodes' : 'Airing')
@@ -212,7 +209,7 @@ class _HeroCard extends ConsumerWidget {
                 unawaited(ref.read(listActionsProvider).changeStatus(title, MediaListStatus.planning));
               }
             },
-            style: _buttonStyle(mode.accent, mode.onAccent),
+            style: _buttonStyle(TextTone.high, Surface.base),
             icon: const Icon(Symbols.bookmark_add_rounded, size: 20),
             label: Text('Plan to ${isAnime ? 'watch' : 'read'}', maxLines: 1, overflow: TextOverflow.ellipsis),
           )
@@ -223,53 +220,40 @@ class _HeroCard extends ConsumerWidget {
             label: Text(statusLabel(entry.status, isAnime: isAnime), maxLines: 1, overflow: TextOverflow.ellipsis),
           );
 
+    // editorial (design/mockups): ruled top and bottom, a halftone in the
+    // cover's colour behind, the cover with an offset shadow in that colour
     return GestureDetector(
       onTap: () => context.push('/title/${title.id}'),
       child: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(color: title.colors.glow, blurRadius: 40, spreadRadius: -16, offset: const Offset(0, 16)),
-          ],
+        decoration: const BoxDecoration(
+          border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
         ),
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // the cover, blurred and enlarged, behind everything
-            ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
-              child: Transform.scale(scale: 1.3, child: CoverImage(title: title, radius: 0, showMissing: false)),
-            ),
-            const DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerRight,
-                  end: Alignment.centerLeft,
-                  colors: [Color(0xF5090B11), Color(0xB8090B11)],
-                ),
-              ),
-            ),
+            Halftone(color: title.colors.accent),
             Padding(
-              padding: const EdgeInsets.all(Space.x4),
+              padding: const EdgeInsets.symmetric(vertical: Space.x4),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     width: cover.w,
                     height: cover.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Corner.sm),
-                      boxShadow: const [BoxShadow(color: Color(0x73000000), blurRadius: 24, offset: Offset(0, 12))],
-                    ),
+                    decoration: BoxDecoration(boxShadow: offsetShadow(title.colors.accent)),
                     child: CoverImage(title: title),
                   ),
-                  const SizedBox(width: 14),
+                  const SizedBox(width: 20),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(slide.reason, maxLines: 2, overflow: TextOverflow.ellipsis, style: reasonStyle),
+                        Text(
+                          slide.reason.toUpperCase(),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: reasonStyle.copyWith(color: title.colors.accent),
+                        ),
                         const SizedBox(height: 6),
                         Text(title.title, maxLines: 2, overflow: TextOverflow.ellipsis, style: titleStyle),
                         const SizedBox(height: 4),
@@ -306,7 +290,7 @@ class _HeroCard extends ConsumerWidget {
                                     backgroundColor: Quiet.fill,
                                     foregroundColor: TextTone.high,
                                     side: const BorderSide(color: Quiet.border),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                                   ),
                                   icon: const Icon(Symbols.block_rounded, size: 20),
                                 ),
@@ -331,7 +315,7 @@ class _HeroCard extends ConsumerWidget {
     foregroundColor: fg,
     padding: const EdgeInsets.symmetric(horizontal: Space.x3),
     side: border == null ? null : BorderSide(color: border),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
     textStyle: AppType.body.copyWith(fontSize: 15, fontWeight: FontWeight.w600),
   );
 }

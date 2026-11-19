@@ -1,19 +1,22 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-/// Tests never reach the network, so fonts fall back to the default and
-/// google_fonts' "unable to load" notes are kept out of the output.
+/// Tests render with the app's own fonts (pubspec `fonts:`), so text measures
+/// as it does on a phone; without this every glyph is the test font's square.
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
-  GoogleFonts.config.allowRuntimeFetching = false;
-  final print = debugPrint;
-  var inFontNote = false;
-  debugPrint = (String? message, {int? wrapWidth}) {
-    final m = message ?? '';
-    if (m.startsWith('Error: google_fonts')) inFontNote = true;
-    if (!inFontNote) print(message, wrapWidth: wrapWidth);
-    if (m.startsWith("If troubleshooting doesn't solve")) inFontNote = false;
-  };
+  TestWidgetsFlutterBinding.ensureInitialized();
+  for (final (family, files) in [
+    ('Fraunces', ['fonts/Fraunces.ttf', 'fonts/Fraunces-Italic.ttf']),
+    ('Schibsted Grotesk', ['fonts/SchibstedGrotesk.ttf']),
+    ('JetBrains Mono', ['fonts/JetBrainsMono.ttf']),
+  ]) {
+    final loader = FontLoader(family);
+    for (final file in files) {
+      loader.addFont(rootBundle.load(file));
+    }
+    await loader.load();
+  }
   await testMain();
 }

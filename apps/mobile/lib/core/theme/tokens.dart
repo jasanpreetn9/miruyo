@@ -1,44 +1,49 @@
-// Design tokens from design/…/shared/miruyo Design System.dc.html (screen 00),
-// matching the web app's layout.css. Change a value there and here together.
+// Design tokens, matching the web app's layout.css: the editorial redesign
+// (design/mockups) on top of the design system's structure (screen 00).
+// Change a value there and here together.
 
 import 'package:flutter/animation.dart';
 
-/// Surfaces: elevation is shown by lightness, not shadows.
+/// Surfaces: a warm paper-black, not blue-black. Elevation is shown by
+/// lightness; in-flow content is ruled off rather than boxed.
 abstract final class Surface {
-  static const base = Color(0xFF090B11);
-  static const s1 = Color(0xFF10131C);
-  static const s2 = Color(0xFF161A26);
-  static const s3 = Color(0xFF1E2331);
-  static const s4 = Color(0xFF262C3D);
+  static const base = Color(0xFF13110F);
+  static const s1 = Color(0xFF171512);
+  static const s2 = Color(0xFF1D1A16);
+  static const s3 = Color(0xFF25211C);
+  static const s4 = Color(0xFF2D2822);
 
-  /// Hairlines and borders: white at 8%.
-  static const line = Color(0x14FFFFFF);
+  /// Hairlines and rules: cream ink at 12%.
+  static const line = Color(0x1FEFE7DA);
+
+  /// The heavier rule over a table or a block of facts: ink itself.
+  static const rule = TextTone.high;
 }
 
-/// The +1 and other repeated row actions: a faint fill and border, so a
-/// column of them doesn't outshine the titles (the web's btn-quiet). The
-/// screen's one accent button stays the loud one.
+/// The +1 and other repeated row actions: an outline, no fill, so a column
+/// of them doesn't outshine the titles (the web's btn-quiet). The screen's
+/// one main action is filled in ink (the web's btn-ink).
 abstract final class Quiet {
-  static const fill = Color(0x0FFFFFFF);
+  static const fill = Color(0x00000000);
   static const border = Surface.line;
 }
 
-/// Text tokens; all pass AA on every surface up to S3.
+/// Text tokens: cream ink; all pass AA on every surface up to S3.
 abstract final class TextTone {
-  static const high = Color(0xFFEEF0F6);
-  static const mid = Color(0xFFA6ADC2);
-  static const low = Color(0xFF7C849C);
+  static const high = Color(0xFFEFE7DA);
+  static const mid = Color(0xFFB3A996);
+  static const low = Color(0xFF938979);
 }
 
 /// The two mode accents and the secondary blue. Text on an accent is dark
 /// ink: white on coral fails AA.
 abstract final class Accent {
-  /// Beni: anime mode, primary actions, active nav.
-  static const beni = Color(0xFFFF6A55);
-  static const beniInk = Color(0xFF1A0B08);
+  /// Shu (vermilion): anime mode, the active rule under nav and tabs.
+  static const beni = Color(0xFFE8452C);
+  static const beniInk = Color(0xFF13110F);
 
-  /// Beni lifted for text and icons on dark surfaces (tab labels, badges).
-  static const beniText = Color(0xFFFF8A78);
+  /// Shu lifted for text and icons on dark surfaces.
+  static const beniText = Color(0xFFF07A63);
 
   /// Fuji: replaces Beni in manga mode.
   static const fuji = Color(0xFFA08CFF);
@@ -62,8 +67,8 @@ abstract final class Accent {
   static const green = Color(0xFF4ED98A);
   static const greenInk = Color(0xFF06210F);
 
-  /// Countdowns at rest (Sora lifted for text).
-  static const soraText = Color(0xFF8CC8FF);
+  /// Countdowns at rest: quiet text, not blue (the editorial look keeps one accent).
+  static const soraText = TextTone.mid;
 }
 
 /// The 4px spacing scale.
@@ -86,19 +91,20 @@ abstract final class Space {
   static const minTarget = 44.0;
 }
 
-/// Corners soften as surfaces get bigger.
+/// Corners: nearly square everywhere (print, not app chrome); sheets keep a
+/// small lip so they read as lifted.
 abstract final class Corner {
   /// Tags, kbd.
-  static const xs = 6.0;
+  static const xs = 2.0;
 
   /// Buttons, covers.
-  static const sm = 10.0;
+  static const sm = 2.0;
 
-  /// Panels.
-  static const md = 14.0;
+  /// Panels and floating layers.
+  static const md = 3.0;
 
   /// Modals, sheets.
-  static const lg = 20.0;
+  static const lg = 6.0;
 
   /// Pills, the mode toggle.
   static const full = 999.0;

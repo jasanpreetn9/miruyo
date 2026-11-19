@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
@@ -14,11 +13,14 @@ import 'features/shell/router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // the fonts ship in google_fonts/; the app talks to AniList and nothing else
-  GoogleFonts.config.allowRuntimeFetching = false;
+  // the fonts ship in fonts/; the app talks to AniList and nothing else
   LicenseRegistry.addLicense(() async* {
-    for (final (font, file) in [('Bricolage Grotesque', 'bricolagegrotesque'), ('Geist, Geist Mono', 'geist')]) {
-      yield LicenseEntryWithLineBreaks([font], await rootBundle.loadString('google_fonts/OFL-$file.txt'));
+    for (final (font, file) in [
+      ('Fraunces', 'fraunces'),
+      ('Schibsted Grotesk', 'schibstedgrotesk'),
+      ('JetBrains Mono', 'jetbrainsmono'),
+    ]) {
+      yield LicenseEntryWithLineBreaks([font], await rootBundle.loadString('fonts/OFL-$file.txt'));
     }
   });
   SystemChrome.setSystemUIOverlayStyle(

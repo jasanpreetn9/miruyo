@@ -156,9 +156,9 @@ class SearchPeopleRows extends ConsumerWidget {
                     label: Text(s.name),
                     onPressed: () => context.push(s.href),
                     labelStyle: AppType.body.copyWith(fontSize: 13),
-                    backgroundColor: Surface.s1,
+                    backgroundColor: Colors.transparent,
                     side: const BorderSide(color: Surface.line),
-                    shape: const StadiumBorder(),
+                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                   );
                 },
               ),

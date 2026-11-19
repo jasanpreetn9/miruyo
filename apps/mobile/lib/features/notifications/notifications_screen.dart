@@ -217,7 +217,7 @@ class _Row extends ConsumerWidget {
   }
 
   /// Read ones step back a little.
-  static Color _textColor(NotificationItem item) => item.unread ? TextTone.high : const Color(0xFFD7DBE6);
+  static Color _textColor(NotificationItem item) => item.unread ? TextTone.high : const Color(0xFFDDD3C3);
 }
 
 /// Offers episode alerts on this phone, until they're turned on or declined.

@@ -29,12 +29,15 @@ import 'continue_row.dart';
 import 'hero_carousel.dart';
 import 'home_data.dart';
 import 'home_list.dart';
+import 'home_masthead.dart';
 import 'logged_out_hero.dart';
 import 'upcoming_list.dart';
 
-/// Home (01): finding what to watch and tracking it. Signed out: the pitch,
-/// then the public rows. Signed in: Picked for you first, then Trending,
-/// Continue, the For You rows, Popular and Upcoming.
+/// Home (01), editorial (design/mockups/home-editorial): finding what to
+/// watch and tracking it. Signed out: the pitch, then the public rows.
+/// Signed in: the masthead and Continue first (logging an episode is what
+/// you open it for), then Picked for you, the For You rows, Trending,
+/// Popular and Upcoming.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -90,14 +93,14 @@ class HomeScreen extends ConsumerWidget {
       ],
       AuthState.signedIn => [
         _OfflineBanner(mode: mode, signedIn: true, onRetry: refresh),
-        // the picks lead, then Trending; what you're watching comes right under it
-        _PickedForYou(mode: mode),
-        const SizedBox(height: Space.x5),
-        _FeedRows(mode: mode, part: _FeedPart.trending),
-        const SizedBox(height: Space.x5),
+        // where you stand and what you're watching lead; then the pick and the rows
         _YourSection(mode: mode),
         const SizedBox(height: Space.x10),
+        _PickedForYou(mode: mode),
+        const SizedBox(height: Space.x10),
         _ForYouRow(mode: mode),
+        _FeedRows(mode: mode, part: _FeedPart.trending),
+        const SizedBox(height: Space.x10),
         _FeedRows(mode: mode, part: _FeedPart.rest),
       ],
     };
@@ -257,9 +260,13 @@ class _Planned extends ConsumerWidget {
       },
       now: now,
     );
-    return Padding(
-      padding: const EdgeInsets.only(top: Space.x5),
-      child: ContinueSection(plan: plan),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        HomeMasthead(plan: plan, mode: ref.watch(modeProvider)),
+        const SizedBox(height: Space.x8),
+        ContinueSection(plan: plan),
+      ],
     );
   }
 }
@@ -303,24 +310,40 @@ class _PickedForYou extends ConsumerWidget {
     if (heroes == null) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(Space.gutter, Space.x5, Space.gutter, 0),
-        child: Skeleton(height: HeroCarousel.cardHeight(context), radius: 20),
+        child: Skeleton(height: HeroCarousel.cardHeight(context), radius: Corner.sm),
       );
     }
     if (heroes.isEmpty) return const SizedBox.shrink();
+    final season = currentSeason();
     return Padding(
       padding: const EdgeInsets.only(top: Space.x5),
       child: Appear(
-        child: HeroCarousel(
-          slides: heroes,
-          onDismiss: (hero) {
-            ref.read(dismissedPicksProvider.notifier).add(hero.title.id);
-            ref
-                .read(toastProvider.notifier)
-                .show(
-                  'Hid ${hero.title.title} from your picks',
-                  action: ToastAction('Undo', () => ref.read(dismissedPicksProvider.notifier).remove(hero.title.id)),
-                );
-          },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SectionHeading(
+              heading: heroes.first.pick
+                  ? 'Picked for you'
+                  : 'Popular in ${humanizeSeason(season.season)} ${season.year}',
+              jp: heroes.first.pick ? 'おすすめ' : '人気',
+            ),
+            const SizedBox(height: Space.x3),
+            HeroCarousel(
+              slides: heroes,
+              onDismiss: (hero) {
+                ref.read(dismissedPicksProvider.notifier).add(hero.title.id);
+                ref
+                    .read(toastProvider.notifier)
+                    .show(
+                      'Hid ${hero.title.title} from your picks',
+                      action: ToastAction(
+                        'Undo',
+                        () => ref.read(dismissedPicksProvider.notifier).remove(hero.title.id),
+                      ),
+                    );
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -367,9 +390,7 @@ class _EmptyListPickState extends ConsumerState<_EmptyListPick> {
       margin: const EdgeInsets.fromLTRB(Space.gutter, Space.x4, Space.gutter, 0),
       padding: const EdgeInsets.all(Space.x5),
       decoration: BoxDecoration(
-        color: Surface.s1,
-        borderRadius: BorderRadius.circular(Corner.lg),
-        border: Border.all(color: Surface.line),
+        border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -442,7 +463,8 @@ class _ForYouRow extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: Space.x10),
             child: PosterRow(
-              heading: top.isEmpty ? 'For You' : 'Because you loved ${group.first.because.title.title}',
+              heading: top.isEmpty ? 'For You' : 'Because you loved',
+              em: top.isEmpty ? null : group.first.because.title.title,
               subtitle: top.isEmpty ? 'From titles you rated highly' : null,
               // the first row leads to the page with every pick
               seeAll: i == 0 ? '/for-you' : null,
@@ -475,14 +497,12 @@ class _YourSection extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(continueHeading(mode), style: AppType.section),
+            SectionHeading(heading: continueHeading(mode), padding: EdgeInsets.zero),
             const SizedBox(height: Space.x3),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: Space.x5, vertical: Space.x4),
-              decoration: BoxDecoration(
-                color: Surface.s1,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Surface.line),
+              padding: const EdgeInsets.symmetric(vertical: Space.x4),
+              decoration: const BoxDecoration(
+                border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
               ),
               child: Row(
                 children: [

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/catalog/status.dart';
 import '../../core/gestures/haptics.dart';
@@ -16,10 +15,10 @@ import '../../widgets/motion.dart';
 import '../../widgets/peek.dart';
 import 'seasonal_data.dart';
 
-/// A season chart card (06, after AniChart): the cover fills the card's
-/// height; beside it, when it airs, the title and studio, the synopsis, genres in
-/// the cover colour, the score's face and this season's popularity rank.
-/// Titles on your list get a ring in the cover colour.
+/// A season chart entry (06, after AniChart), editorial: the cover, then when
+/// it airs, the title and studio (in the cover's colour), the synopsis, genres
+/// as words, the score and this season's popularity rank, ruled off from the
+/// next. Titles on your list get an offset shadow behind their cover.
 class SeasonCardView extends ConsumerWidget {
   const SeasonCardView({super.key, required this.card});
 
@@ -35,10 +34,8 @@ class SeasonCardView extends ConsumerWidget {
     final accent = title.colors.accent;
 
     return Material(
-      color: Surface.s1,
-      borderRadius: BorderRadius.circular(Corner.md),
+      color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(Corner.md),
         onTap: () => context.push('/title/${title.id}'),
         // Haptic Touch: hold for the peek, as on posters
         onLongPress: () {
@@ -46,24 +43,23 @@ class SeasonCardView extends ConsumerWidget {
           unawaited(showPeek(context, title));
         },
         child: Container(
-          height: 148,
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Corner.md)),
-          // drawn over the cover, so the ring shows all the way round
-          foregroundDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Corner.md),
-            border: Border.all(
-              color: entry != null ? accent.withValues(alpha: 0.7) : Surface.line,
-              width: entry != null ? 1.5 : 1,
-            ),
+          height: 160,
+          padding: const EdgeInsets.symmetric(vertical: Space.x3 + 2),
+          decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: Surface.line)),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(width: 98, child: CoverImage(title: title, radius: 0)),
+              Container(
+                width: 88,
+                margin: const EdgeInsets.only(right: 6, bottom: 6),
+                decoration: BoxDecoration(boxShadow: entry != null ? offsetShadow(accent) : null),
+                child: CoverImage(title: title, radius: Corner.sm),
+              ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(Space.x3, Space.x3, Space.x3, Space.x2),
+                  padding: const EdgeInsets.only(left: Space.x3),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -84,7 +80,7 @@ class SeasonCardView extends ConsumerWidget {
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: AppType.caption.copyWith(color: TextTone.mid, fontWeight: FontWeight.w400),
+                              style: AppType.mono(11, color: TextTone.mid),
                             ),
                           ),
                           if (card.score != null) _Score(score: card.score!, face: card.face),
@@ -95,7 +91,7 @@ class SeasonCardView extends ConsumerWidget {
                         title.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: AppType.body.copyWith(fontSize: 15, fontWeight: FontWeight.w600, height: 1.25),
+                        style: AppType.body.copyWith(fontSize: 16, fontWeight: FontWeight.w700, height: 1.25),
                       ),
                       if (card.studio.isNotEmpty)
                         Text(
@@ -131,10 +127,10 @@ class SeasonCardView extends ConsumerWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              card.genres.take(2).join(' · '),
+                              card.genres.take(3).join(' / '),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: AppType.caption.copyWith(color: accent, fontWeight: FontWeight.w600),
+                              style: AppType.caption.copyWith(color: TextTone.low, fontWeight: FontWeight.w400),
                             ),
                           ),
                           if (entry != null)
@@ -172,18 +168,11 @@ class _Score extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (icon, color) = switch (face) {
-      ScoreFace.good => (Symbols.sentiment_satisfied_rounded, Accent.green),
-      ScoreFace.ok => (Symbols.sentiment_neutral_rounded, Accent.gold),
-      _ => (Symbols.sentiment_dissatisfied_rounded, Accent.danger),
-    };
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 18, color: color),
-        const SizedBox(width: 3),
-        Text('$score%', style: AppType.numeric.copyWith(fontSize: 12, color: color)),
-      ],
+    // a plain percentage in ink, as the web's season chart has it
+    return Semantics(
+      label: 'Average score $score%',
+      excludeSemantics: true,
+      child: Text('$score%', style: AppType.mono(12)),
     );
   }
 }

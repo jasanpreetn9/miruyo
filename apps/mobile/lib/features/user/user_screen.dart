@@ -257,10 +257,10 @@ class _UserScreenState extends ConsumerState<UserScreen> {
 
   ButtonStyle _actionStyle(Color color) => OutlinedButton.styleFrom(
     minimumSize: const Size(double.infinity, Space.minTarget),
-    backgroundColor: Surface.s1,
+    backgroundColor: Colors.transparent,
     foregroundColor: color,
     side: const BorderSide(color: Surface.line),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
   );
 }
 
@@ -290,9 +290,9 @@ class _TabRow extends StatelessWidget {
                 fontWeight: t == current ? FontWeight.w600 : FontWeight.w400,
               ),
               selectedColor: TextTone.high,
-              backgroundColor: Surface.s1,
+              backgroundColor: Colors.transparent,
               side: BorderSide(color: t == current ? TextTone.high : Surface.line),
-              shape: const StadiumBorder(),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
             ),
             const SizedBox(width: Space.x2),
           ],
@@ -385,9 +385,9 @@ class _UserListState extends ConsumerState<_UserList> {
                       color: t.status == _status ? Surface.base : TextTone.high,
                     ),
                     selectedColor: TextTone.high,
-                    backgroundColor: Surface.s1,
+                    backgroundColor: Colors.transparent,
                     side: const BorderSide(color: Surface.line),
-                    shape: const StadiumBorder(),
+                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                   ),
               ],
             ),

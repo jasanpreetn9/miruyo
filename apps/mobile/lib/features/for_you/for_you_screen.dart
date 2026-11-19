@@ -100,7 +100,7 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
               child: Badge(
                 isLabelVisible: tune.changed,
                 smallSize: 8,
-                backgroundColor: context.mode.accent,
+                backgroundColor: TextTone.high,
                 child: IconButton(
                   tooltip: tune.changed ? 'Tune picks (some left out)' : 'Tune picks',
                   icon: const Icon(Symbols.tune_rounded),
@@ -331,9 +331,7 @@ class _ColdStart extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(Space.x6),
           decoration: BoxDecoration(
-            color: Surface.s1,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Surface.line),
+            border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,8 +355,8 @@ class _ColdStart extends StatelessWidget {
                   FilledButton(
                     onPressed: () => signedIn ? context.go('/list') : context.push('/login'),
                     style: FilledButton.styleFrom(
-                      backgroundColor: mode.accent,
-                      foregroundColor: mode.onAccent,
+                      backgroundColor: TextTone.high,
+                      foregroundColor: Surface.base,
                       minimumSize: const Size(0, Space.minTarget),
                     ),
                     child: Text(signedIn ? 'Rate a few titles' : 'Log in with AniList'),
@@ -420,7 +418,7 @@ Widget _chipBox({required bool selected, required Widget child}) => Container(
   alignment: Alignment.center,
   decoration: BoxDecoration(
     color: selected ? Surface.s3 : Surface.s1,
-    borderRadius: BorderRadius.circular(12),
+    borderRadius: BorderRadius.circular(2),
     border: Border.all(color: selected ? const Color(0x4DFFFFFF) : Surface.line),
   ),
   child: child,
@@ -521,7 +519,7 @@ class _SeedChipState extends State<_SeedChip> {
                             style: AppType.body.copyWith(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: widget.selected ? TextTone.high : const Color(0xFFD7DBE6),
+                              color: widget.selected ? TextTone.high : const Color(0xFFDDD3C3),
                             ),
                           ),
                           Text(
@@ -657,8 +655,8 @@ Future<void> _showWhy(
                       icon: const Icon(Symbols.bookmark_add_rounded, size: 18),
                       label: const Text('Planning'),
                       style: FilledButton.styleFrom(
-                        backgroundColor: context.mode.accent,
-                        foregroundColor: context.mode.onAccent,
+                        backgroundColor: TextTone.high,
+                        foregroundColor: Surface.base,
                         minimumSize: const Size(0, Space.minTarget),
                       ),
                     ),
@@ -758,12 +756,12 @@ Future<void> _showTune(BuildContext context, ForYou data, {required bool isAnime
                             decoration: tune.hiddenGenres.contains(g) ? TextDecoration.lineThrough : null,
                             decorationColor: Accent.danger,
                           ),
-                          backgroundColor: Surface.s1,
+                          backgroundColor: Colors.transparent,
                           selectedColor: Accent.danger.withValues(alpha: 0.08),
                           side: BorderSide(
                             color: tune.hiddenGenres.contains(g) ? Accent.danger.withValues(alpha: 0.35) : Surface.line,
                           ),
-                          shape: const StadiumBorder(),
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                           materialTapTargetSize: MaterialTapTargetSize.padded,
                         ),
                     ],

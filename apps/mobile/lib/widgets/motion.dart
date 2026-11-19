@@ -103,3 +103,38 @@ class EasedFractionallySizedBox extends StatelessWidget {
         FractionallySizedBox(alignment: alignment, widthFactor: value.clamp(0.0, 1.0), child: child),
   );
 }
+
+/// A number that ticks: when [value] changes (a +1), the new one comes up
+/// from below as the old one leaves. It doesn't on first build, and under
+/// Reduce Motion it simply changes.
+class Tick extends StatelessWidget {
+  const Tick({super.key, required this.value, this.style});
+
+  final Object value;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Text('$value', style: style, key: ValueKey(value));
+    if (MediaQuery.disableAnimationsOf(context)) return text;
+    return ClipRect(
+      child: AnimatedSwitcher(
+        duration: Motion.lift,
+        switchInCurve: Motion.enter,
+        switchOutCurve: Motion.exit,
+        layoutBuilder: (current, previous) => Stack(alignment: Alignment.center, children: [...previous, ?current]),
+        transitionBuilder: (child, animation) {
+          final incoming = child.key == ValueKey(value);
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween(begin: Offset(0, incoming ? 0.6 : -0.6), end: Offset.zero).animate(animation),
+              child: child,
+            ),
+          );
+        },
+        child: text,
+      ),
+    );
+  }
+}

@@ -9,9 +9,10 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/tokens.dart';
 import '../../widgets/cover_image.dart';
 import '../../widgets/poster_card.dart';
+import '../../widgets/poster_row.dart' show SectionHeading;
 import 'detail_data.dart';
 
-const _soft = Color(0xFFD7DBE6);
+const _soft = Color(0xFFDDD3C3);
 
 /// The facts, as a two-column table on a raised card.
 class InfoTable extends StatelessWidget {
@@ -24,9 +25,7 @@ class InfoTable extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Space.x4, vertical: Space.x1),
       decoration: BoxDecoration(
-        color: Surface.s1,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Surface.line),
+        border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
       ),
       child: Column(
         children: [
@@ -105,21 +104,20 @@ class DetailHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: [
-        Expanded(child: Text(text, style: AppType.section.copyWith(fontSize: 22))),
-        if (action != null)
-          TextButton(
-            onPressed: onAction,
-            style: TextButton.styleFrom(foregroundColor: TextTone.mid, minimumSize: const Size(0, Space.minTarget)),
-            child: Text(
-              action!,
-              style: AppType.body.copyWith(fontWeight: FontWeight.w600, color: TextTone.mid),
+    // the shared heading: serif, a hairline out to the action
+    return SectionHeading(
+      heading: text,
+      padding: EdgeInsets.zero,
+      trailing: action == null
+          ? null
+          : TextButton(
+              onPressed: onAction,
+              style: TextButton.styleFrom(foregroundColor: TextTone.mid, minimumSize: const Size(0, Space.minTarget)),
+              child: Text(
+                action!,
+                style: AppType.body.copyWith(fontWeight: FontWeight.w500, color: TextTone.mid),
+              ),
             ),
-          ),
-      ],
     );
   }
 }
@@ -144,8 +142,9 @@ class RelationList extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: Space.x3),
             child: Material(
-              color: Surface.s1,
-              borderRadius: BorderRadius.circular(Corner.md),
+              // a ruled row, not a card
+              color: Colors.transparent,
+              shape: const Border(bottom: BorderSide(color: Surface.line)),
               child: InkWell(
                 borderRadius: BorderRadius.circular(Corner.md),
                 onTap: () => context.push('/title/${r.id}'),
@@ -162,7 +161,7 @@ class RelationList extends StatelessWidget {
                         height: 120,
                         clipBehavior: Clip.antiAlias,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(2),
                           gradient: coverGradient(r.colors),
                         ),
                         child: r.cover == null ? null : CachedNetworkImage(imageUrl: r.cover!, fit: BoxFit.cover),
@@ -286,10 +285,8 @@ class CharacterList extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(bottom: Space.x2),
             clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: Surface.s1,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0x0FFFFFFF)),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: Surface.line)),
             ),
             child: Row(
               children: [
@@ -388,7 +385,7 @@ class PublicationCard extends StatelessWidget {
     Widget stat(String value, String label) => Expanded(
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: const Color(0x99090B11), borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(color: const Color(0x9913110F), borderRadius: BorderRadius.circular(2)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -405,9 +402,7 @@ class PublicationCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(Space.x5),
       decoration: BoxDecoration(
-        color: Surface.s1,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Surface.line),
+        border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -519,9 +514,9 @@ class LinkChips extends StatelessWidget {
             label: [l.site, if (l.detail.isNotEmpty) l.detail, 'opens outside miruyo'].join(', '),
             excludeSemantics: true,
             child: Material(
-              color: Surface.s1,
+              color: Colors.transparent,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(2),
                 side: const BorderSide(color: Surface.line),
               ),
               clipBehavior: Clip.antiAlias,
@@ -538,7 +533,7 @@ class LinkChips extends StatelessWidget {
                         height: 28,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: _color(l.color) ?? const Color(0xFF1E2331),
+                          color: _color(l.color) ?? const Color(0xFF25211C),
                           borderRadius: BorderRadius.circular(Corner.sm),
                         ),
                         child: l.icon == null
@@ -601,7 +596,7 @@ class _TagWrapState extends State<TagWrap> {
   static const preview = 8;
   bool _open = false;
 
-  static const _spoilerInk = Color(0xFFFF8A78);
+  static const _spoilerInk = Color(0xFFF07A63);
 
   @override
   Widget build(BuildContext context) {
@@ -627,17 +622,19 @@ class _TagWrapState extends State<TagWrap> {
         if (shown.isNotEmpty) ...[
           const SizedBox(height: 14),
           Wrap(
-            spacing: 6,
-            runSpacing: 6,
+            spacing: 14,
+            runSpacing: 0,
             children: [
               for (final t in visible)
                 // like the genre chips: a 48pt tap area around the chip
                 ActionChip(
                   tooltip: t.description,
                   onPressed: () => context.go('/browse?tag=${Uri.encodeComponent(t.name)}'),
-                  backgroundColor: t.spoiler ? _spoilerInk.withValues(alpha: 0.08) : Surface.s1,
-                  side: BorderSide(color: t.spoiler ? _spoilerInk.withValues(alpha: 0.35) : Surface.line),
-                  shape: const StadiumBorder(),
+                  backgroundColor: Colors.transparent,
+                  side: BorderSide.none,
+                  padding: EdgeInsets.zero,
+                  labelPadding: EdgeInsets.zero,
+                  shape: const RoundedRectangleBorder(),
                   materialTapTargetSize: MaterialTapTargetSize.padded,
                   label: Semantics(
                     label: '${t.name}, ${t.rank}%${t.spoiler ? ', spoiler' : ''}',
@@ -645,13 +642,7 @@ class _TagWrapState extends State<TagWrap> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          t.name,
-                          style: AppType.caption.copyWith(
-                            color: t.spoiler ? _spoilerInk : _soft,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                        Text(t.name, style: AppType.body.copyWith(color: t.spoiler ? _spoilerInk : _soft)),
                         const SizedBox(width: 6),
                         Text('${t.rank}%', style: AppType.numeric.copyWith(fontSize: 11, color: TextTone.low)),
                       ],
@@ -665,7 +656,7 @@ class _TagWrapState extends State<TagWrap> {
                     onPressed: () => setState(() => _open = !_open),
                     backgroundColor: Colors.transparent,
                     side: BorderSide.none,
-                    shape: const StadiumBorder(),
+                    shape: const RoundedRectangleBorder(),
                     materialTapTargetSize: MaterialTapTargetSize.padded,
                     label: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -723,9 +714,7 @@ class AuthorsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(Space.x5, Space.x4, Space.x5, Space.x3),
       decoration: BoxDecoration(
-        color: Surface.s1,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Surface.line),
+        border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

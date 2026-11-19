@@ -25,7 +25,7 @@ class Logo extends StatelessWidget {
       width: size,
       height: size,
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: mode.accent, borderRadius: BorderRadius.circular(size * 0.29)),
+      decoration: BoxDecoration(color: mode.accent, borderRadius: BorderRadius.circular(size * 0.11)),
       child: Text(
         '見',
         style: AppType.wordmark.copyWith(fontSize: size * 0.57, fontWeight: FontWeight.w800, color: mode.onAccent),
@@ -62,14 +62,14 @@ class TopBar extends ConsumerWidget implements PreferredSizeWidget {
           height: height + top,
           padding: EdgeInsets.only(top: top, left: Space.gutter, right: Space.gutter - 4),
           decoration: const BoxDecoration(
-            color: Color(0xD1090B11), // base at 82%
-            border: Border(bottom: BorderSide(color: Color(0x0FFFFFFF))),
+            color: Color(0xD113110F), // base at 82%
+            border: Border(bottom: BorderSide(color: Surface.line)),
           ),
           child: Row(
             children: [
               const Logo(),
               const SizedBox(width: 10),
-              Expanded(child: Text('miruyo', style: AppType.wordmark.copyWith(fontSize: 18))),
+              Expanded(child: Text('miruyo', style: AppType.wordmark.copyWith(fontSize: 21))),
               const ModeToggle(),
               const SizedBox(width: 6),
               if (session.signedIn) ...[
@@ -84,7 +84,7 @@ class TopBar extends ConsumerWidget implements PreferredSizeWidget {
                       minimumSize: const Size(0, 32),
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       tapTargetSize: MaterialTapTargetSize.padded,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                       textStyle: AppType.caption.copyWith(fontWeight: FontWeight.w600),
                     ),
                     child: const Text('Log In'),

@@ -44,7 +44,6 @@ class _ModeSliderState extends ConsumerState<ModeSlider> {
     final rest = widget.value.isAnime ? 0.0 : 1.0;
     final t = _drag ?? rest;
     final showing = t < 0.5 ? Mode.anime : Mode.manga;
-    final colors = ModeColors.of(showing);
     final dragging = _drag != null;
 
     return LayoutBuilder(
@@ -67,9 +66,7 @@ class _ModeSliderState extends ConsumerState<ModeSlider> {
           child: Container(
             padding: const EdgeInsets.all(_pad),
             decoration: BoxDecoration(
-              color: Surface.s1,
-              borderRadius: BorderRadius.circular(Corner.md),
-              border: Border.all(color: Surface.line),
+              border: Border.symmetric(horizontal: BorderSide(color: Surface.line)),
             ),
             child: SizedBox(
               height: widget.height,
@@ -84,7 +81,7 @@ class _ModeSliderState extends ConsumerState<ModeSlider> {
                     bottom: 0,
                     child: AnimatedContainer(
                       duration: Motion.overlay,
-                      decoration: BoxDecoration(color: colors.accent, borderRadius: BorderRadius.circular(10)),
+                      decoration: BoxDecoration(color: TextTone.high, borderRadius: BorderRadius.circular(Corner.sm)),
                     ),
                   ),
                   // filling the track, so the labels sit in the middle of the thumb
@@ -111,14 +108,14 @@ class _ModeSliderState extends ConsumerState<ModeSlider> {
                                       icon,
                                       size: 20,
                                       fill: m == showing ? 1 : 0,
-                                      color: m == showing ? colors.onAccent : TextTone.mid,
+                                      color: m == showing ? Surface.base : TextTone.mid,
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
                                       name,
                                       style: AppType.body.copyWith(
                                         fontWeight: FontWeight.w600,
-                                        color: m == showing ? colors.onAccent : TextTone.mid,
+                                        color: m == showing ? Surface.base : TextTone.mid,
                                       ),
                                     ),
                                   ],

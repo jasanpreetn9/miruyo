@@ -96,7 +96,7 @@ class _HoldToConfirmState extends ConsumerState<HoldToConfirm> with SingleTicker
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             color: widget.color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(2),
             border: Border.all(color: widget.color.withValues(alpha: 0.35)),
           ),
           child: Stack(

@@ -7,12 +7,33 @@ import '../core/theme/tokens.dart';
 import 'poster_card.dart';
 import 'skeleton.dart';
 
-/// A section heading with an optional subtitle and "See all →".
+/// A section heading, editorial (design/mockups): a serif title (with an
+/// optional italic part, "Because you loved *Frieren*"), a Japanese gloss and
+/// a note, then a hairline out to "See all →" or a [trailing] control.
 class SectionHeading extends StatelessWidget {
-  const SectionHeading({super.key, required this.heading, this.subtitle, this.seeAll, this.seeAllPushes = false});
+  const SectionHeading({
+    super.key,
+    required this.heading,
+    this.em,
+    this.jp,
+    this.subtitle,
+    this.subtitleColor = TextTone.low,
+    this.seeAll,
+    this.seeAllPushes = false,
+    this.trailing,
+    this.padding = const EdgeInsets.symmetric(horizontal: Space.gutter),
+    this.background = Surface.base,
+  });
 
   final String heading;
+
+  /// Set in italics after [heading].
+  final String? em;
+
+  /// A small Japanese gloss beside the title (視聴中).
+  final String? jp;
   final String? subtitle;
+  final Color subtitleColor;
 
   /// Where "See all" goes; no link when null.
   final String? seeAll;
@@ -21,61 +42,153 @@ class SectionHeading extends StatelessWidget {
   /// rather than switching tabs.
   final bool seeAllPushes;
 
+  /// Replaces "See all" (a sort control, "My List →").
+  final Widget? trailing;
+  final EdgeInsetsGeometry padding;
+
+  /// What the heading sits on, so its words mask the hairline behind them.
+  final Color background;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: [
-          // the heading takes what it needs; the subtitle gives way first
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                // a long heading ("Because you loved …") ellipsizes rather than overflow
-                Flexible(
-                  flex: 3,
-                  child: Text(heading, style: AppType.section, maxLines: 1, overflow: TextOverflow.ellipsis),
-                ),
-                if (subtitle != null) ...[
-                  const SizedBox(width: Space.x2),
-                  Flexible(
-                    child: Text(
-                      subtitle!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppType.body.copyWith(color: TextTone.low),
+    final full = em == null ? heading : '$heading $em';
+    final link =
+        trailing ??
+        (seeAll == null
+            ? null
+            : Semantics(
+                link: true,
+                label: 'See all: $full',
+                excludeSemantics: true,
+                child: InkWell(
+                  onTap: () => seeAllPushes ? context.push(seeAll!) : context.go(seeAll!),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: Space.minTarget),
+                    child: Center(
+                      child: Text(
+                        'See all →',
+                        style: AppType.body.copyWith(color: TextTone.mid, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
-                ],
-              ],
-            ),
-          ),
-          if (seeAll != null)
-            Semantics(
-              link: true,
-              label: 'See all: $heading',
-              excludeSemantics: true,
-              child: InkWell(
-                onTap: () => seeAllPushes ? context.push(seeAll!) : context.go(seeAll!),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: Space.minTarget),
-                  child: Center(
-                    child: Text(
-                      'See all →',
-                      style: AppType.body.copyWith(color: TextTone.mid, fontWeight: FontWeight.w600),
+                ),
+              ));
+    // the hairline runs the full width behind; the words and the link sit on
+    // the page's colour over it, so it shows only between them. The words
+    // give way (ellipsize) before the link does.
+    return Padding(
+      padding: padding,
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          const Positioned.fill(child: Hairline()),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: ColoredBox(
+                  color: background,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: Space.x3),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Flexible(
+                          flex: 3,
+                          child: Text.rich(
+                            TextSpan(
+                              text: heading,
+                              children: [
+                                if (em != null)
+                                  TextSpan(
+                                    text: ' $em',
+                                    style: AppType.section.copyWith(fontStyle: FontStyle.italic),
+                                  ),
+                              ],
+                            ),
+                            semanticsLabel: full,
+                            style: AppType.section,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (jp != null) ...[const SizedBox(width: Space.x2), Text(jp!, style: AppType.jp, maxLines: 1)],
+                        if (subtitle != null) ...[
+                          const SizedBox(width: Space.x2),
+                          Flexible(
+                            child: Text(
+                              subtitle!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppType.caption.copyWith(color: subtitleColor),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 ),
               ),
-            ),
+              if (link != null)
+                ColoredBox(
+                  color: background,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: Space.x3),
+                    child: link,
+                  ),
+                ),
+            ],
+          ),
         ],
       ),
     );
   }
+}
+
+/// A section's hairline. It draws out from the left the first time it's
+/// built (Motion.panel), and is simply there under reduced motion.
+class Hairline extends StatefulWidget {
+  const Hairline({super.key, this.color = Surface.line, this.thickness = 1});
+
+  final Color color;
+  final double thickness;
+
+  @override
+  State<Hairline> createState() => _HairlineState();
+}
+
+class _HairlineState extends State<Hairline> with SingleTickerProviderStateMixin {
+  late final _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 720));
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _c.value = 1;
+    } else if (_c.value == 0 && !_c.isAnimating) {
+      _c.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => ExcludeSemantics(
+    child: AnimatedBuilder(
+      animation: _c,
+      builder: (context, child) => Align(
+        alignment: Alignment.centerLeft,
+        child: FractionallySizedBox(widthFactor: Motion.enter.transform(_c.value), heightFactor: null, child: child),
+      ),
+      child: Container(height: widget.thickness, color: widget.color),
+    ),
+  );
 }
 
 /// A heading over a sideways-scrolling row of 108-wide posters, a little
@@ -85,6 +198,7 @@ class PosterRow extends StatelessWidget {
   const PosterRow({
     super.key,
     required this.heading,
+    this.em,
     required this.titles,
     this.subtitle,
     this.seeAll,
@@ -96,6 +210,9 @@ class PosterRow extends StatelessWidget {
   });
 
   final String heading;
+
+  /// Set in italics after [heading] (the title it's because of).
+  final String? em;
   final String? subtitle;
   final String? seeAll;
   final List<Title> titles;
@@ -116,7 +233,7 @@ class PosterRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SectionHeading(heading: heading, subtitle: subtitle, seeAll: seeAll, seeAllPushes: seeAllPushes),
+        SectionHeading(heading: heading, em: em, subtitle: subtitle, seeAll: seeAll, seeAllPushes: seeAllPushes),
         const SizedBox(height: 14),
         SizedBox(
           // a reason runs to three lines where the meta line has one

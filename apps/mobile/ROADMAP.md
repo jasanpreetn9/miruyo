@@ -1,6 +1,6 @@
 # miruyo mobile roadmap
 
-The path to a mobile v1 that matches the design and the web app. **Source of truth:** the design export in [`design/`](../../design): `shared/` for screens, `mobile/` for gestures (screens 11–22, with 22 as the shared rules). The web app in [`apps/web`](../web) is the reference for AniList behaviour.
+The path to a mobile v1 that matches the design and the web app. **Look:** the editorial redesign in [`design/mockups`](../../design/mockups) (Nov 2026), as on the web, sets the visual style; the design export still sets layouts, gestures and behaviour. **Source of truth:** the design export in [`design/`](../../design): `shared/` for screens, `mobile/` for gestures (screens 11–22, with 22 as the shared rules). The web app in [`apps/web`](../web) is the reference for AniList behaviour.
 
 **Decisions:** Riverpod for state; the web's GraphQL queries ported verbatim over `http`; a cached list plus queued edits for offline; AniList's airing notifications plus on-device local notifications for reminders.
 
@@ -11,7 +11,7 @@ Critical path: 1 → 2 → 5. Phases 4 and 6–10 can go in any order after 5. C
 - [x] Packages, lints (120-column format), drift codegen.
 - [x] `.github/workflows/mobile.yml`: codegen check, format, analyze, test on changes to `apps/mobile`.
 - [x] README, run config (`config/anilist.example.json`), Android OAuth callback and permissions.
-- [x] Bricolage Grotesque, Geist and Geist Mono bundled in `google_fonts/` (runtime fetching off; OFL licences registered).
+- [x] Fraunces, Schibsted Grotesk and JetBrains Mono (variable fonts) bundled in `fonts/` and declared in `pubspec.yaml`, nothing fetched at runtime; OFL licences registered. Japanese glosses use the phone's own Japanese font. (The editorial redesign, design/mockups, replaced Bricolage Grotesque, Geist and Geist Mono.)
 
 ## Phase 1 — Foundations ✅
 

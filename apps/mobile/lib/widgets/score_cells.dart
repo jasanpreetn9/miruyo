@@ -148,7 +148,7 @@ class _Cell extends StatelessWidget {
     return Container(
       height: 30,
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(color: Surface.s3, borderRadius: BorderRadius.circular(6)),
+      decoration: BoxDecoration(color: Surface.s3, borderRadius: BorderRadius.circular(2)),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -191,7 +191,7 @@ class _Face extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: selected ? accent.withValues(alpha: 0.2) : Surface.s3,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(2),
         border: Border.all(color: selected ? accent : Colors.transparent),
       ),
       child: Text(faces[index], style: const TextStyle(fontSize: 18)),

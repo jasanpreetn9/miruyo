@@ -28,7 +28,7 @@ Future<void> showQuickActions(BuildContext context, WidgetRef ref, Title title) 
     showDragHandle: true,
     isScrollControlled: true,
     backgroundColor: Surface.s2,
-    barrierColor: const Color(0x99090B11),
+    barrierColor: const Color(0x9913110F),
     builder: (_) => _QuickActions(title: title, host: context),
   );
 }
@@ -55,9 +55,9 @@ class _QuickActions extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 4),
         child: Material(
           color: primary ? TextTone.high : Surface.s3,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(2),
           child: InkWell(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(2),
             onTap: onTap,
             child: Opacity(
               opacity: onTap == null ? 0.35 : 1,
@@ -159,10 +159,10 @@ class _QuickActions extends ConsumerWidget {
                     selected: entry?.status == s,
                     showCheckmark: false,
                     selectedColor: statusColor[s]!.withValues(alpha: 0.18),
-                    backgroundColor: Surface.s1,
+                    backgroundColor: Colors.transparent,
                     side: BorderSide(color: entry?.status == s ? statusColor[s]! : Surface.line),
                     labelStyle: AppType.body.copyWith(fontSize: 13),
-                    shape: const StadiumBorder(),
+                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                     onSelected: (_) {
                       close();
                       unawaited(actions.changeStatus(title, s));

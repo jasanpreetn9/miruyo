@@ -19,7 +19,7 @@ const listStatuses = [
 const statusColor = {
   MediaListStatus.current: Color(0xFF5AB0FF),
   MediaListStatus.completed: Color(0xFF4ED98A),
-  MediaListStatus.planning: Color(0xFFA6ADC2),
+  MediaListStatus.planning: Color(0xFFB3A996),
   MediaListStatus.paused: Color(0xFFF5B83D),
   MediaListStatus.dropped: Color(0xFFFF6B8B),
   MediaListStatus.repeating: Color(0xFF3DD6D0),

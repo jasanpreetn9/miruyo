@@ -19,7 +19,6 @@ class LoggedOutHero extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mode = ref.watch(modeProvider);
     final wall = ref.watch(publicTrendingProvider(mode)).value ?? const [];
-    final colors = context.mode;
 
     // a Stack only clips when it sees overflow, and transformed children
     // don't count, so the tilted wall needs its own clip
@@ -53,7 +52,7 @@ class LoggedOutHero extends ConsumerWidget {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Surface.base, Color(0x66090B11), Color(0xB3090B11)],
+                    colors: [Surface.base, Color(0x6613110F), Color(0xB313110F)],
                     stops: [0.38, 0.75, 1],
                   ),
                 ),
@@ -65,7 +64,7 @@ class LoggedOutHero extends ConsumerWidget {
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
-                    colors: [Surface.base, Color(0x00090B11)],
+                    colors: [Surface.base, Color(0x0013110F)],
                     stops: [0, 0.4],
                   ),
                 ),
@@ -86,7 +85,7 @@ class LoggedOutHero extends ConsumerWidget {
                   Text(
                     'miruyo syncs with your AniList account — track progress in one tap, '
                     'see what airs tonight, and find out what to watch next.',
-                    style: AppType.body.copyWith(color: const Color(0xFFC4C9D6), height: 1.6),
+                    style: AppType.body.copyWith(color: const Color(0xFFC9BFAE), height: 1.6),
                   ),
                   const SizedBox(height: Space.x4),
                   Wrap(
@@ -98,9 +97,9 @@ class LoggedOutHero extends ConsumerWidget {
                         style: FilledButton.styleFrom(
                           minimumSize: const Size(0, 48),
                           padding: const EdgeInsets.symmetric(horizontal: 22),
-                          backgroundColor: colors.accent,
-                          foregroundColor: colors.onAccent,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          backgroundColor: TextTone.high,
+                          foregroundColor: Surface.base,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                           textStyle: AppType.body.copyWith(fontSize: 15, fontWeight: FontWeight.w600),
                         ),
                         child: const Text('Log in with AniList'),
@@ -113,7 +112,7 @@ class LoggedOutHero extends ConsumerWidget {
                           backgroundColor: Surface.s3,
                           foregroundColor: TextTone.high,
                           side: const BorderSide(color: Surface.line),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                           textStyle: AppType.body.copyWith(fontSize: 15, fontWeight: FontWeight.w600),
                         ),
                         child: const Text('Browse'),

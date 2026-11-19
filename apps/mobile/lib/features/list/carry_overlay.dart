@@ -111,7 +111,7 @@ class _CarryLayerState extends State<_CarryLayer> with SingleTickerProviderState
         IgnorePointer(
           child: FadeTransition(
             opacity: _rise,
-            child: const ColoredBox(color: Color(0x80050609), child: SizedBox.expand()),
+            child: const ColoredBox(color: Color(0x8013110F), child: SizedBox.expand()),
           ),
         ),
         Positioned(
@@ -163,7 +163,7 @@ class _CarryLayerState extends State<_CarryLayer> with SingleTickerProviderState
                           angle: (i - 1) * 0.06,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(2),
                               boxShadow: const [
                                 BoxShadow(color: Color(0x99000000), blurRadius: 22, offset: Offset(0, 10)),
                               ],

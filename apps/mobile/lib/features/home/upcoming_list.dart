@@ -132,7 +132,7 @@ class _UpcomingRow extends ConsumerWidget {
                 label: 'Plan to ${title.isAnime ? 'watch' : 'read'} ${title.title}',
                 excludeSemantics: true,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(2),
                   onTap: () {
                     if (canEditList(context, ref)) {
                       unawaited(ref.read(listActionsProvider).changeStatus(title, MediaListStatus.planning));
@@ -142,8 +142,7 @@ class _UpcomingRow extends ConsumerWidget {
                     width: Space.minTarget,
                     height: Space.minTarget,
                     decoration: BoxDecoration(
-                      color: Surface.s2,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(2),
                       border: Border.all(color: Surface.line),
                     ),
                     child: const Icon(Symbols.bookmark_add_rounded, size: 20, color: TextTone.high),
