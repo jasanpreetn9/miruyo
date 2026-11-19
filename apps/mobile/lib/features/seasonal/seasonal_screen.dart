@@ -700,7 +700,7 @@ class _ScheduleState extends ConsumerState<_Schedule> with SingleTickerProviderS
                         onSelected: (v) => setState(() => _mineOnly = v),
                         showCheckmark: false,
                         selectedColor: TextTone.high,
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: Surface.base,
                         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                         side: BorderSide(color: _mineOnly ? TextTone.high : Surface.line),
                       ),

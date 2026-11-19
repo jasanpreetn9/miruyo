@@ -244,7 +244,7 @@ class StatusPanel extends StatelessWidget {
                   style: AppType.body.copyWith(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: isHere ? const Color(0xFF938979) : TextTone.high,
+                    color: isHere ? const Color(0xFF9A9080) : TextTone.high,
                   ),
                 ),
               ],

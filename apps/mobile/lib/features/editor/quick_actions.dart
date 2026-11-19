@@ -159,7 +159,7 @@ class _QuickActions extends ConsumerWidget {
                     selected: entry?.status == s,
                     showCheckmark: false,
                     selectedColor: statusColor[s]!.withValues(alpha: 0.18),
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: Surface.base,
                     side: BorderSide(color: entry?.status == s ? statusColor[s]! : Surface.line),
                     labelStyle: AppType.body.copyWith(fontSize: 13),
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),

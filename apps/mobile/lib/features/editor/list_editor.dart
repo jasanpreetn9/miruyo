@@ -381,7 +381,7 @@ class _ListEditorState extends ConsumerState<_ListEditor> {
                     onSelected: (_) => _status(s),
                     showCheckmark: false,
                     selectedColor: statusColor[s]!.withValues(alpha: 0.18),
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: Surface.base,
                     side: BorderSide(color: onList && _draft.status == s ? statusColor[s]! : Surface.line),
                     labelStyle: AppType.body.copyWith(
                       fontSize: 13,
@@ -504,7 +504,7 @@ class _ListEditorState extends ConsumerState<_ListEditor> {
                       showCheckmark: true,
                       checkmarkColor: Surface.base,
                       selectedColor: TextTone.high,
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: Surface.base,
                       side: BorderSide(color: _draft.customLists.contains(name) ? TextTone.high : Surface.line),
                       labelStyle: AppType.body.copyWith(
                         fontSize: 13,

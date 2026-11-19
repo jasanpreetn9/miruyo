@@ -75,7 +75,7 @@ class _Missing extends StatelessWidget {
         child: Icon(
           Symbols.image_not_supported_rounded,
           size: (box.maxWidth * 0.3).clamp(14.0, 32.0),
-          color: const Color(0xFF938979),
+          color: const Color(0xFF9A9080),
         ),
       ),
     );

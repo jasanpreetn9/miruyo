@@ -32,7 +32,7 @@ abstract final class Quiet {
 abstract final class TextTone {
   static const high = Color(0xFFEFE7DA);
   static const mid = Color(0xFFB3A996);
-  static const low = Color(0xFF938979);
+  static const low = Color(0xFF9A9080);
 }
 
 /// The two mode accents and the secondary blue. Text on an accent is dark

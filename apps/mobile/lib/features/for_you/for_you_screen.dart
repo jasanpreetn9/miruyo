@@ -756,7 +756,7 @@ Future<void> _showTune(BuildContext context, ForYou data, {required bool isAnime
                             decoration: tune.hiddenGenres.contains(g) ? TextDecoration.lineThrough : null,
                             decorationColor: Accent.danger,
                           ),
-                          backgroundColor: Colors.transparent,
+                          backgroundColor: Surface.base,
                           selectedColor: Accent.danger.withValues(alpha: 0.08),
                           side: BorderSide(
                             color: tune.hiddenGenres.contains(g) ? Accent.danger.withValues(alpha: 0.35) : Surface.line,

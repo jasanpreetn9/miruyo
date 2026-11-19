@@ -108,7 +108,7 @@ class _FilterSheetState extends ConsumerState<_FilterSheet> {
         fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
       ),
       selectedColor: TextTone.high,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Surface.base,
       side: BorderSide(color: selected ? Colors.transparent : Surface.line),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
     );
@@ -151,7 +151,7 @@ class _FilterSheetState extends ConsumerState<_FilterSheet> {
           decoration: TextDecoration.lineThrough,
           decorationColor: TextTone.mid,
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Surface.base,
         side: const BorderSide(color: TextTone.low),
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
       ),
@@ -364,7 +364,7 @@ class _FilterSheetState extends ConsumerState<_FilterSheet> {
                                 InputChip(
                                   label: Text(t),
                                   labelStyle: AppType.body.copyWith(fontSize: 13),
-                                  backgroundColor: Colors.transparent,
+                                  backgroundColor: Surface.base,
                                   side: const BorderSide(color: Surface.line),
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(2)),
@@ -418,7 +418,7 @@ class _FilterSheetState extends ConsumerState<_FilterSheet> {
                                     decoration: TextDecoration.lineThrough,
                                     decorationColor: TextTone.mid,
                                   ),
-                                  backgroundColor: Colors.transparent,
+                                  backgroundColor: Surface.base,
                                   side: const BorderSide(color: TextTone.low),
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(2)),

@@ -630,7 +630,7 @@ class _TagWrapState extends State<TagWrap> {
                 ActionChip(
                   tooltip: t.description,
                   onPressed: () => context.go('/browse?tag=${Uri.encodeComponent(t.name)}'),
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: Surface.base,
                   side: BorderSide.none,
                   padding: EdgeInsets.zero,
                   labelPadding: EdgeInsets.zero,
@@ -654,7 +654,7 @@ class _TagWrapState extends State<TagWrap> {
                   expanded: _open,
                   child: ActionChip(
                     onPressed: () => setState(() => _open = !_open),
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: Surface.base,
                     side: BorderSide.none,
                     shape: const RoundedRectangleBorder(),
                     materialTapTargetSize: MaterialTapTargetSize.padded,

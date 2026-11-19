@@ -156,7 +156,7 @@ class SearchPeopleRows extends ConsumerWidget {
                     label: Text(s.name),
                     onPressed: () => context.push(s.href),
                     labelStyle: AppType.body.copyWith(fontSize: 13),
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: Surface.base,
                     side: const BorderSide(color: Surface.line),
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                   );

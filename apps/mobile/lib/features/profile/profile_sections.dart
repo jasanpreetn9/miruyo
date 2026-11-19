@@ -83,7 +83,7 @@ class FavouritesView extends StatelessWidget {
                 for (final s in p.studios)
                   ActionChip(
                     label: Text(s.name),
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: Surface.base,
                     side: const BorderSide(color: Surface.line),
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                     onPressed: () => context.push(s.href),
@@ -219,7 +219,7 @@ class StatsPanel extends ConsumerWidget {
                   onSelected: (_) => onRange(r),
                   showCheckmark: false,
                   selectedColor: accent.tint,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: Surface.base,
                   side: BorderSide(color: r == range ? accent.accent : Surface.line),
                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2))),
                 ),
