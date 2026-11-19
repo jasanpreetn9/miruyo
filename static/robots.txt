@@ -1,0 +1,5 @@
+# allow crawling everything by default; personal pages opt out with a noindex tag
+User-agent: *
+Disallow:
+
+Sitemap: https://miruyo.jnagra.com/sitemap.xml

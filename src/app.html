@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="text-scale" content="scale" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<!-- AniList: its API is on the critical path of most pages' data (fetch
+		     is CORS, so crossorigin), and its CDN serves every cover -->
+		<link rel="preconnect" href="https://graphql.anilist.co" crossorigin />
+		<link rel="preconnect" href="https://s4.anilist.co" />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200..800;1,9..144,300..700&family=Schibsted+Grotesk:wght@400..800&family=JetBrains+Mono:wght@400..600&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap"
+		/>
+		<!--
+			Only the icons the app uses (icon_names, kept alphabetical): ~50 KB
+			instead of the full 3 MB set. src/lib/icons.test.ts fails when an
+			icon is used but missing here.
+		-->
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..500,0..1,0&icon_names=add,arrow_back,auto_awesome,auto_stories,bar_chart,block,bookmark_add,bookmarks,calendar_month,check,check_box,check_box_outline_blank,check_circle,chevron_left,chevron_right,close,cloud_off,delete,domain,done_all,edit,error,expand_less,expand_more,explore,explore_off,favorite,filter_list,grid_view,home,image_not_supported,info,inventory_2,ios_share,key_off,library_books,logout,menu_book,movie,new_releases,notifications,open_in_new,pause,person,play_arrow,play_circle,public,refresh,remove,replay,schedule,search,search_off,sell,sentiment_dissatisfied,sentiment_neutral,sentiment_satisfied,settings,sort,star,star_border,star_half,task_alt,tune,verified_user,view_agenda,view_list,visibility_off&display=block"
+		/>
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>

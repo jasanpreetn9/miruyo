@@ -1,0 +1,20 @@
+node_modules
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vercel CLI link
+.vercel
+
+# design export archive — its contents are extracted alongside it
+/design/*.zip
+
+# graphify knowledge-graph output
+graphify-out/
