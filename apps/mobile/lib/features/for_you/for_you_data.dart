@@ -28,8 +28,31 @@ const minRatings = 5;
 /// How many top-rated titles seed the picks.
 const maxSeeds = 8;
 
-/// A seed must be rated at least this (out of 10).
+/// What "loved" means (out of 10) until a list has enough scores to judge by
+/// its own: below [_lovedFromRatings] scored titles, a seed is rated 7.5 or more.
 const _seedMinScore = 7.5;
+
+/// With this many scored titles, "loved" is measured against your own scores.
+const _lovedFromRatings = 10;
+
+/// Loved is half a deviation above your mean, kept within these: a harsh
+/// rater's 7 is a high mark, but a 6.5 isn't; a generous rater's 9 is
+/// ordinary, but every 9.5 still counts.
+const _lovedFloor = 7.0;
+const _lovedCeiling = 9.0;
+
+/// A genre's lift (its mean score above your overall mean, in points) is
+/// shrunk toward nothing by this many titles' worth, so one 10 in a genre
+/// isn't a taste.
+const _genreShrink = 3;
+
+/// Each point of genre lift moves a pick this much, within these limits.
+const _genreWeight = 0.1;
+const _genreMin = 0.7;
+const _genreMax = 1.4;
+
+/// A genre with this much lift is one "you rate highly" on a pick.
+const _likedGenreLift = 0.25;
 
 /// How many titles from the other list look for their manga or anime.
 const maxCrossSeeds = 4;
@@ -88,7 +111,7 @@ class Pick {
   /// AniList users recommending it to fans of [because].
   final int votes;
 
-  /// Its genres that are among the ones you rate highest.
+  /// Its genres you rate clearly above your usual, the most liked first.
   final List<String> sharedGenres;
   final PickKind kind;
 
@@ -143,12 +166,28 @@ double _unitHash(String text) {
   return (h + 1) / 4294967297;
 }
 
-/// The titles driving the picks: up to [maxSeeds] you rated 7.5 or more,
+/// The score (out of 10) from which you loved a title. Under
+/// [_lovedFromRatings] scores it's 7.5; past that it's your own: half a
+/// deviation above your mean, from [_lovedFloor] to [_lovedCeiling]. A harsh
+/// rater who averages 6 loves from 7, a generous one who averages 9 from 9.
+double lovedFrom(List<CollectionEntry> entries, ScoreFormat? scoreFormat) {
+  final scores = [
+    for (final c in entries)
+      if (c.entry.score > 0) toTenPoint(c.entry.score, scoreFormat),
+  ];
+  if (scores.length < _lovedFromRatings) return _seedMinScore;
+  final mean = scores.reduce((a, b) => a + b) / scores.length;
+  final deviation = math.sqrt(scores.fold<double>(0, (a, s) => a + (s - mean) * (s - mean)) / scores.length);
+  return (mean + deviation / 2).clamp(_lovedFloor, _lovedCeiling);
+}
+
+/// The titles driving the picks: up to [maxSeeds] you loved ([lovedFrom]),
 /// best first (by your exact score, then most recently updated). With more
 /// than that to choose from, [day] draws a different set each day: the same
 /// all day, and weighted so the higher you rated a title, the more often it
-/// comes round (a 10 about six times as often as a 7.5). Without [day], the
-/// top ones. [leaveOut]: seeds you've stopped using, so they don't take a slot.
+/// comes round (with the 7.5 cutoff, a 10 about six times as often as a 7.5).
+/// Without [day], the top ones. [leaveOut]: seeds you've stopped using, so
+/// they don't take a slot.
 List<Seed> pickSeeds(
   List<CollectionEntry> entries, {
   ScoreFormat? scoreFormat,
@@ -156,16 +195,18 @@ List<Seed> pickSeeds(
   String? day,
   Set<int> leaveOut = const {},
 }) {
+  final loved = lovedFrom(entries, scoreFormat);
   final pool = [
     for (final c in entries)
       if (c.entry.score > 0 && _ratedStatuses.contains(c.entry.status) && !leaveOut.contains(c.media.id))
         (entry: c, exact: toTenPoint(c.entry.score, scoreFormat)),
-  ].where((s) => s.exact >= _seedMinScore).toList();
-  // a weighted draw without replacement (Efraimidis–Spirakis), keyed on the day
+  ].where((s) => s.exact >= loved).toList();
+  // a weighted draw without replacement (Efraimidis–Spirakis), keyed on the
+  // day; the weight is how far past the cutoff a title is, plus half a point
   final drawn = day != null && pool.length > maxSeeds
       ? ([
           for (final s in pool)
-            (s: s, key: math.pow(_unitHash('$day:${s.entry.media.id}'), 1 / (s.exact - 7)).toDouble()),
+            (s: s, key: math.pow(_unitHash('$day:${s.entry.media.id}'), 1 / (s.exact - loved + 0.5)).toDouble()),
         ]..sort((a, b) => b.key.compareTo(a.key))).take(maxSeeds).map((d) => d.s).toList()
       : pool;
   drawn.sort(
@@ -181,25 +222,41 @@ List<Seed> pickSeeds(
   ];
 }
 
-/// The genres you rate highest, most frequent first.
-Set<String> _favouriteGenres(List<CollectionEntry> entries, ScoreFormat? scoreFormat) {
-  final counts = <String, int>{};
-  for (final c in entries) {
-    if (toTenPoint(c.entry.score, scoreFormat) < _seedMinScore) continue;
-    for (final g in c.media.genres) {
-      counts[g] = (counts[g] ?? 0) + 1;
+/// How much more (or less) you like each genre than your list as a whole: its
+/// mean score minus your overall mean, in points, shrunk toward 0 by
+/// [_genreShrink] titles so a genre needs a few scores to count. Action, on
+/// half the list, has a lift near 0 however many you've seen; a genre you
+/// score well above your usual has a high one, and one you score below it a
+/// negative one.
+Map<String, double> genreLift(List<CollectionEntry> entries, ScoreFormat? scoreFormat) {
+  final scored = [
+    for (final c in entries)
+      if (c.entry.score > 0) (genres: c.media.genres, score: toTenPoint(c.entry.score, scoreFormat)),
+  ];
+  if (scored.isEmpty) return {};
+  final mean = scored.fold<double>(0, (a, s) => a + s.score) / scored.length;
+  final sums = <String, ({double above, int n})>{};
+  for (final s in scored) {
+    for (final g in s.genres) {
+      final sum = sums[g];
+      sums[g] = (above: (sum?.above ?? 0) + s.score - mean, n: (sum?.n ?? 0) + 1);
     }
   }
-  final sorted = counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
-  return {for (final e in sorted.take(5)) e.key};
+  return {for (final MapEntry(:key, :value) in sums.entries) key: value.above / (value.n + _genreShrink)};
 }
 
-/// The studios behind the titles you rate highest: a studio counts once two
-/// of its titles are rated 7.5 or more. The top five, most titles first.
+/// How a pick's genres move it: [_genreWeight] a point of lift, within
+/// [_genreMin] and [_genreMax].
+double _genreFactor(List<String> genres, Map<String, double> lift) =>
+    (1 + _genreWeight * genres.fold<double>(0, (a, g) => a + (lift[g] ?? 0))).clamp(_genreMin, _genreMax);
+
+/// The studios behind the titles you love ([lovedFrom]): a studio counts once
+/// two of its titles are loved. The top five, most titles first.
 Map<int, String> favouriteStudios(List<CollectionEntry> entries, ScoreFormat? scoreFormat) {
+  final loved = lovedFrom(entries, scoreFormat);
   final counts = <int, ({String name, int n})>{};
   for (final c in entries) {
-    if (toTenPoint(c.entry.score, scoreFormat) < _seedMinScore) continue;
+    if (c.entry.score <= 0 || toTenPoint(c.entry.score, scoreFormat) < loved) continue;
     final studio = c.media.mainStudio;
     if (studio == null) continue;
     counts[studio.id] = (name: studio.name, n: (counts[studio.id]?.n ?? 0) + 1);
@@ -222,8 +279,9 @@ List<AniListMedia> _adaptationsOf(List<({String relationType, AniListMedia media
 
 /// Ranks every recommended title not already on the list. A title earns
 /// weight from each seed that recommends it (the seed's score × AniList's
-/// vote count, dampened), plus a little for each favourite genre it shares
-/// and more if a favourite studio made it. [crossSeeds] are titles you loved
+/// vote count, dampened; recommendations with no votes left over don't
+/// count), moves up or down with how you rate its genres ([genreLift]), and
+/// weighs more if a favourite studio made it. [crossSeeds] are titles you loved
 /// on your other list; their manga or anime ([relations]) join the picks.
 List<Pick> buildPicks(
   List<Seed> seeds,
@@ -238,7 +296,7 @@ List<Pick> buildPicks(
   Relations relations = const {},
 }) {
   final onList = {for (final c in entries) c.media.id};
-  final genres = _favouriteGenres(entries, scoreFormat);
+  final lift = genreLift(entries, scoreFormat);
   final studios = favouriteStudios(entries, scoreFormat);
   final byId =
       <
@@ -249,7 +307,7 @@ List<Pick> buildPicks(
   void add(AniListMedia media, Seed seed, int votes, PickKind kind) {
     if (media.type != type || onList.contains(media.id) || dismissed.contains(media.id)) return;
     if (media.mediaListEntry != null || (media.isAdult && !showAdult)) return;
-    final weight = seed.score / 10 * math.log(2 + math.max(0, votes)) / math.ln2;
+    final weight = seed.score / 10 * math.log(2 + votes) / math.ln2;
     final pick = byId[media.id];
     if (pick == null) {
       byId[media.id] = (
@@ -277,6 +335,8 @@ List<Pick> buildPicks(
 
   for (final seed in seeds) {
     for (final (:rating, :media) in recommendations[seed.id] ?? const <({int rating, AniListMedia media})>[]) {
+      // a recommendation AniList's users voted to nothing (or below) isn't one
+      if (rating <= 0) continue;
       add(media, seed, rating, PickKind.recommended);
     }
   }
@@ -291,15 +351,15 @@ List<Pick> buildPicks(
       () {
         final shared = [
           for (final g in p.media.genres)
-            if (genres.contains(g)) g,
-        ];
+            if ((lift[g] ?? 0) >= _likedGenreLift) g,
+        ]..sort((a, b) => lift[b]!.compareTo(lift[a]!));
         final main = p.media.mainStudio;
         final studio = main != null && studios.containsKey(main.id) ? main : null;
         return Pick(
           title: adaptMedia(p.media, titles: titles),
           because: p.because,
           seedIds: p.seedIds,
-          score: p.score * (1 + 0.1 * shared.length) * (studio != null ? 1 + _studioBoost : 1),
+          score: p.score * _genreFactor(p.media.genres, lift) * (studio != null ? 1 + _studioBoost : 1),
           votes: p.votes,
           sharedGenres: shared,
           kind: p.kind,

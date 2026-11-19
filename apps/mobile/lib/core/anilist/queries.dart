@@ -1032,7 +1032,9 @@ String forYouRelationsQuery(List<int> seedIds) {
 ''';
 }
 
-String forYouQuery(List<int> seedIds, {int perSeed = 8}) {
+// 20 a seed, so more titles are recommended by more than one seed (checked
+// against the live API with eight seeds: within AniList's limits)
+String forYouQuery(List<int> seedIds, {int perSeed = 20}) {
   final seeds = [
     for (final (i, id) in seedIds.indexed)
       '''

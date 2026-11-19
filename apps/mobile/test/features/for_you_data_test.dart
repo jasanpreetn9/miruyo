@@ -179,6 +179,84 @@ void main() {
       expect(ids(picks), [30, 31]);
       expect(picks.first.sharedGenres, ['Fantasy']);
     });
+
+    test('moves titles up for genres you rate above your usual, and down for those below', () {
+      final list = [
+        entry(media(1, 'G1', genres: ['Fantasy']), score: 9.5),
+        entry(media(2, 'G2', genres: ['Fantasy']), score: 9),
+        entry(media(3, 'G3', genres: ['Sports']), score: 5),
+        entry(media(4, 'G4', genres: ['Sports']), score: 5.5),
+      ];
+      final picks = buildPicks(
+        pickSeeds(list, scoreFormat: ScoreFormat.point10Decimal),
+        {
+          1: [
+            rec(media(30, 'Sports pick', genres: ['Sports']), 5),
+            rec(media(31, 'Other pick', genres: ['Drama']), 5),
+            rec(media(32, 'Fantasy pick', genres: ['Fantasy']), 5),
+          ],
+        },
+        entries: list,
+        type: MediaType.anime,
+        showAdult: false,
+        scoreFormat: ScoreFormat.point10Decimal,
+      );
+      expect(ids(picks), [32, 31, 30]);
+      expect(picks.last.sharedGenres, isEmpty);
+    });
+
+    test('leaves out recommendations voted down to nothing', () {
+      final picks = build({
+        1: [rec(media(40, 'Zero'), 0), rec(media(41, 'Negative'), -3), rec(media(42, 'Kept'), 1)],
+      });
+      expect(ids(picks), [42]);
+    });
+  });
+
+  group('lovedFrom', () {
+    List<CollectionEntry> list(List<double> scores) => [
+      for (final (i, score) in scores.indexed) entry(media(500 + i, 'L$i'), score: score),
+    ];
+    const format = ScoreFormat.point10Decimal;
+
+    test('is 7.5 on a short list', () {
+      expect(lovedFrom(list([6, 6, 6, 8]), format), 7.5);
+    });
+
+    test("follows a longer list's own scores, within 7 and 9", () {
+      // a harsh rater: a 7 is a high mark
+      final harsh = list([4, 5, 5, 5, 6, 6, 6, 6, 7, 7]);
+      expect(lovedFrom(harsh, format), 7);
+      expect(pickSeeds(harsh, scoreFormat: format).map((s) => s.score), [7, 7]);
+      // a generous one: 8.5 is ordinary
+      final generous = list([8, 8.5, 9, 9, 9, 9, 9.5, 9.5, 10, 10]);
+      expect(lovedFrom(generous, format), 9);
+      expect(pickSeeds(generous, scoreFormat: format).map((s) => s.score), [10, 10, 9.5, 9.5, 9, 9, 9, 9]);
+      // in between: half a deviation above the mean
+      expect(lovedFrom(list([5, 6, 6, 7, 7, 7, 8, 8, 9, 10]), format), closeTo(7.3 + 0.7088723, 1e-6));
+    });
+  });
+
+  test("genreLift measures a genre against the list's mean, not by how often it comes up", () {
+    CollectionEntry e(int id, List<String> genres, double score) =>
+        entry(media(id, 'E$id', genres: genres), score: score);
+    final lift = genreLift([
+      e(1, ['Action'], 7),
+      e(2, ['Action'], 7),
+      e(3, ['Action'], 7),
+      e(4, ['Action', 'Mystery'], 9),
+      e(5, ['Action', 'Mystery'], 9),
+      e(6, ['Action', 'Mystery'], 9),
+      e(7, ['Romance'], 5),
+      e(8, ['Romance'], 5),
+      e(9, ['Romance'], 5),
+      e(10, [], 0), // unscored: left out
+    ], ScoreFormat.point10Decimal);
+    // mean 7: Mystery +2 each, three of them, shrunk by three: +1
+    expect(lift['Mystery'], closeTo(1, 1e-9));
+    expect(lift['Romance'], closeTo(-1, 1e-9));
+    // on most of the list, so about the mean
+    expect(lift['Action'], closeTo(6 / 9, 1e-9));
   });
 
   test('visiblePicks drops hidden picks and those only a muted seed recommends', () {

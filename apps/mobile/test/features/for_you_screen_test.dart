@@ -29,6 +29,8 @@ void main() {
   final entries = [
     entry(media(1, 'Frieren', genres: ['Fantasy']), score: 9.5),
     entry(media(2, 'Apothecary', genres: ['Mystery']), score: 9),
+    // a lower score, so Fantasy stands out from the list's mean ("Shares Fantasy")
+    entry(media(3, 'Meh'), score: 5),
   ];
   final seeds = pickSeeds(entries, scoreFormat: ScoreFormat.point10Decimal);
   final picks = buildPicks(
