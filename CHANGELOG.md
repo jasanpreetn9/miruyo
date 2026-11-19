@@ -2,6 +2,12 @@
 
 What changed on the website, newest first. Dates are when each pull request merged and went live. What's planned next is in [ROADMAP.md](ROADMAP.md#next-up); the iPhone app has its own [roadmap](../mobile/ROADMAP.md).
 
+## Nov 19, 2026
+
+**Changed**
+
+- **For You measures your taste against your own scores.** What counts as a title you loved follows how you rate: half a deviation above your average, between 7 and 9, so a harsh rater's 7s seed picks and a generous rater's 8.5s don't (lists under 10 scores keep 7.5). Genres weigh a pick by how far you rate them above your usual, not by how often they're on your list, and a genre you rate below it weighs a pick down. Recommendations AniList's users voted to nothing are left out, and each title you loved brings 20 recommendations instead of 8, so more picks are backed by several of them.
+
 ## Nov 17, 2026
 
 **Changed**
