@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home mockup</title>
+<link rel="stylesheet" href="editorial.css">
+<style>
+/* ── dateline masthead ── */
+.dateline{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:14px 0;border-bottom:1px solid var(--rule)}
+.dateline .jp{letter-spacing:0;text-transform:none}
+.hello{display:grid;grid-template-columns:1fr auto;align-items:end;gap:40px;padding:40px 0 32px;border-bottom:3px double var(--rule)}
+.hello h1{font-family:var(--serif);font-weight:300;font-size:84px;line-height:.92;letter-spacing:-.045em;margin:0;font-variation-settings:'opsz' 144}
+.hello h1 em{font-style:italic;font-weight:500}
+.hello p{margin:16px 0 0;font-size:17px;color:var(--ink-2);max-width:52ch;line-height:1.5}
+.hello p b{color:var(--ink);font-weight:600}
+.tally{display:flex;gap:36px;text-align:right}
+.tally div{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.tally strong{display:block;font-family:var(--serif);font-weight:300;font-size:56px;line-height:1;letter-spacing:-.04em;color:var(--ink);margin-bottom:6px}
+.tally .hot strong{color:var(--shu)}
+
+/* ── continue + tonight ── */
+.split{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:56px}
+.lead{--c:#c8b89a;display:grid;grid-template-columns:200px minmax(0,1fr);gap:32px;padding:8px 0 32px;border-bottom:1px solid var(--rule)}
+.lead img{width:200px;aspect-ratio:2/3;object-fit:cover;box-shadow:10px 10px 0 color-mix(in oklch,var(--c) 55%,var(--paper))}
+.lead h3{font-family:var(--serif);font-weight:600;font-size:44px;line-height:.95;letter-spacing:-.03em;margin:12px 0 6px}
+.lead .nat{font-family:var(--jp);color:var(--ink-3);font-size:13px;margin-bottom:22px}
+.behind{font-size:15px;color:var(--ink-2);margin-bottom:22px;line-height:1.5}
+.behind b{color:var(--ink)}
+/* the +1 as a tally counter: shows the number you'll land on */
+.counter{display:inline-flex;align-items:stretch;border:1px solid var(--ink);border-radius:2px;overflow:hidden}
+.counter .num{font-family:var(--mono);font-size:22px;padding:10px 16px;min-width:120px;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px}
+.counter .num small{font-size:12px;color:var(--ink-3)}
+.counter button{border:0;background:var(--ink);color:var(--paper);font-weight:700;font-size:15px;padding:0 20px}
+.counter button:hover{background:var(--c)}
+.track{margin-top:22px;height:4px;background:var(--rule);position:relative;max-width:420px}
+.track i{position:absolute;inset:0 auto 0 0;background:var(--c)}
+.track b{position:absolute;top:-3px;width:2px;height:10px;background:var(--ink)}
+.track-l{display:flex;justify-content:space-between;max-width:420px;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:8px}
+
+.row{--c:#c8b89a;display:grid;grid-template-columns:44px minmax(0,1fr) 140px 120px 28px;gap:18px;align-items:center;padding:14px 0;border-bottom:1px solid var(--rule)}
+.row img{width:44px;aspect-ratio:2/3;object-fit:cover}
+.row .t{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .t small{display:block;font-family:var(--jp);font-weight:400;font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.row .bar{height:3px;background:var(--rule);position:relative}
+.row .bar i{position:absolute;inset:0 auto 0 0;background:var(--c)}
+.row .bar b{position:absolute;inset:0 auto 0 0;background:color-mix(in oklch,var(--c) 35%,transparent)}
+.row .ep{font-family:var(--mono);font-size:12.5px;text-align:right}
+.row .ep small{display:block;color:var(--ink-3);font-size:11px}
+.row .ep .new{color:var(--shu)}
+.row:hover .t{color:var(--c)}
+.row.done .ep small{color:var(--ink-3)}
+
+/* tonight: a vertical time ruler */
+.tonight{border-left:1px solid var(--rule);padding-left:28px}
+.tonight h3{font-family:var(--serif);font-weight:500;font-size:22px;margin:0 0 4px;letter-spacing:-.01em}
+.tonight .sub{font-size:12px;color:var(--ink-3);margin-bottom:18px}
+.tick{--c:#c8b89a;display:grid;grid-template-columns:52px 12px 1fr;gap:10px;align-items:start;padding:7px 0;font-size:13.5px;line-height:1.3}
+.tick time{font-family:var(--mono);font-size:12px;color:var(--ink-3);padding-top:1px}
+.tick .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--ink-3);margin-top:4px}
+.tick.mine .dot{background:var(--shu);border-color:var(--shu)}
+.tick.mine{font-weight:600}
+.tick .ep{display:block;font-family:var(--mono);font-size:11px;font-weight:400;color:var(--ink-3)}
+.tick.past{opacity:.45}
+.now-line{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center;margin:6px 0;font-family:var(--mono);font-size:11px;color:var(--shu)}
+.now-line i{height:1px;background:var(--shu)}
+
+/* ── pick ── */
+.pick{display:grid;grid-template-columns:300px minmax(0,1fr);gap:72px;padding:44px 0;border-bottom:1px solid var(--rule)}
+.pick .cover{position:relative}
+.pick .cover img{width:300px;aspect-ratio:2/3;object-fit:cover;box-shadow:12px 12px 0 color-mix(in oklch,var(--c) 55%,var(--paper))}
+.vert{position:absolute;right:-48px;top:0;max-height:100%;overflow:hidden;writing-mode:vertical-rl;font-family:var(--jp);font-weight:700;font-size:17px;letter-spacing:.12em;color:var(--ink-2)}
+.pick h2{font-family:var(--serif);font-weight:600;font-size:54px;line-height:.98;letter-spacing:-.035em;margin:14px 0 20px;max-width:16ch}
+.pick p{font-size:16px;line-height:1.65;color:var(--ink-2);max-width:54ch;margin:0 0 24px}
+.why{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink);margin:0 0 20px;padding-left:16px;border-left:2px solid var(--c)}
+.facts{display:flex;gap:36px;border-top:1px solid var(--rule);padding-top:16px;margin:0 0 28px}
+.facts dt{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.facts dd{margin:4px 0 0;font-family:var(--mono);font-size:15px}
+
+/* ── because you loved: uneven strip ── */
+.strip{display:grid;grid-template-columns:1.6fr repeat(6,1fr);gap:20px;align-items:start}
+.strip a{--c:#c8b89a;display:block}
+.strip img{width:100%;aspect-ratio:2/3;object-fit:cover;transition:box-shadow .18s,transform .18s}
+.strip a:hover img{box-shadow:6px 6px 0 color-mix(in oklch,var(--c) 60%,var(--paper));transform:translate(-2px,-2px)}
+.strip .cap{display:grid;grid-template-columns:auto 1fr;gap:8px;margin-top:10px;font-size:13px;line-height:1.3}
+.strip .cap .i{font-family:var(--serif);color:var(--ink-3);font-size:15px}
+.strip .cap b{font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.strip .cap small{display:block;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:3px}
+.strip a:first-child .cap b{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.05}
+
+/* ── trending ledger ── */
+.ledger{display:grid;grid-template-columns:1fr 1fr;column-gap:56px}
+.lr{--c:#c8b89a;display:grid;grid-template-columns:40px 36px minmax(0,1fr) auto auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule)}
+.lr .r{font-family:var(--serif);font-weight:300;font-size:30px;line-height:1;color:var(--ink-3);letter-spacing:-.04em}
+.lr:hover .r{color:var(--c)}
+.lr img{width:36px;aspect-ratio:2/3;object-fit:cover}
+.lr .t{font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lr .t small{display:block;font-weight:400;font-size:12px;color:var(--ink-3);margin-top:2px}
+.lr .mv{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);text-align:right;min-width:48px}
+.lr .mv.up{color:#7fc98f}
+.lr .mv.dn{color:var(--shu)}
+.lr .sc{font-family:var(--mono);font-size:12.5px;min-width:34px;text-align:right}
+
+@media (max-width:900px){
+  .dateline .r{display:none}
+  .hello{grid-template-columns:1fr}
+  .hello h1{font-size:48px}
+  .tally{text-align:left}
+  .tally strong{font-size:40px}
+  .split{grid-template-columns:1fr;gap:32px}
+  .tonight{border-left:0;padding-left:0}
+  .lead{grid-template-columns:110px minmax(0,1fr);gap:18px}
+  .lead img{width:110px}
+  .lead h3{font-size:28px}
+  .row{grid-template-columns:44px minmax(0,1fr) 72px 28px}
+  .row .bar{display:none}
+  .pick{grid-template-columns:1fr;gap:24px}
+  .pick .cover img{width:200px}
+  .pick .vert{display:none}
+  .pick h2{font-size:40px}
+  .strip{grid-template-columns:repeat(7,40vw);overflow-x:auto}
+  .strip a:first-child{grid-column:auto}
+  .ledger{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#"><i>見</i>miruyo</a>
+    <div class="links"><a class="on" href="#">Home</a><a href="#">Browse</a><a href="#">Seasonal</a><a href="#">My List</a><a href="#">Profile</a></div>
+    <div class="mode"><b>Anime</b> / Manga</div>
+    <div class="search">Search ⌘K</div>
+  </nav>
+
+  <div class="dateline"><span id="date"></span><span class="r">Fall 2026 · Week 7 of 12</span></div>
+
+  <header class="hello">
+    <div>
+      <h1 id="greet"></h1>
+      <p id="sum"></p>
+    </div>
+    <div class="tally" id="tally"></div>
+  </header>
+
+  <div class="split">
+    <section>
+      <div class="sect-h"><h2>Continue watching</h2><span class="jp">視聴中</span><span class="fill"></span><a class="more" href="#">My list →</a></div>
+      <div class="lead" id="lead"></div>
+      <div id="rows"></div>
+    </section>
+    <aside>
+      <div class="sect-h"><h2>&nbsp;</h2></div>
+      <div class="tonight" id="tonight"></div>
+    </aside>
+  </div>
+
+  <div class="sect-h"><h2>Tonight’s pick</h2><span class="jp">今夜の一本</span><span class="fill"></span><a class="more" href="#">Another →</a></div>
+  <section class="pick tone" id="pick"></section>
+
+  <div class="sect-h"><h2>Because you loved <em style="font-style:italic">Uzumaki</em></h2><span class="fill"></span><a class="more" href="#">More →</a></div>
+  <div class="strip" id="strip"></div>
+
+  <div class="sect-h"><h2>Trending</h2><span class="jp">話題</span><span class="n">this week</span><span class="fill"></span><a class="more" href="#">See all →</a></div>
+  <div class="ledger" id="trend"></div>
+
+  <footer><span>miruyo · data from AniList</span><span>Mockup — list progress is made up</span></footer>
+</div>
+
+<script>
+const D = {"cont": [{"t": "ONE PIECE", "n": "ONE PIECE", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx21-ELSYx3yMPcKM.jpg", "c": "#e49335", "have": 1177, "eps": null, "aired": 1180, "next": {"episode": 1181, "airingAt": 1798985760}}, {"t": "The Apothecary Diaries Season 3", "n": "薬屋のひとりごと 第3期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx195516-MJpUZlOberqH.jpg", "c": "#e4a128", "have": 5, "eps": 12, "aired": 7, "next": {"episode": 8, "timeUntilAiring": 138234, "airingAt": 1795183200}}, {"t": "STEEL BALL RUN JoJo's Bizarre Adventure 2nd - 3rd STAGE", "n": "ジョジョの奇妙な冒険 スティール・ボール・ラン 2nd＆3rd STAGE", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx210482-P1VNKbqdJ6Zj.jpg", "c": "#f1ae50", "have": 6, "eps": 11, "aired": 8, "next": {"episode": 9, "timeUntilAiring": 116634, "airingAt": 1795161600}}, {"t": "Black Clover Season 2", "n": "ブラッククローバー 第2期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx195604-tSZcfKbVqSEG.jpg", "c": "#f1a143", "have": 6, "eps": null, "aired": 7, "next": {"episode": 8, "timeUntilAiring": 224634, "airingAt": 1795269600}}, {"t": "Blue Box Season 2", "n": "アオのハコ Season２", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx189123-0secXELIhkIW.jpg", "c": "#e4ae50", "have": 6, "eps": 12, "aired": 6, "next": {"episode": 7, "timeUntilAiring": 287634, "airingAt": 1795332600}}, {"t": "Firefly Wedding", "n": "ホタルの嫁入り", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx205909-DM0fAzNQulod.jpg", "c": "#aebb35", "have": 4, "eps": 12, "aired": 6, "next": {"episode": 7, "timeUntilAiring": 140034, "airingAt": 1795185000}}], "pick": {"t": "Neon Genesis Evangelion: The End of Evangelion", "n": "新世紀エヴァンゲリオン劇場版 Air/まごころを、君に", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx32-5JYsv0wc122I.jpg", "c": "#e46b50", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/n32-BH9yHJBQqeOa.jpg", "d": "Shinji Ikari is left emotionally comatose after the death of a dear friend. With his son mentally unable to pilot the humanoid robot Evangelion Unit-01, Gendou Ikari's NERV races against the shadow organization SEELE to see who can enact their ultimate plan…", "st": "GAINAX", "s": 86, "y": 1997, "f": "MOVIE", "eps": 1, "g": ["Action", "Drama", "Mecha"]}, "rec": [{"t": "Junji Ito Collection", "n": "伊藤潤二「コレクション」", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/nx99940-pxsliSVHi0sj.jpg", "c": "#86285d", "f": "TV", "y": 2018, "s": 63, "eps": 12, "st": "Studio DEEN"}, {"t": "Junji Ito Maniac: Japanese Tales of the Macabre", "n": "伊藤潤二『マニアック』", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx150653-80BlGKvUBmaS.jpg", "c": "#f1e4ae", "f": "ONA", "y": 2023, "s": 66, "eps": 12, "st": "Studio DEEN"}, {"t": "Junji Ito Collection: Tomie", "n": "伊藤潤二「コレクション」富江", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b101016-VM4HXz6S5myf.jpg", "c": "#c8b89a", "f": "OVA", "y": 2018, "s": 64, "eps": 2, "st": "Studio DEEN"}, {"t": "GYO: Tokyo Fish Attack", "n": "ギョ", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx10417-0tPSLVLmnLZY.jpg", "c": "#50aee4", "f": "OVA", "y": 2012, "s": 47, "eps": 1, "st": "ufotable"}, {"t": "Another", "n": "アナザー", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx11111-gvvE5bBYsyFo.png", "c": "#e47850", "f": "TV", "y": 2012, "s": 71, "eps": 12, "st": "P.A.WORKS"}, {"t": "Theatre of Darkness: Yamishibai", "n": "闇芝居", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b19383-vmpqTraCFNRg.jpg", "c": "#939328", "f": "TV_SHORT", "y": 2013, "s": 65, "eps": 13, "st": "ILCA"}, {"t": "When They Cry", "n": "ひぐらしのなく頃に", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx934-wjMlVEl4CWwg.jpg", "c": "#e4a11a", "f": "TV", "y": 2006, "s": 76, "eps": 26, "st": "Studio DEEN"}], "trend": [{"t": "Reincarnated as a Sword Season 2", "n": "転生したら剣でした 第2期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx159042-GGFwlDskc5vR.png", "c": "#f19328", "f": "ONA", "s": 75, "tr": 287, "st": "C2C", "nx": {"episode": 9, "airingAt": 1795620600}}, {"t": "ONE PIECE", "n": "ONE PIECE", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx21-ELSYx3yMPcKM.jpg", "c": "#e49335", "f": "TV", "s": 87, "tr": 273, "st": "Toei Animation", "nx": {"episode": 1181, "airingAt": 1798985760}}, {"t": "The World's Strongest Witch", "n": "世界最強の魔女、始めました", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx211778-0MXK5HqVFBYH.jpg", "c": "#5dbbf1", "f": "TV", "s": 70, "tr": 227, "st": "Bridge", "nx": {"episode": 8, "airingAt": 1795611600}}, {"t": "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life", "n": "追放されたチート付与魔術師は気ままなセカンドライフを謳歌する。　～俺は武器だけじゃなく、あらゆるものに『強化ポイント』を付与できるし、俺の意思でいつでも効果を解除できるけど、残った人たち大丈夫？～", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b207329-6VPeZIDfF4Sr.png", "c": "#f1e4c9", "f": "TV", "s": 74, "tr": 222, "st": "P.A.WORKS", "nx": {"episode": 8, "airingAt": 1795532400}}, {"t": "A Returner's Magic Should be Special Season 2", "n": "帰還者の魔法は特別です 第2期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx172192-W7P5xEUaxF3y.jpg", "c": "#f19328", "f": "TV", "s": 69, "tr": 183, "st": "Arvo Animation", "nx": {"episode": 8, "airingAt": 1795621500}}, {"t": "Black Clover", "n": "ブラッククローバー", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx97940-fyh8o7gNbha0.png", "c": "#d6c96b", "f": "TV", "s": 79, "tr": 157, "st": "Studio Pierrot", "nx": null}, {"t": "Overgeared", "n": "テムパル～アイテムの力～", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx212888-NhyvqPt5aIuJ.jpg", "c": "#f19335", "f": "ONA", "s": 76, "tr": 134, "st": "J.C.STAFF", "nx": {"episode": 9, "airingAt": 1795357800}}, {"t": "Nia Liston: The Merciless Maiden", "n": "凶乱令嬢ニア・リストン", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx206949-4HYI3YuP0eLI.png", "c": "#f15dbb", "f": "TV", "s": 74, "tr": 114, "st": "KONAMI animation", "nx": {"episode": 8, "airingAt": 1795523160}}, {"t": "Sasaki and Peeps Season 2", "n": "佐々木とピーちゃん シーズン２", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx176314-lpvca6vjmkeO.jpg", "c": "#1a78d6", "f": "TV", "s": 70, "tr": 107, "st": "SILVER LINK.", "nx": {"episode": 8, "airingAt": 1795611600}}, {"t": "Even the Student Council Has Its Holes!", "n": "生徒会にも穴はある！", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx191656-xFHtxM8SUTdU.png", "c": "#5dbbe4", "f": "TV", "s": 74, "tr": 96, "st": "Passione", "nx": {"episode": 8, "airingAt": 1795275000}}], "air": [{"t": "The Apothecary Diaries Season 3", "c": "#e4a128", "at": 1795183200, "ep": 8, "eps": 12, "mine": true}, {"t": "Black Clover Season 2", "c": "#f1a143", "at": 1795269600, "ep": 8, "eps": null, "mine": true}, {"t": "Overgeared", "c": "#f19335", "at": 1795357800, "ep": 9, "eps": 12, "mine": false}, {"t": "Reincarnated as a Sword Season 2", "c": "#f19328", "at": 1795620600, "ep": 9, "eps": 12, "mine": false}, {"t": "Firefly Wedding", "c": "#aebb35", "at": 1795185000, "ep": 7, "eps": 12, "mine": true}, {"t": "Even the Student Council Has Its Holes!", "c": "#5dbbe4", "at": 1795275000, "ep": 8, "eps": 12, "mine": false}, {"t": "Blue Box Season 2", "c": "#e4ae50", "at": 1795332600, "ep": 7, "eps": 12, "mine": true}, {"t": "STEEL BALL RUN JoJo's Bizarre Adventure 2nd - 3rd STAGE", "c": "#f1ae50", "at": 1795161600, "ep": 9, "eps": 11, "mine": true}, {"t": "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life", "c": "#f1e4c9", "at": 1795532400, "ep": 8, "eps": 12, "mine": false}, {"t": "The Ramparts of Ice Season 2", "c": "#e4a143", "at": 1795100160, "ep": 8, "eps": null, "mine": false}, {"t": "Tokyo Revengers: War of the Three Titans Arc", "c": "#c99350", "at": 1795193580, "ep": 8, "eps": 13, "mine": false}, {"t": "A Returner's Magic Should be Special Season 2", "c": "#f19328", "at": 1795621500, "ep": 8, "eps": null, "mine": false}, {"t": "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!", "c": "#aed6e4", "at": 1795437000, "ep": 8, "eps": 12, "mine": false}, {"t": "Dragon Ball Super: Beerus", "c": "#e48643", "at": 1795356960, "ep": 7, "eps": null, "mine": false}, {"t": "Reborn as a Space Mercenary: I Woke Up Piloting the Strongest Starship!", "c": "#d6bb78", "at": 1795350600, "ep": 8, "eps": 13, "mine": false}, {"t": "Nia Liston: The Merciless Maiden", "c": "#f15dbb", "at": 1795523160, "ep": 8, "eps": 25, "mine": false}, {"t": "As a Reincarnated Aristocrat, I'll Use My Appraisal Skill to Rise in the World Season 3", "c": "#d6f1c9", "at": 1795357800, "ep": 9, "eps": 12, "mine": false}, {"t": "I'm Dating a Dark Summoner", "c": "#fff1ae", "at": 1795364400, "ep": 8, "eps": 12, "mine": false}, {"t": "Aoashi Season 2", "c": "#e4ae50", "at": 1795334400, "ep": 8, "eps": 24, "mine": false}, {"t": "Magic Repo Man: Dumped by My Party, I’ll Cash In With a Cute Support Fairy to Become the Strongest!", "c": "#bbe45d", "at": 1795278600, "ep": 8, "eps": 12, "mine": false}, {"t": "Magical Explorer", "c": "#f1a150", "at": 1795273200, "ep": 9, "eps": 13, "mine": false}, {"t": "The Detective Is Already Dead Season 2", "c": "#c8b89a", "at": 1795609800, "ep": 8, "eps": 13, "mine": false}, {"t": "Fool Night", "c": "#93281a", "at": 1795680000, "ep": 1, "eps": 12, "mine": false}, {"t": "A Wild Last Boss Appeared! Season 2", "c": "#e45dc9", "at": 1795267800, "ep": 9, "eps": null, "mine": false}, {"t": "PSYREN", "c": "#0dd6e4", "at": 1795442400, "ep": 7, "eps": null, "mine": false}]};
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const jpDays = ['日','月','火','水','木','金','土'];
+const now = new Date();
+const hhmm = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const fmt = f => ({TV:'TV',TV_SHORT:'Short',MOVIE:'Film',ONA:'Streaming',OVA:'OVA',SPECIAL:'Special'}[f] || f);
+
+/* masthead */
+document.getElementById('date').innerHTML = `${days[now.getDay()]} ${now.getDate()} ${now.toLocaleString('en',{month:'long'})} ${now.getFullYear()} · <span class="jp">${jpDays[now.getDay()]}曜日</span>`;
+const h = now.getHours();
+document.getElementById('greet').innerHTML = h < 5 ? 'Up <em>late</em>.' : h < 12 ? 'Good <em>morning</em>.' : h < 18 ? 'Good <em>afternoon</em>.' : 'Good <em>evening</em>.';
+const cont = D.cont.map(c => ({...c, behind: c.aired - c.have}));
+const totalBehind = cont.reduce((a,c)=>a+c.behind,0);
+const showsBehind = cont.filter(c=>c.behind>0).length;
+/* shows are weekly: anything whose next airing falls on today's weekday airs today at that time */
+const todayAir = D.air.filter(a => new Date(a.at*1000).getDay() === now.getDay()).map(a => {
+  const d = new Date(a.at*1000), t = new Date(now); t.setHours(d.getHours(), d.getMinutes(), 0, 0);
+  const aired = d.toDateString() !== now.toDateString();   // next airing is a week out, so today's already went out
+  return {...a, at: t/1000, ep: aired ? a.ep - 1 : a.ep};
+});
+const mineToday = todayAir.filter(a=>a.mine).length;
+document.getElementById('sum').innerHTML = `You’re <b>${totalBehind} episodes behind</b> across ${showsBehind} shows. ${mineToday ? `<b>${mineToday}</b> of yours air${mineToday===1?'s':''} today.` : 'Nothing of yours airs today, so it’s a good night to catch up.'}`;
+document.getElementById('tally').innerHTML = `
+  <div class="hot"><strong>${totalBehind}</strong>to watch</div>
+  <div><strong>${cont.length}</strong>watching</div>
+  <div><strong>${todayAir.length}</strong>on air today</div>`;
+
+/* continue watching: the show you're furthest behind on leads */
+const sorted = [...cont].sort((a,b)=>b.behind-a.behind);
+const L = sorted[0];
+const lead = document.getElementById('lead');
+lead.style.setProperty('--c', L.c);
+const total = L.eps || L.aired;
+lead.innerHTML = `
+  <img src="${L.img}" alt="">
+  <div>
+    <div class="kicker">Furthest behind</div>
+    <h3>${esc(L.t)}</h3>
+    <div class="nat">${esc(L.n)}</div>
+    <div class="behind"><b>${L.behind} episodes</b> waiting. Episode ${L.aired+1} airs ${new Date(L.next.airingAt*1000).toLocaleDateString('en',{weekday:'long'})} at ${hhmm(new Date(L.next.airingAt*1000))}.</div>
+    <div class="counter"><span class="num">${L.have} <small>/ ${L.eps ?? L.aired}</small></span><button>+1 → ${L.have+1}</button></div>
+    <div class="track"><i style="width:${L.have/total*100}%"></i><b style="left:${L.aired/total*100}%"></b></div>
+    <div class="track-l"><span>Watched ${L.have}</span><span>Aired ${L.aired}</span></div>
+  </div>`;
+document.getElementById('rows').innerHTML = sorted.slice(1).map(c => {
+  const tot = c.eps || c.aired + 1;
+  return `<div class="row ${c.behind?'':'done'}" style="--c:${c.c}">
+    <img src="${c.img}" alt="">
+    <div class="t">${esc(c.t)}<small>${esc(c.n)}</small></div>
+    <div class="bar"><b style="width:${c.aired/tot*100}%"></b><i style="width:${c.have/tot*100}%"></i></div>
+    <div class="ep">${c.have} / ${c.eps ?? '?'}<small>${c.behind ? `<span class="new">${c.behind} new</span>` : `next ${new Date(c.next.airingAt*1000).toLocaleDateString('en',{weekday:'short'})} ${hhmm(new Date(c.next.airingAt*1000))}`}</small></div>
+    <button class="add" aria-label="Watched next episode">+</button>
+  </div>`; }).join('');
+
+/* tonight: today's broadcasts on a time ruler (falls back to the next 24 hours) */
+let air = [...todayAir];
+air = air.sort((a,b)=>a.at-b.at).slice(0,9);
+let drawnNow = false;
+const tl = air.map(a => {
+  const d = new Date(a.at*1000);
+  let pre = '';
+  if (!drawnNow && d > now) { drawnNow = true; pre = `<div class="now-line"><span>${hhmm(now)}</span><i></i></div>`; }
+  return pre + `<div class="tick ${a.mine?'mine':''} ${d < now?'past':''}" style="--c:${a.c}">
+    <time>${d.toDateString()===now.toDateString()?hhmm(d):d.toLocaleDateString('en',{weekday:'short'})+' '+hhmm(d)}</time><span class="dot"></span>
+    <span>${esc(a.t)}<span class="ep">Ep ${a.ep}${a.eps?' / '+a.eps:''}</span></span></div>`;
+}).join('') + (drawnNow ? '' : `<div class="now-line"><span>${hhmm(now)}</span><i></i></div>`);
+document.getElementById('tonight').innerHTML = `<h3>On air today</h3><div class="sub">Your time · <span style="color:var(--shu)">●</span> on your list</div>${tl}`;
+
+/* pick */
+const P = D.pick, pk = document.getElementById('pick');
+pk.style.setProperty('--c', P.c);
+pk.innerHTML = `
+  <div class="cover"><img src="${P.img}" alt=""><div class="vert">${esc(P.n)}</div></div>
+  <div>
+    <div class="kicker">${esc(P.st)} · ${fmt(P.f)} · ${P.y}</div>
+    <h2>${esc(P.t)}</h2>
+    <p class="why">Because you gave <b style="font-style:normal">Akira</b> a 9.</p>
+    <p>${esc(P.d)}</p>
+    <dl class="facts">
+      <div><dt>Score</dt><dd>${P.s}%</dd></div>
+      <div><dt>Runtime</dt><dd>87 min</dd></div>
+      <div><dt>Genre</dt><dd>${esc(P.g.slice(0,2).join(' / '))}</dd></div>
+    </dl>
+    <a class="btn" href="#">+ Plan to watch</a> &nbsp; <a class="btn ghost" href="#">More about it</a> &nbsp; <a class="btn ghost" href="#">Not for me</a>
+  </div>`;
+
+/* because you loved */
+document.getElementById('strip').innerHTML = D.rec.map((m,i) => `
+  <a href="#" style="--c:${m.c}"><img src="${m.img}" alt="" loading="lazy">
+  <div class="cap"><span class="i">${i+1}</span><div><b>${esc(m.t)}</b><small>${fmt(m.f)} · ${m.y ?? ''}${m.s?` · ${m.s}%`:''}</small></div></div></a>`).join('');
+
+/* trending, with made-up week-on-week movement */
+const moves = [0, 3, -1, 5, 0, -2, 1, -4, 2, 7];
+document.getElementById('trend').innerHTML = D.trend.map((m,i) => {
+  const mv = moves[i];
+  return `<a class="lr" href="#" style="--c:${m.c}">
+    <span class="r">${pad(i+1)}</span><img src="${m.img}" alt="" loading="lazy">
+    <span class="t">${esc(m.t)}<small>${esc(m.st)} · ${fmt(m.f)}</small></span>
+    <span class="mv ${mv>0?'up':mv<0?'dn':''}">${mv>0?'▲ '+mv:mv<0?'▼ '+(-mv):'—'}</span>
+    <span class="sc">${m.s ? m.s+'%' : '—'}</span></a>`; }).join('');
+</script>
+</body>
+</html>

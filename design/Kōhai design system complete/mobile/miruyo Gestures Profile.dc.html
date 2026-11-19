@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..500,0..1,0&display=block">
+<script src="../miruyo-data.js"></script>
+<script src="../miruyo-gestures.js"></script>
+<style>
+body{margin:0;background:#05060A;color:#EEF0F6;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#FF8A78;text-decoration:none}a:hover{color:#FFB3A6}
+</style>
+</helmet>
+<div style="padding:64px;display:flex;flex-direction:column;gap:56px;width:max-content">
+
+<div style="display:flex;flex-direction:column;gap:14px;max-width:1440px">
+  <div style="font:500 11px 'Geist Mono';color:#FF8A78;letter-spacing:.08em">SCREEN 18 · GESTURES · PROFILE &amp; SETTINGS</div>
+  <h1 style="margin:0;font:700 44px/1.05 'Bricolage Grotesque';letter-spacing:-.03em">Profile gestures</h1>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:14px;line-height:1.55;color:#A6ADC2;max-width:1200px">
+    <p style="margin:0"><b style="color:#EEF0F6">Scrub any chart.</b> Drag sideways across the score bars, the months or the activity grid. The exact value reads out in the card header, so your finger never covers it. After you let go it stays for 1.5s.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Sideways means scrub, up and down means scroll.</b> A chart only starts scrubbing after 6px of sideways movement, so scrolling the page past a chart never highlights a bar.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Swipe the totals to switch.</b> The four stat cards swipe between Anime and Manga, and the pinned toggle's thumb can be dragged. Both stay in sync with the top bar toggle. Try it on <a href="#18a">18a</a>.</p>
+  </div>
+</div>
+
+<div style="display:flex;gap:64px;align-items:flex-start">
+
+<div id="18a" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">18a</span>Live · drag with mouse or touch<div style="flex:1"></div><button onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#EEF0F6;font:600 12px 'Geist';display:flex;align-items:center;gap:6px;cursor:pointer"><span class="material-symbols-rounded" style="font-size:16px">replay</span>Reset</button></div>
+  <div data-screen-label="Gestures profile live" style="width:390px;height:844px;border-radius:44px;overflow:hidden;background:#05060A;border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 0 0 8px #11131a;user-select:none;-webkit-user-select:none">
+    <div ref="{{ scRef }}" style="position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding-bottom:110px;scrollbar-width:none">
+      <div style="height:44px"></div>
+      <dc-import name="../shared/TopBar" device="mobile" mode="{{ mode }}" on-mode="{{ setMode }}" hint-size="100%,56px"></dc-import>
+      <div style="position:relative;height:120px;overflow:hidden"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#1E2A44,#2A1E44)"></div><div style="position:absolute;inset:0;background:linear-gradient(0deg,#05060A 0%,rgba(5,6,10,.35) 60%,rgba(5,6,10,.15) 100%)"></div></div>
+      <div style="position:relative;margin-top:-44px;padding:0 16px;display:flex;align-items:flex-end;gap:12px"><div style="width:76px;height:76px;flex:none;border-radius:16px;border:4px solid #05060A;background:linear-gradient(135deg,#5AB0FF,#A08CFF)"></div><div style="flex:1;min-width:0;padding-bottom:4px"><div style="font:700 24px/1.2 'Bricolage Grotesque';letter-spacing:-.02em">haruka_k</div><div style="font-size:12px;color:#A6ADC2">Member since March 2019</div></div><div style="width:44px;height:44px;margin-bottom:4px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#10131C;display:grid;place-items:center"><span class="material-symbols-rounded" style="font-size:22px">settings</span></div></div>
+      <div style="padding-top:28px;display:flex;flex-direction:column;gap:14px">
+        <div style="padding:0 16px;font:700 20px 'Bricolage Grotesque';letter-spacing:-.02em">Favourite {{ favNoun }}</div>
+        <div style="display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:0 16px">
+          <sc-for list="{{ favs }}" as="t" hint-placeholder-count="6"><div onPointerDown="{{ t.down }}" style="width:120px;flex:none"><dc-import name="../shared/PosterCard" tid="{{ t.id }}" size="sm" hint-size="100%,236px"></dc-import></div></sc-for>
+        </div>
+      </div>
+      <div style="position:sticky;top:44px;z-index:5;margin-top:28px;padding:10px 16px;background:#05060A;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between">
+        <div style="font:700 26px/1 'Bricolage Grotesque';letter-spacing:-.03em">Stats</div>
+        <div ref="{{ segRef }}" onPointerDown="{{ segDown }}" style="position:relative;width:168px;height:42px;padding:3px;border-radius:12px;background:#10131C;border:1px solid rgba(255,255,255,.08);display:flex;touch-action:none;cursor:grab">
+          <div style="position:absolute;top:3px;width:80px;height:34px;border-radius:9px;left:{{ thumbL }};background:{{ thumbBg }};transition:{{ thumbTr }};box-shadow:{{ thumbSh }}"></div>
+          <button onClick="{{ toA }}" style="position:relative;flex:1;border:0;background:transparent;font:600 14px 'Geist';cursor:pointer;transition:color .15s;color:{{ aFg }}">Anime</button>
+          <button onClick="{{ toM }}" style="position:relative;flex:1;border:0;background:transparent;font:600 14px 'Geist';cursor:pointer;transition:color .15s;color:{{ mFg }}">Manga</button>
+        </div>
+      </div>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+        <div onPointerDown="{{ cardsDown }}" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;touch-action:pan-y;cursor:grab;transform:{{ cTf }};opacity:{{ cOp }};transition:{{ cTr }}">
+          <sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
+            <div style="padding:14px;border-radius:14px;background:#10131C;display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#A6ADC2"><span class="material-symbols-rounded" style="font-size:16px;color:{{ accT }}">{{ c.i }}</span>{{ c.l }}</div><div style="font:700 28px/1 'Bricolage Grotesque'">{{ c.v }}</div></div>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:center;gap:6px;margin-top:-2px"><span style="height:6px;border-radius:3px;transition:width .2s,background .2s;width:{{ dotA }};background:{{ dotAc }}"></span><span style="height:6px;border-radius:3px;transition:width .2s,background .2s;width:{{ dotM }};background:{{ dotMc }}"></span></div>
+        <div style="padding:16px;border-radius:14px;background:#10131C;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><div style="font:650 17px 'Bricolage Grotesque';white-space:nowrap">Score distribution</div><div style="min-width:0;overflow:hidden;text-overflow:ellipsis;font:500 12px 'Geist Mono';white-space:nowrap;color:{{ distReadC }}">{{ distRead }}</div></div>
+          <div onPointerDown="{{ distDown }}" style="touch-action:pan-y;cursor:crosshair;display:flex;flex-direction:column;gap:6px">
+            <div style="height:132px;display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;align-items:end;background:repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 1px,transparent 1px 44px)">
+              <sc-for list="{{ dist }}" as="b" hint-placeholder-count="10"><div onClick="{{ b.pin }}" style="height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px"><div style="font:600 11px 'Geist Mono';height:13px;color:#EEF0F6">{{ b.vl }}</div><div style="width:100%;border-radius:4px 4px 1px 1px;transition:height .3s cubic-bezier(.2,.8,.2,1),background .1s,opacity .1s;height:{{ b.h }};background:{{ b.bg }};opacity:{{ b.op }}"></div></div></sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px"><sc-for list="{{ dist }}" as="b" hint-placeholder-count="10"><div style="text-align:center;font:500 11px 'Geist Mono';color:{{ b.kc }}">{{ b.k }}</div></sc-for></div>
+          </div>
+        </div>
+        <div style="padding:16px;border-radius:14px;background:#10131C;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><div style="font:650 17px 'Bricolage Grotesque';white-space:nowrap">Finished · 12 months</div><div style="min-width:0;overflow:hidden;text-overflow:ellipsis;font:500 12px 'Geist Mono';white-space:nowrap;color:{{ actReadC }}">{{ actRead }}</div></div>
+          <div onPointerDown="{{ actDown }}" style="touch-action:pan-y;cursor:crosshair;display:flex;flex-direction:column;gap:6px">
+            <div style="height:112px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;align-items:end">
+              <sc-for list="{{ act }}" as="a" hint-placeholder-count="12"><div onClick="{{ a.pin }}" style="height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px"><div style="font:600 10px 'Geist Mono';height:12px;color:#EEF0F6">{{ a.vl }}</div><div style="width:100%;border-radius:3px 3px 1px 1px;transition:height .3s cubic-bezier(.2,.8,.2,1),background .1s,opacity .1s;height:{{ a.h }};background:{{ a.bg }};opacity:{{ a.op }}"></div></div></sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px"><sc-for list="{{ act }}" as="a" hint-placeholder-count="12"><div style="text-align:center;font:500 10px 'Geist Mono';color:{{ a.kc }}">{{ a.m }}</div></sc-for></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)"><span style="font-size:12px;color:#A6ADC2;white-space:nowrap">Daily activity · 26 weeks</span><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;font:500 12px 'Geist Mono';white-space:nowrap;color:{{ heatReadC }}">{{ heatRead }}</span></div>
+          <div onPointerDown="{{ heatDown }}" style="touch-action:pan-y;cursor:crosshair;display:grid;grid-template-columns:repeat(26,minmax(0,1fr));grid-auto-flow:column;grid-template-rows:repeat(7,9px);gap:2px">
+            <sc-for list="{{ heat }}" as="h" hint-placeholder-count="182"><div onClick="{{ h.pin }}" style="border-radius:2px;background:{{ h.c }};box-shadow:{{ h.ring }};opacity:{{ h.op }}"></div></sc-for>
+          </div>
+        </div>
+        <div style="font-size:12px;line-height:1.5;color:#7C849C">{{ footnote }}</div>
+      </div>
+    </div>
+    <div style="position:absolute;top:0;left:0;right:0;height:44px;z-index:8;background:#05060A;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font:600 15px 'Geist'"><span>9:41</span><span style="display:flex;gap:4px"><span class="material-symbols-rounded" style="font-size:18px">signal_cellular_alt</span><span class="material-symbols-rounded" style="font-size:18px">wifi</span><span class="material-symbols-rounded" style="font-size:18px">battery_full</span></span></div>
+    <sc-if value="{{ hasHap }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:56px;left:50%;transform:translateX(-50%);height:26px;padding:0 10px 0 8px;border-radius:999px;background:rgba(9,11,17,.9);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;gap:6px;font:600 11px 'Geist Mono';z-index:60;white-space:nowrap;color:{{ hapC }}"><span class="material-symbols-rounded" style="font-size:15px">vibration</span>{{ hapLbl }}</div>
+    </sc-if>
+    <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:16px;right:16px;bottom:100px;height:48px;padding:0 14px;border-radius:12px;background:#1F2433;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;font-size:14px;z-index:20"><span class="material-symbols-rounded" style="font-size:20px;color:#D7DBE6">visibility</span><span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ toastMsg }}</span></div>
+    </sc-if>
+    <div style="position:absolute;left:0;right:0;bottom:0;z-index:10"><dc-import name="../shared/TabBar" active="profile" mode="{{ mode }}" hint-size="100%,84px"></dc-import></div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:40px">
+<div id="18b" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">18b</span>Storyboard · scrub, scroll, switch</div>
+  <div style="display:grid;grid-template-columns:repeat(4,300px);gap:20px">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="8">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="height:236px;padding-top:30px;border-radius:18px;background:#05060A;border:1px solid rgba(255,255,255,.08);position:relative;overflow:hidden">
+          <sc-if value="{{ f.isBars }}" hint-placeholder-val="{{ true }}">
+            <div style="margin:10px 14px 0;padding:12px;border-radius:12px;background:#10131C;display:flex;flex-direction:column;gap:10px;position:relative">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px"><span style="font:650 13px 'Bricolage Grotesque';white-space:nowrap">{{ f.title }}</span><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;font:500 10px 'Geist Mono';white-space:nowrap;color:{{ f.readC }}">{{ f.read }}</span></div>
+              <div style="height:100px;display:grid;gap:3px;align-items:end;grid-template-columns:{{ f.cols }}">
+                <sc-for list="{{ f.bars }}" as="b" hint-placeholder-count="10"><div style="border-radius:3px 3px 1px 1px;height:{{ b.h }};background:{{ b.bg }};opacity:{{ b.op }}"></div></sc-for>
+              </div>
+              <sc-if value="{{ f.finger }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:96px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18);left:{{ f.fx }}"></div></sc-if>
+              <sc-if value="{{ f.scroll }}" hint-placeholder-val="{{ false }}"><span class="material-symbols-rounded" style="position:absolute;left:50%;top:44px;margin-left:-12px;font-size:24px;color:#EEF0F6">arrow_upward</span></sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isHeat }}" hint-placeholder-val="{{ false }}">
+            <div style="margin:10px 14px 0;padding:12px;border-radius:12px;background:#10131C;display:flex;flex-direction:column;gap:12px;position:relative">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px"><span style="font:650 13px 'Bricolage Grotesque';white-space:nowrap">Daily activity</span><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;font:500 10px 'Geist Mono';white-space:nowrap;color:#EEF0F6">{{ f.read }}</span></div>
+              <div style="display:grid;grid-template-columns:repeat(26,minmax(0,1fr));grid-auto-flow:column;grid-template-rows:repeat(7,8px);gap:2px">
+                <sc-for list="{{ f.cells }}" as="h" hint-placeholder-count="182"><div style="border-radius:2px;background:{{ h.c }};box-shadow:{{ h.ring }};opacity:{{ h.op }}"></div></sc-for>
+              </div>
+              <div style="position:absolute;left:78%;top:78px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18)"></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isSeg }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:40px 14px 0;display:flex;flex-direction:column;align-items:center;gap:18px">
+              <div style="position:relative;width:200px;height:44px;padding:3px;border-radius:12px;background:#10131C;border:1px solid rgba(255,255,255,.08);display:flex">
+                <div style="position:absolute;top:3px;left:61px;width:96px;height:36px;border-radius:9px;background:#FF6A55;box-shadow:0 4px 14px rgba(0,0,0,.4)"></div>
+                <span style="position:relative;flex:1;display:grid;place-items:center;font:600 14px 'Geist';color:#1A0B08">Anime</span><span style="position:relative;flex:1;display:grid;place-items:center;font:600 14px 'Geist';color:#A6ADC2">Manga</span>
+                <div style="position:absolute;left:110px;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18)"></div>
+              </div>
+              <div style="font:500 11px 'Geist Mono';color:#7C849C">60% → snaps to Manga on release</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isCards }}" hint-placeholder-val="{{ false }}">
+            <div style="position:relative;padding:20px 14px 0;overflow:hidden">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;transform:translateX(-96px);opacity:.75">
+                <sc-for list="{{ f.cards }}" as="c" hint-placeholder-count="4"><div style="padding:10px;border-radius:10px;background:#10131C;display:flex;flex-direction:column;gap:4px"><span style="font-size:10px;color:#A6ADC2">{{ c.l }}</span><span style="font:700 20px/1 'Bricolage Grotesque'">{{ c.v }}</span></div></sc-for>
+              </div>
+              <div style="position:absolute;top:20px;right:-60px;width:150px;display:grid;grid-template-columns:1fr;gap:8px;opacity:.6">
+                <div style="padding:10px;border-radius:10px;background:#10131C;border:1px solid rgba(160,140,255,.4);display:flex;flex-direction:column;gap:4px"><span style="font-size:10px;color:#B9A9FF">Total manga</span><span style="font:700 20px/1 'Bricolage Grotesque'">97</span></div>
+              </div>
+              <div style="position:absolute;left:40%;top:60px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18)"></div>
+              <div style="display:flex;justify-content:center;gap:5px;padding-top:14px"><span style="width:16px;height:5px;border-radius:3px;background:#FF6A55"></span><span style="width:5px;height:5px;border-radius:3px;background:#3A4054"></span></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isSwitch }}" hint-placeholder-val="{{ false }}">
+            <div style="margin:36px 14px 0;padding:14px;border-radius:12px;background:#10131C;display:flex;align-items:center;gap:10px">
+              <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500">New episodes</div><div style="font-size:11px;color:#A6ADC2">AniList tells you when one airs</div></div>
+              <div style="position:relative;width:44px;height:26px;border-radius:999px;background:#7A3E36;flex:none"><span style="position:absolute;top:3px;left:14px;width:20px;height:20px;border-radius:50%;background:#fff"></span><div style="position:absolute;left:24px;top:13px;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:rgba(238,240,246,.6);box-shadow:0 0 0 6px rgba(238,240,246,.15)"></div></div>
+            </div>
+            <div style="margin:14px 14px 0;font:500 11px 'Geist Mono';color:#7C849C;text-align:center">past halfway → on · Saved to AniList</div>
+          </sc-if>
+          <div style="position:absolute;top:10px;left:14px;z-index:4;font:500 11px 'Geist Mono';color:#7C849C">{{ f.tag }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="font:600 11px 'Geist Mono';color:#7C849C">{{ f.n }}</span><span style="font:650 16px 'Bricolage Grotesque'">{{ f.h }}</span><div style="flex:1"></div><span style="height:22px;padding:0 8px;border-radius:999px;display:flex;align-items:center;gap:4px;font:600 11px 'Geist Mono';white-space:nowrap;color:{{ f.hapC }};background:{{ f.hapBg }}"><span class="material-symbols-rounded" style="font-size:13px">vibration</span>{{ f.hap }}</span></div>
+        <div style="font-size:13px;line-height:1.5;color:#A6ADC2;text-wrap:pretty">{{ f.d }}</div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div id="18c" style="display:flex;flex-direction:column;gap:12px;max-width:1260px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">18c</span>Spec · thresholds, haptics, fallbacks</div>
+  <div style="border-radius:16px;background:#10131C;border:1px solid rgba(255,255,255,.06);overflow:hidden;font-size:13px">
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:12px 18px;font:600 11px 'Geist Mono';letter-spacing:.06em;color:#7C849C;border-bottom:1px solid rgba(255,255,255,.06)"><span>GESTURE</span><span>RESULT</span><span>COMMIT AT</span><span>HAPTIC</span><span>NON-GESTURE PATH</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline"><b style="font-weight:600">Scrub bar charts</b><span style="color:#C4C9D6">The bar under your finger turns white and shows its value, and the others dim. The header readout replaces the summary, e.g. “8 · 48 titles · 29%”.</span><span style="font-family:'Geist Mono';color:#C4C9D6">6px sideways, then per bar</span><span style="color:#C4C9D6">Selection per bar</span><span style="color:#A6ADC2">Tap a bar · each bar labelled for screen readers</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Scrub activity grid</b><span style="color:#C4C9D6">Once started, the scrub follows your finger in both directions, one day at a time. It stops at today; future days are skipped.</span><span style="font-family:'Geist Mono';color:#C4C9D6">6px sideways, then per day</span><span style="color:#C4C9D6">Selection, at most every 40ms</span><span style="color:#A6ADC2">Tap a day</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Release</b><span style="color:#C4C9D6">The readout holds for 1.5s, then goes back to the summary. Starting another scrub replaces it straight away.</span><span style="font-family:'Geist Mono';color:#C4C9D6">1.5s</span><span style="color:#C4C9D6">none</span><span style="color:#A6ADC2">n/a</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Vertical drag on a chart</b><span style="color:#C4C9D6">Scrolls the page and never scrubs. A drag counts as sideways only once it moves 6px in that direction.</span><span style="font-family:'Geist Mono';color:#C4C9D6">axis lock at 6px</span><span style="color:#C4C9D6">none</span><span style="color:#A6ADC2">n/a</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Swipe stat cards</b><span style="color:#C4C9D6">Swipe left for Manga and right for Anime. The cards follow your finger, the new set slides in, and the charts animate their bars to the new heights. Swiping past either end only stretches.</span><span style="font-family:'Geist Mono';color:#C4C9D6">108px (30%), or flick &gt;0.5px/ms after 24px</span><span style="color:#C4C9D6">Selection on change</span><span style="color:#A6ADC2">Stats toggle · top bar toggle</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Drag toggle thumb</b><span style="color:#C4C9D6">The thumb follows your finger and snaps to the nearer side on release. Labels swap colour at halfway.</span><span style="font-family:'Geist Mono';color:#C4C9D6">50% of the track</span><span style="color:#C4C9D6">Selection at halfway</span><span style="color:#A6ADC2">Tap either label</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Hold favourite</b><span style="color:#C4C9D6">Opens the peek from <a href="miruyo Gestures Navigation.dc.html">Navigation</a>. The favourites rails scroll sideways natively.</span><span style="font-family:'Geist Mono';color:#C4C9D6">450ms, &lt;8px movement</span><span style="color:#C4C9D6">Medium</span><span style="color:#A6ADC2">Tap opens Detail</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Settings switches</b><span style="color:#C4C9D6">Tap, or drag the thumb. It flips past halfway and saves to AniList.</span><span style="font-family:'Geist Mono';color:#C4C9D6">50% of the track</span><span style="color:#C4C9D6">Light</span><span style="color:#A6ADC2">Tap the whole row</span></div>
+  </div>
+  <div style="border-radius:16px;background:#10131C;border:1px solid rgba(255,255,255,.06);padding:16px 18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;font-size:13px;line-height:1.5;color:#A6ADC2">
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">1 · FAVOURITES</span>Native sideways scroll. Hold a poster to peek.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">2 · STATS HEADER</span>Stays pinned. The toggle owns every drag that starts on it.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">3 · STAT CARDS</span>Sideways swipes switch Anime and Manga.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">4 · CHARTS</span>Sideways drags scrub. Vertical drags scroll the page.</div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { mode:'anime', sc:null, scrubbing:false, cdx:0, cdrag:false, segF:null, hap:null, toast:null };
+  scRef = el => { this._sc = el; };
+  segRef = el => { this._seg = el; };
+  componentDidMount(){
+    if(!window.KD||!window.MG){ this._p=setInterval(()=>{ if(window.KD&&window.MG){ clearInterval(this._p); this.forceUpdate(); } },80); }
+    this._art=()=>this.forceUpdate(); window.addEventListener('kd-art',this._art);
+  }
+  componentWillUnmount(){ clearInterval(this._p); [this._tt,this._ht,this._clr,this._ct].forEach(clearTimeout); window.removeEventListener('kd-art',this._art); }
+  hap(k,lbl){ const now=Date.now(); if(k==='Selection'&&now-(this._lb||0)<40) return; this._lb=now;
+    window.MG&&MG.buzz(k); clearTimeout(this._ht); this.setState({hap:{k,lbl:lbl||k}}); this._ht=setTimeout(()=>this.setState({hap:null}),800); }
+  armClear(){ clearTimeout(this._clr); this._clr=setTimeout(()=>this.setState({sc:null}),1500); }
+  pin(chart,i){ if(Date.now()-(this._noClick||0)<300) return; this.setState({sc:{chart,i}}); this.armClear(); }
+  setMode(m,fromDx){ if(m===this.state.mode) return; this.setState({mode:m,sc:null,...(fromDx?{cdx:fromDx,cdrag:true}:{})}); this.hap('Selection',m==='anime'?'Anime':'Manga');
+    if(fromDx){ clearTimeout(this._ct); this._ct=setTimeout(()=>this.setState({cdx:0,cdrag:false}),30); } }
+  scrub(chart,n,maxI){ return e=>{ const r=e.currentTarget.getBoundingClientRect(), x0=e.clientX, y0=e.clientY, cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const idx=(x,y)=>{ if(chart==='heat'){ const c=cl(Math.floor((x-r.left)/r.width*26),0,25), rr=cl(Math.floor((y-r.top)/r.height*7),0,6); return Math.min(maxI,c*7+rr); } return cl(Math.floor((x-r.left)/r.width*n),0,n-1); };
+    MG.drag(e,{axis:'x',slop:6,
+      onMove:(dx,dy)=>{ clearTimeout(this._clr); const i=idx(x0+dx,y0+(dy||0)), cur=this.state.sc;
+        if(!cur||cur.chart!==chart||cur.i!==i){ this.setState({sc:{chart,i},scrubbing:true}); this.hap('Selection'); } else if(!this.state.scrubbing) this.setState({scrubbing:true}); },
+      onEnd:()=>{ this._noClick=Date.now(); this.setState({scrubbing:false}); this.armClear(); },
+      onCancel:()=>{ this.setState({scrubbing:false}); this.armClear(); }}); }; }
+  renderVals(){
+    if(!window.KD||!window.MG) return {favs:[],cards:[],dist:[],act:[],heat:[],frames:[]};
+    const st=this.state, isA=st.mode==='anime';
+    const acc=isA?'#FF6A55':'#A08CFF', accT=isA?'#FF8A78':'#B9A9FF', ink=isA?'#1A0B08':'#140E2B';
+    const sc=st.sc, on=c=>sc&&sc.chart===c?sc.i:null;
+    // score distribution
+    const distV=isA?[2,1,3,6,11,19,34,48,29,14]:[0,1,1,3,5,9,17,24,21,12], dmx=Math.max(...distV), dTot=distV.reduce((a,b)=>a+b,0), dA=on('dist');
+    const dist=distV.map((v,i)=>({k:String(i+1), h:Math.max(2,Math.round(v/dmx*88))+'%', bg:dA===i?'#EEF0F6':(i>=6?acc:'#3A4054'), op:dA==null||dA===i?'1':'.4', vl:dA===i?String(v):'', kc:dA===i?'#EEF0F6':'#7C849C', pin:()=>this.pin('dist',i)}));
+    const mean=isA?'7.9':'8.4';
+    // months
+    const MS=['Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'], av=isA?[3,5,6,2,4,2,1,4,7,3,5,2]:[1,0,2,1,0,1,3,1,0,2,2,1], amx=Math.max(...av), aA=on('act');
+    const act=av.map((v,i)=>({m:MS[i][0], h:Math.max(2,Math.round(v/amx*85))+'%', bg:aA===i?'#EEF0F6':(i===11?acc:'#3A4054'), op:aA==null||aA===i?'1':'.4', vl:aA===i?String(v):'', kc:aA===i?'#EEF0F6':'#7C849C', pin:()=>this.pin('act',i)}));
+    // heatmap
+    let seed=7; const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
+    const lv=['#161A26', isA?'rgba(255,106,85,.25)':'rgba(160,140,255,.25)', isA?'rgba(255,106,85,.5)':'rgba(160,140,255,.5)', isA?'rgba(255,106,85,.75)':'rgba(160,140,255,.75)', acc], cnt=[0,1,3,5,8];
+    const TODAY=179, hA=on('heat');
+    const hv=Array.from({length:182},(_,i)=>{ const r=rnd(); return i>TODAY?-1:(r<.35?0:r<.6?1:r<.8?2:r<.93?3:4); });
+    const heat=hv.map((l,i)=>({c:l<0?'transparent':lv[l], ring:hA===i?'0 0 0 1.5px #EEF0F6':'none', op:hA==null||hA===i?'1':'.45', pin:()=>{ if(l>=0) this.pin('heat',i); }}));
+    const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dayL=i=>{ const d=new Date(2026,3,13+i); return `${MN[d.getMonth()]} ${d.getDate()}`; };
+    const heatRead=hA!=null?`${dayL(hA)} · ${cnt[hv[hA]]?cnt[hv[hA]]+(cnt[hv[hA]]===1?' update':' updates'):'none'}`:'anime and manga';
+    // cards
+    const cards=isA?[{i:'movie',l:'Total anime',v:'167'},{i:'play_circle',l:'Episodes',v:'2,418'},{i:'schedule',l:'Days watched',v:'41.6'},{i:'star',l:'Mean score',v:'7.9'}]
+      :[{i:'menu_book',l:'Total manga',v:'97'},{i:'auto_stories',l:'Chapters',v:'11,204'},{i:'library_books',l:'Volumes',v:'612'},{i:'star',l:'Mean score',v:'8.4'}];
+    const cardsDown=e=>MG.drag(e,{axis:'x',
+      onMove:dx=>{ const can=(isA&&dx<0)||(!isA&&dx>0); this.setState({cdx:can?dx:dx*.3,cdrag:true}); },
+      onEnd:(dx,dy,vx)=>{ const can=(isA&&dx<0)||(!isA&&dx>0);
+        if(can&&(Math.abs(dx)>108||(Math.abs(vx)>.5&&Math.abs(dx)>24))) this.setMode(isA?'manga':'anime', dx<0?160:-160); else this.setState({cdx:0,cdrag:false}); }});
+    // segmented
+    const f0=isA?0:1, f=st.segF!=null?st.segF:f0, near=f>=.5?'manga':'anime';
+    const segDown=e=>{ MG.drag(e,{axis:'x',slop:3,
+      onMove:dx=>{ const nf=Math.max(0,Math.min(1,f0+dx/80)), was=(this.state.segF??f0)>=.5; if((nf>=.5)!==was) this.hap('Selection'); this.setState({segF:nf}); },
+      onEnd:()=>{ this._segNo=Date.now(); const t=(this.state.segF??f0)>=.5?'manga':'anime'; this.setState({segF:null}); if(t!==this.state.mode){ this.setState({mode:t,sc:null}); this.hap('Selection',t==='anime'?'Anime':'Manga'); } }}); };
+    const segTap=m=>()=>{ if(Date.now()-(this._segNo||0)<300) return; this.setMode(m); };
+    const segAcc=near==='anime'?'#FF6A55':'#A08CFF';
+    // favourites
+    const D=window.KD, favIds=isA?[1,2,6,8,9,3]:[22,21,27,26,24,28];
+    const favs=favIds.map(id=>({id, down:e=>MG.drag(e,{axis:'x',onLong:()=>{ const t=D.byId[id]; this.hap('Medium'); clearTimeout(this._tt); this.setState({toast:`Peek · ${t?t.short||t.title:''}`}); this._tt=setTimeout(()=>this.setState({toast:null}),1800); },onMove:()=>{},onEnd:()=>{}})}));
+    // storyboard
+    const hc={'—':['#7C849C','rgba(255,255,255,.05)'],Selection:['#D7DBE6','rgba(255,255,255,.08)'],Light:['#8CC8FF','rgba(90,176,255,.14)']};
+    const aDist=[2,1,3,6,11,19,34,48,29,14], aAct=[3,5,6,2,4,2,1,4,7,3,5,2];
+    const mini=(vals,a,hiFrom,dim)=>{ const m=Math.max(...vals); return vals.map((v,i)=>({h:Math.max(3,Math.round(v/m*100))+'%', bg:a===i?'#EEF0F6':((hiFrom(i))?'#FF6A55':'#3A4054'), op:a==null||a===i?'1':(dim||'.4')})); };
+    seed=7; const sbHeat=Array.from({length:182},(_,i)=>{ const r=rnd(); const l=i>TODAY?-1:(r<.35?0:r<.6?1:r<.8?2:r<.93?3:4); return {c:l<0?'transparent':['#161A26','rgba(255,106,85,.25)','rgba(255,106,85,.5)','rgba(255,106,85,.75)','#FF6A55'][l], ring:i===156?'0 0 0 1.5px #EEF0F6':'none', op:i===156?'1':'.45'}; });
+    const F=[
+      {n:'01',h:'Scrub the scores',d:'After 6px of sideways drag the scrub starts. The bar under your finger turns white and the header reads out its exact value.',hap:'Selection',tag:'dx +6 → scrub',k:'bars',title:'Score distribution',read:'8 · 48 titles · 29%',readC:'#EEF0F6',cols:'repeat(10,1fr)',bars:mini(aDist,7,i=>i>=6),finger:true,fx:'76%'},
+      {n:'02',h:'Let go',d:'The readout stays for 1.5s so you can read it without your finger in the way, then the summary comes back.',hap:'—',tag:'release · hold 1.5s',k:'bars',title:'Score distribution',read:'8 · 48 titles · 29%',readC:'#EEF0F6',cols:'repeat(10,1fr)',bars:mini(aDist,7,i=>i>=6,'.7')},
+      {n:'03',h:'Scrub the months',d:'Months work the same way. The current month says "so far", because it isn\'t over yet.',hap:'Selection',tag:'per bar',k:'bars',title:'Finished',read:"Jul '26 · 7 finished",readC:'#EEF0F6',cols:'repeat(12,1fr)',bars:mini(aAct,8,i=>i===11),finger:true,fx:'70%'},
+      {n:'04',h:'Scrub the days',d:'In the activity grid, the scrub follows your finger in both directions once it starts. It stops at today.',hap:'Selection',tag:'per day · ≤ 25/s',k:'heat',read:'Sep 15 · 3 updates',cells:sbHeat},
+      {n:'05',h:'Scroll past',d:'A vertical drag that starts on a chart scrolls the page. Nothing highlights, and there\'s no haptic.',hap:'—',tag:'dy −40 → scroll',k:'bars',title:'Score distribution',read:'Mean 7.9 · σ 1.4',readC:'#A6ADC2',cols:'repeat(10,1fr)',bars:mini(aDist,null,i=>i>=6),scroll:true},
+      {n:'06',h:'Drag the toggle',d:'The pinned toggle\'s thumb follows your finger. It ticks at halfway and snaps to the nearer side on release.',hap:'Selection',tag:'thumb 60%',k:'seg'},
+      {n:'07',h:'Swipe the totals',d:'Swipe the stat cards left to switch to Manga. The new totals slide in and every chart animates to the new data.',hap:'Selection',tag:'dx −96 → Manga',k:'cards',cards:[{l:'Total anime',v:'167'},{l:'Episodes',v:'2,418'},{l:'Days watched',v:'41.6'},{l:'Mean score',v:'7.9'}]},
+      {n:'08',h:'Settings switches',d:'Switches in Settings can be tapped or dragged. Past halfway they flip and save to AniList.',hap:'Light',tag:'drag thumb',k:'switch'},
+    ];
+    const frames=F.map(x=>{ const [hC,hB]=hc[x.hap]||hc['—']; return {...x, isBars:x.k==='bars', isHeat:x.k==='heat', isSeg:x.k==='seg', isCards:x.k==='cards', isSwitch:x.k==='switch', finger:!!x.finger, scroll:!!x.scroll, hapC:hC, hapBg:hB, bars:x.bars||[], cells:x.cells||[], cards:x.cards||[], fx:x.fx||'50%', cols:x.cols||'repeat(10,1fr)', read:x.read||'', readC:x.readC||'#EEF0F6', title:x.title||''}; });
+    const hk=st.hap, hapMap={Light:'#8CC8FF',Medium:'#B9A9FF',Success:'#4ED98A',Selection:'#D7DBE6'};
+    return {
+      scRef:this.scRef, segRef:this.segRef, mode:st.mode, setMode:m=>this.setMode(m), accT, favNoun:isA?'anime':'manga', favs,
+      segDown, toA:segTap('anime'), toM:segTap('manga'),
+      thumbL:`${3+f*80}px`, thumbBg:segAcc, thumbTr:st.segF!=null?'background .15s':'left .26s cubic-bezier(.2,.9,.25,1.12), background .15s', thumbSh:st.segF!=null?'0 4px 14px rgba(0,0,0,.4)':'none',
+      aFg:near==='anime'?'#1A0B08':'#A6ADC2', mFg:near==='manga'?'#140E2B':'#A6ADC2',
+      cards, cardsDown, cTf:`translateX(${st.cdx}px)`, cOp:String(1-Math.min(.5,Math.abs(st.cdx)/320)), cTr:st.cdrag?'none':'transform .34s cubic-bezier(.2,.9,.25,1), opacity .3s',
+      dotA:isA?'18px':'6px', dotAc:isA?'#FF6A55':'#3A4054', dotM:isA?'6px':'18px', dotMc:isA?'#3A4054':'#A08CFF',
+      dist, distDown:this.scrub('dist',10), distRead:dA!=null?`${dA+1} · ${distV[dA]} titles · ${Math.round(distV[dA]/dTot*100)}%`:`Mean ${mean} · σ 1.4`, distReadC:dA!=null?'#EEF0F6':'#A6ADC2',
+      act, actDown:this.scrub('act',12), actRead:aA!=null?`${MS[aA]} '${aA<2?25:26} · ${av[aA]}${aA===11?' so far':' finished'}`:'Titles per month', actReadC:aA!=null?'#EEF0F6':'#A6ADC2',
+      heat, heatDown:this.scrub('heat',182,TODAY), heatRead, heatReadC:hA!=null?'#EEF0F6':'#7C849C',
+      footnote:`Every title on your ${isA?'anime':'manga'} list. ${isA?'Rewatches':'Rereads'} count in full. Scores are shown out of 10.`,
+      frames,
+      reset:()=>{ clearTimeout(this._clr); this.setState({mode:'anime',sc:null,cdx:0,segF:null,toast:null}); if(this._sc) this._sc.scrollTop=0; },
+      hasHap:!!hk, hapLbl:hk?hk.lbl:'', hapC:hk?(hapMap[hk.k]||'#D7DBE6'):'#D7DBE6',
+      hasToast:!!st.toast, toastMsg:st.toast||'',
+    };
+  }
+}
+</script>
+</body>
+</html>

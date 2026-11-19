@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seasonal mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..700&family=Schibsted+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#13110f;      /* warm off-black, not blue-black */
+  --paper-2:#1b1815;
+  --ink:#efe7da;        /* cream ink */
+  --ink-2:#b3a996;
+  --ink-3:#7d7465;
+  --rule:rgb(239 231 218 / .14);
+  --shu:#e8452c;        /* vermilion: the one brand accent (hanko red) */
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Schibsted Grotesk',system-ui,sans-serif;
+  --jp:'Zen Kaku Gothic New',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;font-size:15px}
+a{color:inherit;text-decoration:none}
+img{display:block}
+.wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+
+/* ── nav: plain text, no pills ── */
+nav{display:flex;align-items:center;gap:32px;height:60px;border-bottom:1px solid var(--rule)}
+.logo{font-family:var(--serif);font-weight:700;font-size:22px;letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.logo i{font-style:normal;font-family:var(--jp);font-weight:700;background:var(--shu);color:var(--paper);width:26px;height:26px;display:grid;place-items:center;font-size:15px;border-radius:3px}
+nav .links{display:flex;gap:24px;font-size:14px;color:var(--ink-2)}
+nav .links a.on{color:var(--ink);box-shadow:inset 0 -2px 0 var(--shu);padding-bottom:19px;margin-bottom:-21px}
+nav .mode{margin-left:auto;font-size:13px;color:var(--ink-3)}
+nav .mode b{color:var(--ink);font-weight:600}
+nav .search{font-family:var(--mono);font-size:12px;color:var(--ink-3);border-bottom:1px solid var(--rule);padding:4px 0;width:180px}
+
+/* ── masthead ── */
+.mast{display:grid;grid-template-columns:auto 1fr auto;gap:36px;align-items:end;padding:48px 0 28px;border-bottom:3px double var(--rule)}
+.kanji{font-family:var(--jp);font-weight:700;font-size:168px;line-height:.82;color:var(--shu);margin-bottom:-6px}
+.mast h1{font-family:var(--serif);font-weight:300;font-size:104px;line-height:.9;letter-spacing:-.045em;margin:0;font-variation-settings:'opsz' 144}
+.mast h1 em{font-weight:600;font-style:italic}
+.dek{margin-top:16px;font-size:15px;color:var(--ink-2);max-width:54ch;line-height:1.5}
+.dek b{color:var(--ink);font-weight:600}
+.pager{text-align:right;font-size:13px;color:var(--ink-3);line-height:2}
+.pager a{display:block}
+.pager a:hover{color:var(--ink)}
+.pager .now{color:var(--ink);font-weight:600}
+.pager span{font-family:var(--mono);font-size:11px;margin-left:6px}
+
+/* ── timetable ── */
+.sect-h{display:flex;align-items:baseline;gap:14px;margin:56px 0 18px}
+.sect-h h2{font-family:var(--serif);font-weight:500;font-size:30px;letter-spacing:-.02em;margin:0}
+.sect-h .jp{font-family:var(--jp);font-size:13px;color:var(--ink-3)}
+.sect-h .n{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.sect-h .fill{flex:1;border-bottom:1px solid var(--rule);transform:translateY(-6px)}
+.sect-h .tools{display:flex;gap:18px;font-size:13px;color:var(--ink-3)}
+.sect-h .tools b{color:var(--ink);font-weight:500}
+.tt{display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid var(--ink)}
+.day{border-right:1px solid var(--rule);min-height:180px}
+.day:last-child{border-right:0}
+.day h3{margin:0;padding:10px 12px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);display:flex;justify-content:space-between;border-bottom:1px solid var(--rule)}
+.day h3 span{font-family:var(--jp);letter-spacing:0;color:var(--ink-3)}
+.day.today{background:linear-gradient(var(--paper-2),var(--paper))}
+.day.today h3{color:var(--paper);background:var(--shu)}
+.day.today h3 span{color:var(--paper)}
+.slot{display:grid;grid-template-columns:44px 1fr;gap:8px;padding:9px 12px;border-bottom:1px dotted var(--rule);font-size:12.5px;line-height:1.3}
+.slot time{font-family:var(--mono);font-size:11px;color:var(--ink-3);padding-top:1px}
+.slot .t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.slot .ep{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+.slot:hover{background:color-mix(in oklch,var(--c) 14%,transparent)}
+.slot:hover time{color:var(--c)}
+
+/* ── feature (#1) ── */
+.feature{--c:#fe286b;position:relative;display:grid;grid-template-columns:120px 300px minmax(0,1fr);gap:72px;padding:44px 0;border-bottom:1px solid var(--rule)}
+.feature::before{content:'';position:absolute;inset:0 -40px;z-index:-1;
+  background:
+    radial-gradient(circle at 1px 1px,color-mix(in oklch,var(--c) 40%,transparent) 1px,transparent 1.6px) 0 0/7px 7px,
+    linear-gradient(90deg,color-mix(in oklch,var(--c) 18%,var(--paper)),var(--paper) 70%);
+  mask:radial-gradient(ellipse 60% 75% at 22% 50%,#000 35%,transparent 100%)}
+.rank-big{font-family:var(--serif);font-weight:200;font-size:150px;line-height:.8;letter-spacing:-.06em;color:var(--c);font-variation-settings:'opsz' 144}
+.feature .cover{position:relative}
+.feature .cover img{width:300px;aspect-ratio:2/3;object-fit:cover;box-shadow:12px 12px 0 color-mix(in oklch,var(--c) 55%,var(--paper))}
+.vert{position:absolute;right:-48px;top:0;writing-mode:vertical-rl;font-family:var(--jp);font-weight:700;font-size:17px;letter-spacing:.12em;color:var(--ink-2)}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--c);font-weight:600}
+.feature h2{font-family:var(--serif);font-weight:600;font-size:60px;line-height:.95;letter-spacing:-.035em;margin:12px 0 18px;max-width:14ch}
+.feature p{font-size:16px;line-height:1.6;color:var(--ink-2);max-width:52ch;margin:0 0 24px}
+.facts{display:grid;grid-template-columns:repeat(4,auto);justify-content:start;gap:0 36px;border-top:1px solid var(--rule);padding-top:16px;margin-bottom:28px}
+.facts dt{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.facts dd{margin:4px 0 0;font-family:var(--mono);font-size:15px}
+.btn{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:14px;padding:12px 20px;background:var(--ink);color:var(--paper);border-radius:2px}
+.btn:hover{background:var(--c)}
+.btn.ghost{background:none;color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+
+/* ── ranked list ── */
+.list{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:56px}
+.item{--c:#c8b89a;position:relative;display:grid;grid-template-columns:52px 92px minmax(0,1fr);gap:18px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.item>div{min-width:0}
+.item .rk{font-family:var(--serif);font-weight:300;font-size:44px;line-height:.85;letter-spacing:-.05em;color:var(--ink-3);transition:color .18s}
+.item:hover .rk{color:var(--c)}
+.item img{width:92px;aspect-ratio:2/3;object-fit:cover;transition:box-shadow .18s}
+.item:hover img{box-shadow:6px 6px 0 color-mix(in oklch,var(--c) 60%,var(--paper))}
+.item h3{font-family:var(--sans);font-size:17px;font-weight:700;line-height:1.2;margin:0 32px 2px 0;letter-spacing:-.01em}
+.item .nat{font-family:var(--jp);font-size:12px;color:var(--ink-3);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .meta{font-size:12.5px;color:var(--ink-2);margin-bottom:8px}
+.item .meta .studio{color:var(--c);font-weight:600}
+.item .air{font-family:var(--mono);font-size:11.5px;color:var(--ink);margin-bottom:8px}
+.item .air .bar{display:inline-block;vertical-align:middle;width:72px;height:3px;background:var(--rule);margin:0 8px 0 0;position:relative}
+.item .air .bar i{position:absolute;inset:0 auto 0 0;background:var(--c)}
+.item .air .in{color:var(--ink-3)}
+.item p{margin:0 0 10px;font-size:13px;line-height:1.5;color:var(--ink-3);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item .foot{display:flex;gap:14px;align-items:baseline;font-size:12px;color:var(--ink-3)}
+.item .foot .g{flex:1}
+.item .foot .sc{font-family:var(--mono);color:var(--ink)}
+.add{position:absolute;right:0;top:22px;width:26px;height:26px;border:1px solid var(--rule);border-radius:50%;display:grid;place-items:center;color:var(--ink-2);font-size:16px;line-height:1;background:none}
+.add:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* ── compact (movies / shorts): a ledger, not a grid of cards ── */
+.ledger{width:100%;border-collapse:collapse;font-size:14px}
+.ledger td{padding:12px 10px 12px 0;border-bottom:1px solid var(--rule);vertical-align:middle}
+.ledger tr:hover td{background:color-mix(in oklch,var(--c) 10%,transparent)}
+.ledger .r{font-family:var(--serif);font-size:22px;color:var(--ink-3);width:44px}
+.ledger img{width:36px;aspect-ratio:2/3;object-fit:cover}
+.ledger .tt2{font-weight:600}
+.ledger .tt2 small{display:block;font-family:var(--jp);font-weight:400;color:var(--ink-3);font-size:11.5px;margin-top:2px}
+.ledger .m{color:var(--ink-2);font-size:13px}
+.ledger .mono{font-family:var(--mono);font-size:12.5px;text-align:right}
+.ledger .sw{width:10px;height:10px;border-radius:50%;background:var(--c);display:inline-block}
+
+footer{margin:80px 0 40px;padding-top:18px;border-top:3px double var(--rule);font-size:12px;color:var(--ink-3);display:flex;justify-content:space-between}
+
+@media (max-width:900px){
+  .wrap{padding:0 16px}
+  .feature::before{inset:0 -16px}
+  .vert{display:none}
+  .sect-h{flex-wrap:wrap}
+  .sect-h .tools{width:100%;order:9}
+  nav .links,nav .search{display:none}
+  .mast{grid-template-columns:auto 1fr;gap:16px}
+  .kanji{font-size:88px}
+  .mast h1{font-size:56px}
+  .pager{grid-column:1/-1;text-align:left;display:flex;gap:16px}
+  .tt{grid-template-columns:repeat(7,72vw);overflow-x:auto}
+  .feature{grid-template-columns:1fr;gap:20px}
+  .rank-big{font-size:90px}
+  .feature .cover img{width:200px}
+  .feature h2{font-size:40px}
+  .facts{grid-template-columns:repeat(2,auto)}
+  .list{grid-template-columns:1fr}
+  .item{grid-template-columns:36px 72px minmax(0,1fr)}
+  .item img{width:72px}
+  .ledger .m,.ledger .hide{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#"><i>見</i>miruyo</a>
+    <div class="links"><a href="#">Home</a><a href="#">Browse</a><a class="on" href="#">Seasonal</a><a href="#">My List</a><a href="#">Profile</a></div>
+    <div class="mode"><b>Anime</b> / Manga</div>
+    <div class="search">Search ⌘K</div>
+  </nav>
+
+  <header class="mast">
+    <div class="kanji">秋</div>
+    <div>
+      <h1>Fall <em>2026</em></h1>
+      <div class="dek"><b>117 new series</b> premiering this season, and <b>33 carried over</b> from summer. Ranked by how many people on AniList are watching.</div>
+    </div>
+    <div class="pager">
+      <a href="#">← Summer<span>2026</span></a>
+      <a class="now" href="#">Fall<span>2026</span></a>
+      <a href="#">Winter<span>2027</span> →</a>
+    </div>
+  </header>
+
+  <div class="sect-h"><h2>On air this week</h2><span class="jp">今週の放送</span><span class="fill"></span><span class="n" id="tz"></span></div>
+  <div class="tt" id="tt"></div>
+
+  <div class="sect-h"><h2>Most watched</h2><span class="jp">人気</span><span class="fill"></span>
+    <div class="tools"><span>Sort <b>Popularity</b></span><span>Score</span><span>Airing time</span><span>A–Z</span></div></div>
+  <section class="feature" id="feature"></section>
+
+  <div class="sect-h"><h2>TV</h2><span class="jp">テレビ</span><span class="n" id="n-tv"></span><span class="fill"></span></div>
+  <div class="list" id="tv"></div>
+
+  <div class="sect-h"><h2>Streaming</h2><span class="jp">配信</span><span class="n" id="n-ona"></span><span class="fill"></span></div>
+  <div class="list" id="ona"></div>
+
+  <div class="sect-h"><h2>Films &amp; shorts</h2><span class="jp">劇場・ショート</span><span class="n" id="n-mv"></span><span class="fill"></span></div>
+  <table class="ledger" id="mv"></table>
+
+  <footer><span>miruyo · data from AniList</span><span>Mockup — not wired to the app</span></footer>
+</div>
+
+<script>
+const DATA = [{"id": 195539, "f": "ONA", "t": "Cyberpunk: Edgerunners 2", "n": "サイバーパンク: エッジランナーズ2", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx195539-4LdfmKIHzuxr.png", "c": "#fe286b", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/195539-lO5SUdp4SOrq.jpg", "eps": 10, "src": "Video Game", "g": ["Action", "Drama", "Sci-Fi"], "s": 83, "st": "TRIGGER", "nx": null, "d": "Cyberpunk: Edgerunners 2 pulls you back into Night City, where lives become entangled to the extreme. Weak, a washed-up cyberpunk legend, is now forced to live without chrome as he searches…", "seq": null}, {"id": 195516, "f": "TV", "t": "The Apothecary Diaries Season 3", "n": "薬屋のひとりごと 第3期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx195516-MJpUZlOberqH.jpg", "c": "#e4a128", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/195516-B5M0cPaQbQXI.jpg", "eps": 12, "src": "Light Novel", "g": ["Drama", "Mystery"], "s": 85, "st": "OLM", "nx": {"episode": 8, "timeUntilAiring": 138234, "airingAt": 1795183200}, "d": "In the aftermath of the Shi Clan’s rebellion, things have finally settled down, and Maomao has returned to her old life as a pharmacist in the pleasure district.  One day, triggered by a…", "seq": "Kusuriya no Hitorigoto 2nd Season"}, {"id": 195604, "f": "TV", "t": "Black Clover Season 2", "n": "ブラッククローバー 第2期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx195604-tSZcfKbVqSEG.jpg", "c": "#f1a143", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/195604-lQpCzTziSA17.jpg", "eps": null, "src": "Manga", "g": ["Action", "Adventure", "Comedy"], "s": 88, "st": "Studio Pierrot", "nx": {"episode": 8, "timeUntilAiring": 224634, "airingAt": 1795269600}, "d": "As tyranny engulfs the Clover Kingdom, Asta and the Magic Knights launch a desperate raid on the Spade Kingdom to rescue their squad captains from the Dark Triad. But their mission leads…", "seq": "Black Clover"}, {"id": 212888, "f": "ONA", "t": "Overgeared", "n": "テムパル～アイテムの力～", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx212888-NhyvqPt5aIuJ.jpg", "c": "#f19335", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/212888-ZsnNegBCKXQq.jpg", "eps": 12, "src": "Manga", "g": ["Action", "Adventure", "Comedy"], "s": 76, "st": "J.C.STAFF", "nx": {"episode": 9, "timeUntilAiring": 312834, "airingAt": 1795357800}, "d": "Sin Yeong-U (a.k.a. Grid), an unlucky man in life and a low-level player in the popular VR game “Satisfy,” finds a powerful item that earns him a rare legendary class title: “Pagma’s…", "seq": null}, {"id": 159042, "f": "ONA", "t": "Reincarnated as a Sword Season 2", "n": "転生したら剣でした 第2期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx159042-GGFwlDskc5vR.png", "c": "#f19328", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/159042-X0mqyaUFBkms.jpg", "eps": 12, "src": "Light Novel", "g": ["Action", "Adventure", "Fantasy"], "s": 75, "st": "C2C", "nx": {"episode": 9, "timeUntilAiring": 575634, "airingAt": 1795620600}, "d": "The second season of Tensei Shitara Ken Deshita. Note: Each episode was streamed one week in advance of the TV broadcast starting on October 1, 2026 on Abema. Regular broadcasting began on…", "seq": "Tensei Shitara Ken Deshita"}, {"id": 205909, "f": "TV", "t": "Firefly Wedding", "n": "ホタルの嫁入り", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx205909-DM0fAzNQulod.jpg", "c": "#aebb35", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/205909-hGeuFYrdhf9S.jpg", "eps": 12, "src": "Manga", "g": ["Drama", "Romance"], "s": 75, "st": "david production", "nx": {"episode": 7, "timeUntilAiring": 140034, "airingAt": 1795185000}, "d": "On the surface, Satoko has it all—she’s beautiful, the daughter of a nobleman, and at a prime age for marriage. Unfortunately, she is also quite ill and only has a short time left to live.…", "seq": null}, {"id": 191656, "f": "TV", "t": "Even the Student Council Has Its Holes!", "n": "生徒会にも穴はある！", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx191656-xFHtxM8SUTdU.png", "c": "#5dbbe4", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/191656-JQILdzh3FQxN.jpg", "eps": 12, "src": "Manga", "g": ["Comedy", "Ecchi", "Slice of Life"], "s": 74, "st": "Passione", "nx": {"episode": 8, "timeUntilAiring": 230034, "airingAt": 1795275000}, "d": "This is Fujinasu Academy, a private high school with top-achieving students located on the outskirts of town.  High School 1st-Year Ume Mizunoe has excellent grades in Japanese language…", "seq": null}, {"id": 189123, "f": "TV", "t": "Blue Box Season 2", "n": "アオのハコ Season２", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx189123-0secXELIhkIW.jpg", "c": "#e4ae50", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/189123-aGJ7pIDUo2Xs.jpg", "eps": 12, "src": "Manga", "g": ["Romance", "Slice of Life", "Sports"], "s": 81, "st": "Electric Circus", "nx": {"episode": 7, "timeUntilAiring": 287634, "airingAt": 1795332600}, "d": "The second season of Ao no Hako.  As Taiki and Chinatsu navigate their evolving feelings, a fractured friendship from the past and fierce competition cloud the road to nationals.", "seq": "Ao no Hako"}, {"id": 210482, "f": "ONA", "t": "STEEL BALL RUN JoJo's Bizarre Adventure 2nd - 3rd STAGE", "n": "ジョジョの奇妙な冒険 スティール・ボール・ラン 2nd＆3rd STAGE", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx210482-P1VNKbqdJ6Zj.jpg", "c": "#f1ae50", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/210482-pYAD0IbzNbgS.jpg", "eps": 11, "src": "Manga", "g": ["Action", "Adventure", "Drama"], "s": 86, "st": "david production", "nx": {"episode": 9, "timeUntilAiring": 116634, "airingAt": 1795161600}, "d": "In the 2nd STAGE, a desert crossing spanning roughly 750 miles- the land that Johnny Joestar and Gyro Zeppeli must challenge, is home to the area that is feared as the \"Devil's Palm.\" In…", "seq": "JoJo no Kimyou na Bouken: Steel Ball Run - 1st STAGE"}, {"id": 207329, "f": "TV", "t": "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life", "n": "追放されたチート付与魔術師は気ままなセカンドライフを謳歌する。　～俺は武器だけじゃなく、あらゆるものに『強化ポイント』を付与できるし、俺の意思でいつでも効果を解除できるけど、残った人たち大丈夫？～", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b207329-6VPeZIDfF4Sr.png", "c": "#f1e4c9", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/207329-9IqRSKIsM3TC.jpg", "eps": 12, "src": "Manga", "g": ["Adventure", "Comedy", "Fantasy"], "s": 74, "st": "P.A.WORKS", "nx": {"episode": 8, "timeUntilAiring": 487434, "airingAt": 1795532400}, "d": "Rein, an enchanter, is suddenly expelled from his guild one day. But instead of despairing, he declares, “Now I can do anything!” and begins reclaiming the massive number of enhancement…", "seq": null}, {"id": 160275, "f": "MOVIE", "t": "Made in Abyss: Mezameru Shinpi", "n": "メイドインアビス 目覚める神秘", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx160275-cBOWJpcCGeMq.jpg", "c": "#e4d643", "ban": null, "eps": 1, "src": "Manga", "g": ["Adventure", "Drama", "Fantasy"], "s": 80, "st": "Kinema Citrus", "nx": null, "d": "Sequel to Made in Abyss: Retsujitsu no Ougonkyou.", "seq": "Made in Abyss: Retsujitsu no Ougonkyou"}, {"id": 143103, "f": "MOVIE", "t": "Witch on the Holy Night", "n": "魔法使いの夜", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx143103-vvsaIpZPpIuE.png", "c": "#f1d6ae", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/143103-KwDRPfPl4OwL.jpg", "eps": 1, "src": "Visual Novel", "g": ["Action", "Drama", "Fantasy"], "s": null, "st": "ufotable", "nx": {"episode": 1, "timeUntilAiring": 55434, "airingAt": 1795100400}, "d": "Aoko Aozaki, an ordinary high school girl, is actually a Magician who lives in the modern world...though she is still only an apprentice. As she spends her days living alongside her…", "seq": null}, {"id": 213805, "f": "TV", "t": "The Ramparts of Ice Season 2", "n": "氷の城壁 第2期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx213805-Nokui3uWlIlw.png", "c": "#e4a143", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/213805-DKKoBepaY2bj.jpg", "eps": null, "src": "Manga", "g": ["Comedy", "Drama", "Romance"], "s": 82, "st": "Studio KAI", "nx": {"episode": 8, "timeUntilAiring": 55194, "airingAt": 1795100160}, "d": "Koyuki, the isolated girl; Miki, the former school idol; Minato, the guy with no concept of personal space; and Youta, the gentle basketball player. Clumsy, frustrating, yet deeply…", "seq": "Koori no Jouheki"}, {"id": 178083, "f": "TV", "t": "Tokyo Revengers: War of the Three Titans Arc", "n": "東京リベンジャーズ 三天戦争編", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx178083-bg7pg6TCHwtG.jpg", "c": "#c99350", "ban": null, "eps": 13, "src": "Manga", "g": ["Action", "Drama", "Romance"], "s": 77, "st": "LIDENFILMS", "nx": {"episode": 8, "timeUntilAiring": 148614, "airingAt": 1795193580}, "d": "Sequel to Tokyo Revengers: Tenjiku-hen.", "seq": "Tokyo Revengers: Tenjiku-hen"}, {"id": 199340, "f": "MOVIE", "t": "Rascal Does Not Dream of a Dear Friend", "n": "青春ブタ野郎はディアフレンドの夢を見ない", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx199340-YQlmzvmcJzyt.jpg", "c": "#5da1f1", "ban": null, "eps": 1, "src": "Light Novel", "g": ["Drama", "Psychological", "Romance"], "s": 84, "st": "CloverWorks", "nx": null, "d": "\"Actually, I’m Touko Kirishima.\"  The audience erupted in excitement upon learning that the true identity of the mysterious, wildly popular internet singer was none other than the nation’s…", "seq": "Seishun Buta Yarou wa Santa Claus no Yume wo Minai"}, {"id": 172192, "f": "TV", "t": "A Returner's Magic Should be Special Season 2", "n": "帰還者の魔法は特別です 第2期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx172192-W7P5xEUaxF3y.jpg", "c": "#f19328", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/172192-jibcmb7wdbzk.jpg", "eps": null, "src": "Other", "g": ["Action", "Adventure", "Fantasy"], "s": 69, "st": "Arvo Animation", "nx": {"episode": 8, "timeUntilAiring": 576534, "airingAt": 1795621500}, "d": "In a land dominated by the formidable Shadow Worlds, most of humanity has been destroyed. To rescue their planet from impending doom, six brave heroes fight a perilous battle…and fail. But…", "seq": "Kikansha no Mahou wa Tokubetsu desu"}, {"id": 207191, "f": "TV", "t": "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!", "n": "どうも、好きな人に惚れ薬を依頼された魔女です。", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx207191-VgkIzfH92WoZ.jpg", "c": "#aed6e4", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/207191-xYgpkCDnXc5m.jpg", "eps": 12, "src": "Light Novel", "g": ["Fantasy", "Romance"], "s": 74, "st": "diomedéa", "nx": {"episode": 8, "timeUntilAiring": 392034, "airingAt": 1795437000}, "d": "“Make me a love potion.”  And with that single sentence, the Good Witch of the Lake’s secret crush on the dashing Sir Harij ends in heartbreak. Still, when he promises to help her gather…", "seq": null}, {"id": 200929, "f": "MOVIE", "t": "The Apothecary Diaries: The Late Lady’s Treasure", "n": "薬屋のひとりごと 亡妃の秘宝", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx200929-dx3hnftE7K7C.jpg", "c": "#e4bba1", "ban": null, "eps": 1, "src": "Original", "g": ["Drama", "Mystery"], "s": null, "st": "TOHO animation STUDIO", "nx": {"episode": 1, "timeUntilAiring": 1869834, "airingAt": 1796914800}, "d": "The curtains rise on a new mystery surrounding a secret treasure hidden in a city on the water.  The emperor gives Jinshi an order. He must grant the final wish of a concubine who passed…", "seq": null}, {"id": 206814, "f": "TV", "t": "Dragon Ball Super: Beerus", "n": "ドラゴンボール超 ビルス", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx206814-PVVzRbf1IQpe.jpg", "c": "#e48643", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/206814-ARuwrZJAGONN.jpg", "eps": null, "src": "Other", "g": ["Action", "Adventure", "Sci-Fi"], "s": 80, "st": "Toei Animation", "nx": {"episode": 7, "timeUntilAiring": 311994, "airingAt": 1795356960}, "d": "Several years have passed since the fierce battle against Majin Buu, and Earth has finally regained a brief moment of peace. At the same time, Beerus, the God of Destruction, awakens from…", "seq": "Dragon Ball Z"}, {"id": 186541, "f": "TV", "t": "Reborn as a Space Mercenary: I Woke Up Piloting the Strongest Starship!", "n": "目覚めたら最強装備と宇宙船持ちだったので、一戸建て目指して傭兵として自由に生きたい", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx186541-caYpLsLmbCh7.jpg", "c": "#d6bb78", "ban": null, "eps": 13, "src": "Light Novel", "g": ["Action", "Comedy", "Drama"], "s": 69, "st": "studio A-CAT", "nx": {"episode": 8, "timeUntilAiring": 305634, "airingAt": 1795350600}, "d": "Sato Takahiro was an ordinary office worker and hobbyist gamer until the day he woke up on a spaceship–one that strangely resembled a craft from a favorite space-shooter game. With a…", "seq": null}, {"id": 206949, "f": "TV", "t": "Nia Liston: The Merciless Maiden", "n": "凶乱令嬢ニア・リストン", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx206949-4HYI3YuP0eLI.png", "c": "#f15dbb", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/206949-c5hfhixdgvy5.jpg", "eps": 25, "src": "Light Novel", "g": ["Action", "Fantasy"], "s": 74, "st": "KONAMI animation", "nx": {"episode": 8, "timeUntilAiring": 478194, "airingAt": 1795523160}, "d": "A great hero lies undefeated on her deathbed, regretting that she never found a foe who could take her down. She never intended to meet her fate anywhere other than on the battlefield, and…", "seq": null}, {"id": 185756, "f": "TV", "t": "As a Reincarnated Aristocrat, I'll Use My Appraisal Skill to Rise in the World Season 3", "n": "転生貴族、鑑定スキルで成り上がる 第3期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx185756-xPCl0RyQ7fXD.jpg", "c": "#d6f1c9", "ban": null, "eps": 12, "src": "Light Novel", "g": ["Adventure", "Fantasy"], "s": 68, "st": "GeyeG Pictures", "nx": {"episode": 9, "timeUntilAiring": 312834, "airingAt": 1795357800}, "d": "The third season of Tensei Kizoku, Kantei Skill de Nariagaru.  Note: On September 4, 2026, it was announced that GeyeG Pictures would take over the production from studio MOTHER while…", "seq": "Tensei Kizoku, Kantei Skill de Nariagaru 2nd Season"}, {"id": 208025, "f": "TV_SHORT", "t": "I'm Dating a Dark Summoner", "n": "ダークサモナーとデキている", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx208025-JKvqWNr8rz8l.jpg", "c": "#fff1ae", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/208025-s7hcRQO7kwmH.jpg", "eps": 12, "src": "Manga", "g": ["Comedy", "Ecchi", "Fantasy"], "s": 67, "st": "AtoriE", "nx": {"episode": 8, "timeUntilAiring": 319434, "airingAt": 1795364400}, "d": "Amona’s a dark summoner with demonic powers. Roni’s a devout priest who’s way too uptight. By all rights, they should hate each other. Instead, they end up fast-tracking their…", "seq": null}, {"id": 191788, "f": "TV", "t": "Aoashi Season 2", "n": "アオアシ 第2期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx191788-XC6F24LdX6a4.jpg", "c": "#e4ae50", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/191788-tyhsHpXeF26X.jpg", "eps": 24, "src": "Manga", "g": ["Sports"], "s": 81, "st": "TMS Entertainment", "nx": {"episode": 8, "timeUntilAiring": 289434, "airingAt": 1795334400}, "d": "Aoi Ashito’s game has now earned him a spot on the A team, but he is quickly overwhelmed by his harsh new reality. Surrounded by elite players like Kuribayashi and Akutsu, practices are…", "seq": "Aoashi"}, {"id": 202250, "f": "TV", "t": "Magic Repo Man: Dumped by My Party, I’ll Cash In With a Cute Support Fairy to Become the Strongest!", "n": "貸した魔力は【リボ払い】で強制徴収", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx202250-mpm2cvr92Au2.jpg", "c": "#bbe45d", "ban": null, "eps": 12, "src": "Manga", "g": ["Action", "Adventure", "Fantasy"], "s": 62, "st": "SynergySP", "nx": {"episode": 8, "timeUntilAiring": 233634, "airingAt": 1795278600}, "d": "If there's one thing you can never have enough of in a world of RPG-style swords and sorcery, it's magic points! Whether you're fueling spells, techniques, or showing off an incredible…", "seq": null}, {"id": 169581, "f": "ONA", "t": "Magical Explorer", "n": "マジカル★エクスプローラー　エロゲの友人キャラに転生したけど、ゲーム知識使って自由に生きる", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx169581-UlAviVH36Hxi.png", "c": "#f1a150", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/169581-cdooqY7Jqy3x.jpg", "eps": 13, "src": "Light Novel", "g": ["Action", "Adventure", "Ecchi"], "s": 69, "st": "WHITE FOX", "nx": {"episode": 9, "timeUntilAiring": 228234, "airingAt": 1795273200}, "d": "Few titles are more revered among horndogs-(ahem) connoisseurs of Japanese erotic video games-than Magical Explorer. One day, our smut-loving hero wakes up to find he has been reincarnated…", "seq": null}, {"id": 152677, "f": "TV", "t": "The Detective Is Already Dead Season 2", "n": "探偵はもう、死んでいる。Season2", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx152677-gtJbgjE94lCN.png", "c": "#c8b89a", "ban": null, "eps": 13, "src": "Light Novel", "g": ["Comedy", "Drama", "Mystery"], "s": 70, "st": "ENGI", "nx": {"episode": 8, "timeUntilAiring": 564834, "airingAt": 1795609800}, "d": "After thwarting a hijacking with beautiful, silver-haired detective Siesta, Kimihiko leads a life of globe-trotting and crime-solving—until Siesta dies. A year later, a new case will open…", "seq": "Tantei wa mou, Shindeiru."}, {"id": 213457, "f": "ONA", "t": "Fool Night", "n": "フールナイト", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx213457-gN5p1GZjK3zi.jpg", "c": "#93281a", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/213457-xUUdWSFdK8At.jpg", "eps": 12, "src": "Manga", "g": ["Drama", "Psychological", "Sci-Fi"], "s": null, "st": "Shaft", "nx": {"episode": 1, "timeUntilAiring": 635034, "airingAt": 1795680000}, "d": "The earth of the distant future is covered in thick clouds, and the sun no longer shines. Plants wither, and oxygen is thin. To fight extinction, humankind has developed a technology that…", "seq": null}, {"id": 204389, "f": "ONA", "t": "A Wild Last Boss Appeared! Season 2", "n": "野生のラスボスが現れた！ 第2期", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx204389-jCoFCeTthDMy.jpg", "c": "#e45dc9", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/204389-PFtzs8KcRzCz.jpg", "eps": null, "src": "Light Novel", "g": ["Action", "Adventure", "Fantasy"], "s": 74, "st": "WAO World", "nx": {"episode": 9, "timeUntilAiring": 222834, "airingAt": 1795267800}, "d": "The second season of Yasei no Last Boss ga Arawareta!", "seq": "Yasei no Last Boss ga Arawareta!"}, {"id": 204011, "f": "TV", "t": "PSYREN", "n": "PSYREN -サイレン-", "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx204011-j45RZoqYbdZK.jpg", "c": "#0dd6e4", "ban": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/204011-hBOwte9MzykA.jpg", "eps": null, "src": "Manga", "g": ["Action", "Adventure", "Sci-Fi"], "s": 69, "st": "Satelight", "nx": {"episode": 7, "timeUntilAiring": 397434, "airingAt": 1795442400}, "d": "One day, high schooler Ageha Yoshina picks up a mysterious “red phone card” left behind in a public telephone booth. A few days later, his childhood friend and classmate, Sakurako…", "seq": null}];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const rank = new Map(DATA.map((m,i)=>[m.id,i+1]));
+const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const jpDays = ['月','火','水','木','金','土','日'];
+const dayIdx = d => (d.getDay()+6)%7;
+const until = s => { const d=Math.floor(s/86400), h=Math.floor(s%86400/3600); return d ? `in ${d}d ${h}h` : `in ${h}h ${Math.floor(s%3600/60)}m`; };
+const when = nx => { const d=new Date(nx.airingAt*1000); return `${days[dayIdx(d)]} ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+
+/* timetable */
+const cols = days.map(()=>[]);
+for (const m of DATA) if (m.nx && m.eps !== 1) { const d=new Date(m.nx.airingAt*1000); cols[dayIdx(d)].push({m,d}); }
+const today = dayIdx(new Date());
+document.getElementById('tt').innerHTML = cols.map((c,i)=>`
+  <div class="day ${i===today?'today':''}"><h3>${days[i]}<span>${jpDays[i]}</span></h3>
+  ${c.sort((a,b)=>a.d.getHours()*60+a.d.getMinutes()-(b.d.getHours()*60+b.d.getMinutes())).map(({m,d})=>`
+    <a class="slot" href="#" style="--c:${m.c}"><time>${pad(d.getHours())}:${pad(d.getMinutes())}</time>
+    <div><div class="t">${esc(m.t)}</div><div class="ep">Ep ${m.nx.episode}${m.eps?' / '+m.eps:''}</div></div></a>`).join('')}
+  </div>`).join('');
+document.getElementById('tz').textContent = 'Your time · ' + Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+/* feature */
+const f = DATA[0];
+const fe = document.getElementById('feature');
+fe.style.setProperty('--c', f.c);
+fe.innerHTML = `
+  <div class="rank-big">01</div>
+  <div class="cover"><img src="${f.img}" alt=""><div class="vert">${esc(f.n)}</div></div>
+  <div>
+    <div class="kicker">${esc(f.st)} · ${f.f==='ONA'?'Streaming':f.f} · ${f.seq?'Sequel':'New'}</div>
+    <h2>${esc(f.t)}</h2>
+    <p>${esc(f.d)}</p>
+    <dl class="facts">
+      <div><dt>Score</dt><dd>${f.s ?? '—'}%</dd></div>
+      <div><dt>Episodes</dt><dd>${f.eps ?? '?'}</dd></div>
+      <div><dt>Source</dt><dd>${esc(f.src)}</dd></div>
+      <div><dt>Genre</dt><dd>${esc(f.g[0])}</dd></div>
+    </dl>
+    <a class="btn" href="#">+ Plan to watch</a> &nbsp; <a class="btn ghost" href="#">Trailer</a>
+  </div>`;
+
+/* lists */
+const item = m => {
+  const r = rank.get(m.id);
+  const nx = m.nx;
+  const pct = nx && m.eps ? ((nx.episode-1)/m.eps)*100 : 0;
+  return `<article class="item" style="--c:${m.c}">
+    <div class="rk">${pad(r)}</div>
+    <img src="${m.img}" alt="" loading="lazy">
+    <div>
+      <h3>${esc(m.t)}</h3>
+      <div class="nat">${esc(m.n)}</div>
+      <div class="meta"><span class="studio">${esc(m.st)}</span>${m.seq?` · Sequel to ${esc(m.seq)}`:` · ${esc(m.src)}`}</div>
+      ${nx ? `<div class="air"><span class="bar"><i style="width:${pct}%"></i></span>Ep ${nx.episode}${m.eps?'/'+m.eps:''} · ${when(nx)} <span class="in">${until(nx.timeUntilAiring)}</span></div>` : ''}
+      <p>${esc(m.d)}</p>
+      <div class="foot"><span class="g">${m.g.map(esc).join(' / ')}</span>${m.s?`<span class="sc">${m.s}%</span>`:''}</div>
+    </div>
+    <button class="add" aria-label="Add to list">+</button>
+  </article>`;
+};
+const rest = DATA.slice(1);
+const tv = rest.filter(m=>m.f==='TV');
+const ona = rest.filter(m=>m.f==='ONA');
+const mv = rest.filter(m=>m.f==='MOVIE'||m.f==='TV_SHORT');
+document.getElementById('tv').innerHTML = tv.slice(0,10).map(item).join('');
+document.getElementById('ona').innerHTML = ona.map(item).join('');
+document.getElementById('n-tv').textContent = '55';
+document.getElementById('n-ona').textContent = String(ona.length+1);
+document.getElementById('n-mv').textContent = String(mv.length);
+document.getElementById('mv').innerHTML = mv.map(m=>`<tr style="--c:${m.c}">
+  <td class="r">${pad(rank.get(m.id))}</td><td style="width:48px"><img src="${m.img}" alt=""></td>
+  <td class="tt2">${esc(m.t)}<small>${esc(m.n)}</small></td>
+  <td class="m">${m.f==='MOVIE'?'Film':'Short'} · ${esc(m.st)}</td>
+  <td class="m hide">${m.g.map(esc).join(' / ')}</td>
+  <td class="mono">${m.s?m.s+'%':'—'}</td><td style="width:20px"><span class="sw"></span></td></tr>`).join('');
+</script>
+</body>
+</html>

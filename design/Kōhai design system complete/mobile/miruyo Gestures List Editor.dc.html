@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..500,0..1,0&display=block">
+<script src="../miruyo-data.js"></script>
+<script src="../miruyo-gestures.js"></script>
+<style>
+body{margin:0;background:#05060A;color:#EEF0F6;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#FF8A78;text-decoration:none}a:hover{color:#FFB3A6}
+</style>
+</helmet>
+<div style="padding:64px;display:flex;flex-direction:column;gap:56px;width:max-content">
+
+<div style="display:flex;flex-direction:column;gap:14px;max-width:1440px">
+  <div style="font:500 11px 'Geist Mono';color:#FF8A78;letter-spacing:.08em">SCREEN 20 · GESTURES · LIST EDITOR</div>
+  <h1 style="margin:0;font:700 44px/1.05 'Bricolage Grotesque';letter-spacing:-.03em">List editor gestures</h1>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:14px;line-height:1.55;color:#A6ADC2;max-width:1200px">
+    <p style="margin:0"><b style="color:#EEF0F6">Nothing to save.</b> Every change goes to AniList as you make it, so pulling the sheet down just closes it. Only a half-typed note asks before closing. The sheet is the mobile form of <a href="../shared/miruyo List Editor.dc.html">List editor 4b</a>.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Drag the numbers.</b> Scrub the episode count sideways to jump several episodes, or hold +1 to count up. The score cells work like a slider: drag across them, and the left half of a cell gives the half point.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Hold to delete.</b> Delete fills while you hold it and only removes the entry when full. An Undo stays up for 5 seconds afterwards. Try all of it on <a href="#20a">20a</a>.</p>
+  </div>
+</div>
+
+<div style="display:flex;gap:64px;align-items:flex-start">
+
+<div id="20a" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">20a</span>Live · edit sheet<div style="flex:1"></div><button onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#EEF0F6;font:600 12px 'Geist';display:flex;align-items:center;gap:6px;cursor:pointer"><span class="material-symbols-rounded" style="font-size:16px">replay</span>Restart</button></div>
+  <div data-screen-label="Gestures list editor live" style="width:390px;height:844px;border-radius:44px;overflow:hidden;background:#090B11;border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 0 0 8px #11131a;user-select:none;-webkit-user-select:none">
+    <div style="position:absolute;inset:0;background:{{ t.cover }};filter:blur(40px);opacity:.6"></div>
+    <div style="position:absolute;inset:0;background:rgba(5,6,10,.6)"></div>
+    <div style="position:absolute;left:24px;right:24px;top:180px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center">
+      <div style="width:140px;aspect-ratio:2/3;border-radius:12px;background:{{ t.cover }};box-shadow:0 16px 40px rgba(0,0,0,.5)"></div>
+      <div style="font:700 24px/1.15 'Bricolage Grotesque';letter-spacing:-.02em">{{ t.title }}</div>
+      <div style="font:500 13px 'Geist Mono';color:#C4C9D6">{{ underLine }}</div>
+      <button onClick="{{ reopen }}" style="height:48px;padding:0 20px;border-radius:12px;border:0;background:#FF6A55;color:#1A0B08;font:600 15px 'Geist';display:flex;align-items:center;gap:8px;cursor:pointer"><span class="material-symbols-rounded" style="font-size:20px">{{ reopenI }}</span>{{ reopenLbl }}</button>
+    </div>
+
+    <div onClick="{{ close }}" style="position:absolute;inset:0;z-index:40;background:rgba(5,6,10,.55);transition:opacity .25s;opacity:{{ scrimO }};pointer-events:{{ scrimPE }}"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:760px;z-index:41;border-radius:24px 24px 0 0;background:#161A26;border-top:1px solid rgba(255,255,255,.08);box-shadow:0 -24px 64px rgba(0,0,0,.5);display:flex;flex-direction:column;transform:{{ shTf }};transition:{{ shTr }}">
+      <div onPointerDown="{{ sheetDown }}" style="touch-action:none;cursor:grab;border-bottom:1px solid rgba(255,255,255,.06)">
+        <div style="display:flex;justify-content:center;padding:10px 0 4px"><div style="width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.24)"></div></div>
+        <div style="display:flex;gap:12px;align-items:center;padding:8px 12px 14px 16px">
+          <div style="width:40px;aspect-ratio:2/3;border-radius:6px;flex:none;background:{{ t.cover }}"></div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><div style="font:650 17px/1.2 'Bricolage Grotesque';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.title }}</div><div style="font-size:12px;color:#A6ADC2">TV · 28 episodes · Releasing</div></div>
+          <button onClick="{{ close }}" aria-label="Close" style="width:44px;height:44px;border-radius:10px;border:0;background:transparent;color:#A6ADC2;display:grid;place-items:center;cursor:pointer"><span class="material-symbols-rounded" style="font-size:22px">close</span></button>
+        </div>
+      </div>
+      <div style="flex:1;overflow:hidden;padding:16px;display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="font:600 11px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C">Status</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <sc-for list="{{ statuses }}" as="s" hint-placeholder-count="6">
+              <button onClick="{{ s.pick }}" style="height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;font:600 13px 'Geist';cursor:pointer;transition:all .12s;background:{{ s.bg }};border:{{ s.bd }};color:{{ s.fg }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ s.hex }}"></span>{{ s.n }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:600 11px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C">Episode progress</div><div style="font:500 12px 'Geist Mono';color:#A6ADC2">{{ pct }}</div></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button onPointerDown="{{ decDown }}" aria-label="Minus one" style="width:48px;height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#1E2331;color:#EEF0F6;display:grid;place-items:center;cursor:pointer;touch-action:none;flex:none"><span class="material-symbols-rounded" style="font-size:22px">remove</span></button>
+            <div onPointerDown="{{ scrubDown }}" style="flex:1;position:relative;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font:600 18px 'Geist Mono';touch-action:none;cursor:ew-resize;transition:background .15s,border-color .15s;background:{{ fieldBg }};border:{{ fieldBd }}">
+              <span class="material-symbols-rounded" style="position:absolute;left:8px;font-size:18px;color:#7C849C">chevron_left</span>{{ p }}<span style="color:#7C849C;font-weight:400">/ 28</span><span class="material-symbols-rounded" style="position:absolute;right:8px;font-size:18px;color:#7C849C">chevron_right</span>
+              <sc-if value="{{ hasDelta }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-24px;left:50%;transform:translateX(-50%);height:20px;padding:0 7px;border-radius:999px;background:#FF6A55;color:#1A0B08;font:600 11px/20px 'Geist Mono'">{{ deltaLbl }}</span></sc-if>
+            </div>
+            <button onPointerDown="{{ incDown }}" style="width:96px;height:48px;border-radius:12px;border:0;color:#1A0B08;font:700 14px 'Geist Mono';display:flex;align-items:center;justify-content:center;gap:2px;cursor:pointer;touch-action:none;flex:none;transition:transform .1s;background:{{ incBg }};transform:{{ incTf }}"><span class="material-symbols-rounded" style="font-size:20px">add</span>1 EP</button>
+          </div>
+          <div style="height:6px;border-radius:3px;background:rgba(255,255,255,.08)"><div style="height:100%;border-radius:3px;background:#FF6A55;transition:{{ barTr }};width:{{ pct }}"></div></div>
+          <sc-if value="{{ atEnd }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(78,217,138,.1);border:1px solid rgba(78,217,138,.3)"><span class="material-symbols-rounded" style="font-size:20px;color:#4ED98A">task_alt</span><div style="flex:1;font-size:13px">Last episode. Mark as completed?</div><button onClick="{{ complete }}" style="height:36px;padding:0 12px;border:0;border-radius:8px;background:#4ED98A;color:#06210F;font:600 13px 'Geist';cursor:pointer">Complete</button></div>
+          </sc-if>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:600 11px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C">Score</div><div style="font:650 22px 'Bricolage Grotesque'">{{ scoreLbl }}<span style="font-size:13px;color:#7C849C"> / 10</span></div></div>
+          <div onPointerDown="{{ scoreDown }}" style="display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;touch-action:none;cursor:pointer">
+            <sc-for list="{{ scoreCells }}" as="c" hint-placeholder-count="10">
+              <div style="height:44px;border-radius:8px;display:grid;place-items:center;font:600 13px 'Geist Mono';transition:background .1s;background:{{ c.bg }};color:{{ c.fg }}">{{ c.n }}</div>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;color:#7C849C">Drag across to set. Left half of a cell for a half point.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;border-top:1px solid rgba(255,255,255,.06);padding-top:6px">
+          <div style="height:44px;display:flex;align-items:center;justify-content:space-between;font-size:14px"><span>Dates</span><span style="color:#A6ADC2;display:flex;align-items:center;gap:4px;font-family:'Geist Mono';font-size:13px">{{ datesLbl }}<span class="material-symbols-rounded" style="font-size:20px">chevron_right</span></span></div>
+          <div style="height:44px;display:flex;align-items:center;justify-content:space-between;font-size:14px"><span>Rewatches</span><span style="color:#A6ADC2;display:flex;align-items:center;gap:4px;font-family:'Geist Mono';font-size:13px">0<span class="material-symbols-rounded" style="font-size:20px">chevron_right</span></span></div>
+          <div style="height:44px;display:flex;align-items:center;justify-content:space-between;font-size:14px"><span>Notes</span><span style="color:#A6ADC2;display:flex;align-items:center;gap:4px;font-size:13px">Add<span class="material-symbols-rounded" style="font-size:20px">chevron_right</span></span></div>
+        </div>
+      </div>
+      <div style="padding:12px 16px 30px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <button onPointerDown="{{ delDown }}" style="position:relative;overflow:hidden;height:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,107,139,.35);background:rgba(255,107,139,.08);color:#FF8FA8;font:600 14px 'Geist';display:flex;align-items:center;gap:6px;cursor:pointer;touch-action:none;flex:none;white-space:nowrap">
+          <div style="position:absolute;left:0;top:0;bottom:0;background:rgba(255,107,139,.32);transition:{{ delTr }};width:{{ delW }}"></div>
+          <span class="material-symbols-rounded" style="position:relative;font-size:20px">delete</span><span style="position:relative">Hold to delete</span>
+        </button>
+        <div style="flex:1;min-width:0;font-size:12px;color:#7C849C;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Saved ✓</div>
+        <button onClick="{{ close }}" style="height:44px;padding:0 20px;border:0;border-radius:10px;background:#FF6A55;color:#1A0B08;font:600 14px 'Geist';cursor:pointer">Done</button>
+      </div>
+    </div>
+
+    <div style="position:absolute;top:0;left:0;right:0;height:44px;z-index:35;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font:600 15px 'Geist'"><span>9:41</span><span style="display:flex;gap:4px"><span class="material-symbols-rounded" style="font-size:18px">signal_cellular_alt</span><span class="material-symbols-rounded" style="font-size:18px">wifi</span><span class="material-symbols-rounded" style="font-size:18px">battery_full</span></span></div>
+    <sc-if value="{{ hasHap }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:56px;left:50%;transform:translateX(-50%);height:26px;padding:0 10px 0 8px;border-radius:999px;background:rgba(9,11,17,.9);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;gap:6px;font:600 11px 'Geist Mono';z-index:60;white-space:nowrap;color:{{ hapC }}"><span class="material-symbols-rounded" style="font-size:15px">vibration</span>{{ hapLbl }}</div>
+    </sc-if>
+    <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:16px;right:16px;bottom:40px;min-height:52px;padding:6px 6px 6px 14px;border-radius:12px;background:#1F2433;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;font-size:14px;line-height:1.35;z-index:50"><span class="material-symbols-rounded" style="font-size:20px;flex:none;color:{{ toastIc }}">{{ toastI }}</span><span style="flex:1;min-width:0">{{ toastMsg }}</span>
+        <sc-if value="{{ hasUndo }}" hint-placeholder-val="{{ false }}"><button onClick="{{ undo }}" style="height:40px;padding:0 14px;border:0;border-radius:8px;background:transparent;color:#FF8A78;font:600 14px 'Geist';cursor:pointer">Undo</button></sc-if>
+      </div>
+    </sc-if>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:40px">
+<div id="20b" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">20b</span>Storyboard · close, progress, score, delete</div>
+  <div style="display:grid;grid-template-columns:repeat(4,300px);gap:20px">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="8">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="height:236px;border-radius:18px;background:#090B11;border:1px solid rgba(255,255,255,.08);position:relative;overflow:hidden">
+          <sc-if value="{{ f.isSheet }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute;inset:0;background:{{ f.cover }};filter:blur(24px);opacity:.5"></div>
+            <div style="position:absolute;inset:0;background:rgba(5,6,10,.55);opacity:{{ f.scrim }}"></div>
+            <div style="position:absolute;left:0;right:0;top:56px;bottom:0;border-radius:14px 14px 0 0;background:#161A26;transform:{{ f.shy }}">
+              <div style="display:flex;justify-content:center;padding:6px 0 2px"><div style="width:30px;height:4px;border-radius:2px;background:rgba(255,255,255,.24)"></div></div>
+              <div style="display:flex;gap:8px;align-items:center;padding:6px 14px 10px;border-bottom:1px solid rgba(255,255,255,.06)"><div style="width:24px;aspect-ratio:2/3;border-radius:4px;background:{{ f.cover }}"></div><div style="font:650 13px 'Bricolage Grotesque';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ f.title }}</div></div>
+              <div style="padding:12px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><div style="height:22px;border-radius:6px;background:rgba(90,176,255,.18)"></div><div style="height:22px;border-radius:6px;background:#10131C"></div><div style="height:22px;border-radius:6px;background:#10131C"></div><div style="height:22px;border-radius:6px;background:#10131C"></div><div style="height:22px;border-radius:6px;background:#10131C"></div><div style="height:22px;border-radius:6px;background:#10131C"></div></div>
+              <div style="position:absolute;left:50%;top:2px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18)"></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isProg }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:18px;right:18px;top:52px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;font:600 10px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C"><span>Episode progress</span><span style="font-family:'Geist Mono'">{{ f.pct }}</span></div>
+              <div style="display:flex;gap:6px;align-items:center;height:40px">
+                <div style="width:40px;height:40px;border-radius:10px;background:#1E2331;display:grid;place-items:center;flex:none"><span class="material-symbols-rounded" style="font-size:18px">remove</span></div>
+                <div style="flex:1;position:relative;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:5px;font:600 15px 'Geist Mono';background:{{ f.fieldBg }};border:{{ f.fieldBd }}">{{ f.p }}<span style="color:#7C849C;font-weight:400">/ 28</span>
+                  <sc-if value="{{ f.delta }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);height:18px;padding:0 6px;border-radius:999px;background:#FF6A55;color:#1A0B08;font:600 10px/18px 'Geist Mono'">{{ f.deltaLbl }}</span></sc-if>
+                </div>
+                <div style="width:70px;height:40px;border-radius:10px;background:#FF6A55;color:#1A0B08;display:flex;align-items:center;justify-content:center;font:700 12px 'Geist Mono';flex:none">+1 EP</div>
+              </div>
+              <div style="height:5px;border-radius:3px;background:rgba(255,255,255,.08)"><div style="height:100%;border-radius:3px;background:#FF6A55;width:{{ f.pct }}"></div></div>
+              <sc-if value="{{ f.banner }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(78,217,138,.1);border:1px solid rgba(78,217,138,.3);font-size:11px"><span class="material-symbols-rounded" style="font-size:16px;color:#4ED98A">task_alt</span><span style="flex:1">Last episode. Mark as completed?</span><span style="padding:3px 7px;border-radius:6px;background:#4ED98A;color:#06210F;font-weight:600">Complete</span></div></sc-if>
+              <sc-if value="{{ f.note }}" hint-placeholder-val="{{ false }}"><div style="font:500 11px 'Geist Mono';color:#7C849C;text-align:center">{{ f.noteT }}</div></sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isScore }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:18px;right:18px;top:70px;display:flex;flex-direction:column;gap:10px">
+              <div style="height:24px;display:flex;justify-content:space-between;align-items:baseline"><span style="font:600 10px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C">Score</span><span style="font:650 20px 'Bricolage Grotesque'">{{ f.scoreLbl }}<span style="font-size:11px;color:#7C849C"> / 10</span></span></div>
+              <div style="display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px"><sc-for list="{{ f.cells }}" as="c" hint-placeholder-count="10"><div style="height:32px;border-radius:6px;display:grid;place-items:center;font:600 10px 'Geist Mono';background:{{ c.bg }};color:{{ c.fg }}">{{ c.n }}</div></sc-for></div>
+              <div style="font:500 11px 'Geist Mono';color:#7C849C;text-align:center;padding-top:4px">{{ f.noteT }}</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isDel }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ f.toast }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;inset:0;background:{{ f.cover }};filter:blur(24px);opacity:.5"></div>
+              <div style="position:absolute;inset:0;background:rgba(5,6,10,.6)"></div>
+              <div style="position:absolute;left:12px;right:12px;bottom:16px;padding:6px 6px 6px 10px;border-radius:10px;background:#1F2433;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:7px;font-size:12px"><span class="material-symbols-rounded" style="font-size:16px;color:#FF8FA8">delete</span><span style="flex:1">Removed from your list</span><span style="padding:6px 10px;color:#FF8A78;font-weight:600">Undo</span></div>
+            </sc-if>
+            <sc-if value="{{ f.holding }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;left:0;right:0;top:56px;bottom:0;border-radius:14px 14px 0 0;background:#161A26">
+                <div style="padding:16px 14px;display:flex;flex-direction:column;gap:8px"><div style="height:12px;width:60%;border-radius:4px;background:#1E2331"></div><div style="height:12px;width:80%;border-radius:4px;background:#1E2331"></div><div style="height:12px;width:45%;border-radius:4px;background:#1E2331"></div></div>
+                <div style="position:absolute;left:0;right:0;bottom:0;padding:12px 14px 16px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center">
+                  <div style="position:relative;overflow:hidden;height:36px;width:140px;border-radius:8px;border:1px solid rgba(255,107,139,.35);background:rgba(255,107,139,.08);color:#FF8FA8;display:flex;align-items:center;gap:5px;padding:0 10px;font:600 12px 'Geist'"><div style="position:absolute;left:0;top:0;bottom:0;background:rgba(255,107,139,.32);width:{{ f.fill }}"></div><span class="material-symbols-rounded" style="position:relative;font-size:16px">delete</span><span style="position:relative">Hold to delete</span></div>
+                  <div style="height:36px;padding:0 14px;border-radius:8px;background:#FF6A55;color:#1A0B08;display:grid;place-items:center;font:600 12px 'Geist'">Done</div>
+                </div>
+              </div>
+            </sc-if>
+          </sc-if>
+          <sc-if value="{{ f.finger }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;z-index:3;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18);left:{{ f.fx }};top:{{ f.fy }}"></div></sc-if>
+          <div style="position:absolute;top:10px;left:14px;z-index:4;font:500 11px 'Geist Mono';color:#7C849C">{{ f.tag }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="font:600 11px 'Geist Mono';color:#7C849C">{{ f.n }}</span><span style="font:650 16px 'Bricolage Grotesque'">{{ f.h }}</span><div style="flex:1"></div><span style="height:22px;padding:0 8px;border-radius:999px;display:flex;align-items:center;gap:4px;font:600 11px 'Geist Mono';white-space:nowrap;color:{{ f.hapC }};background:{{ f.hapBg }}"><span class="material-symbols-rounded" style="font-size:13px">vibration</span>{{ f.hap }}</span></div>
+        <div style="font-size:13px;line-height:1.5;color:#A6ADC2;text-wrap:pretty">{{ f.d }}</div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div id="20c" style="display:flex;flex-direction:column;gap:12px;max-width:1260px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">20c</span>Spec · thresholds, haptics, fallbacks</div>
+  <div style="border-radius:16px;background:#10131C;border:1px solid rgba(255,255,255,.06);overflow:hidden;font-size:13px">
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:12px 18px;font:600 11px 'Geist Mono';letter-spacing:.06em;color:#7C849C;border-bottom:1px solid rgba(255,255,255,.06)"><span>GESTURE</span><span>RESULT</span><span>COMMIT AT</span><span>HAPTIC</span><span>NON-GESTURE PATH</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline"><b style="font-weight:600">Pull sheet down</b><span style="color:#C4C9D6">Closes the editor. Edits are already saved, so it never asks, unless a note is half typed. The handle and header always drag; the form drags the sheet only when scrolled to the top.</span><span style="font-family:'Geist Mono';color:#C4C9D6">120px, or flick &gt;0.5px/ms</span><span style="color:#C4C9D6">none</span><span style="color:#A6ADC2">✕ · Done · tap scrim</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Scrub episode count</b><span style="color:#C4C9D6">Drag sideways on the count: one episode per 14px, with a chip showing the change. Clamped from 0 to the last episode. A mostly vertical start scrolls instead.</span><span style="font-family:'Geist Mono';color:#C4C9D6">live, saved on release</span><span style="color:#C4C9D6">Selection per episode</span><span style="color:#A6ADC2">− / +1 · tap the count to type</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Hold +1 or −</b><span style="color:#C4C9D6">Steps once on touch, then repeats every 150ms, then every 70ms after 2s. It stops at 0 or at the last episode.</span><span style="font-family:'Geist Mono';color:#C4C9D6">repeat from 450ms</span><span style="color:#C4C9D6">Selection per step</span><span style="color:#A6ADC2">Tap repeatedly</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Reach last episode</b><span style="color:#C4C9D6">Repeats and scrubs stop there and the Completed prompt appears. The status never changes on its own.</span><span style="font-family:'Geist Mono';color:#C4C9D6">on reaching the total</span><span style="color:#C4C9D6">Success</span><span style="color:#A6ADC2">Complete button · Status chips</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Drag across score</b><span style="color:#C4C9D6">The score follows your finger. The left half of a cell gives the half point (7.5), the right half the whole point (8).</span><span style="font-family:'Geist Mono';color:#C4C9D6">4px sideways, saved on release</span><span style="color:#C4C9D6">Selection per change</span><span style="color:#A6ADC2">Tap a cell · tap again for .5</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Hold Delete</b><span style="color:#C4C9D6">The button fills while you hold. Letting go early drains it and nothing happens. When it fills, the entry is removed, the sheet closes, and Undo stays up for 5s.</span><span style="font-family:'Geist Mono';color:#C4C9D6">800ms hold</span><span style="color:#C4C9D6">Light on touch · Warning on delete</span><span style="color:#A6ADC2">Screen readers: confirm dialog</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Swipe status chips</b><span style="color:#C4C9D6">Nothing happens. Status is a deliberate tap here; swiping to change status belongs to rows on My List (<a href="miruyo Gestures Rows.dc.html">Rows</a>).</span><span style="font-family:'Geist Mono';color:#C4C9D6">n/a</span><span style="color:#C4C9D6">none</span><span style="color:#A6ADC2">Tap a chip</span></div>
+  </div>
+  <div style="border-radius:16px;background:#10131C;border:1px solid rgba(255,255,255,.06);padding:16px 18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;font-size:13px;line-height:1.5;color:#A6ADC2">
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">1 · HANDLE &amp; HEADER</span>Always pulls the sheet. No edge-swipe back: this is a sheet, not a page.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">2 · EPISODE COUNT</span>Owns sideways drags. Vertical drags scroll the form.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">3 · SCORE ROW</span>Owns sideways drags. A touch with no movement is a tap.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">4 · EVERYTHING ELSE</span>Taps and scroll. Delete responds only to a hold.</div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { open:true, sdy:0, sdrag:false, s:'Watching', p:7, score:8, scrub:null, inc:false, del:0, deleted:false, hap:null, toast:null };
+  componentDidMount(){
+    if(!window.KD||!window.MG){ this._p=setInterval(()=>{ if(window.KD&&window.MG){ clearInterval(this._p); this.forceUpdate(); } },80); }
+  }
+  componentWillUnmount(){ clearInterval(this._p); [this._tt,this._ht,this._rt].forEach(clearTimeout); cancelAnimationFrame(this._raf); }
+  hap(k,lbl){ window.MG&&MG.buzz(k); clearTimeout(this._ht); this.setState({hap:{k,lbl:lbl||k}}); this._ht=setTimeout(()=>this.setState({hap:null}),800); }
+  say(msg,o,ms){ clearTimeout(this._tt); this.setState({toast:{msg,...(o||{})}}); this._tt=setTimeout(()=>this.setState({toast:null}),ms||3000); }
+  setP(np){ if(np===this.state.p) return false; this.setState({p:np}); if(np===28&&this.state.s!=='Completed') this.hap('Success','Success · last episode'); else this.hap('Selection'); return true; }
+  close(){ if(!this.state.open) return; this.setState({open:false,sdy:0,sdrag:false}); this.say('Saved to AniList',{icon:'cloud_done',ic:'#4ED98A'}); }
+  stepper(delta){ return e=>{
+    if(e.button>0) return; e.preventDefault();
+    const tick=()=>{ const np=Math.max(0,Math.min(28,this.state.p+delta)); if(!this.setP(np)) stop(); };
+    const t0=Date.now();
+    const loop=()=>{ tick(); this._rt=setTimeout(loop, Date.now()-t0>2450?70:150); };
+    const stop=()=>{ clearTimeout(this._rt); window.removeEventListener('pointerup',stop); window.removeEventListener('pointercancel',stop); if(delta>0) this.setState({inc:false}); };
+    if(delta>0) this.setState({inc:true});
+    window.addEventListener('pointerup',stop); window.addEventListener('pointercancel',stop);
+    tick(); this._rt=setTimeout(loop,450);
+  }; }
+  renderVals(){
+    const D=window.KD; if(!D||!window.MG) return {t:{},statuses:[],scoreCells:[],frames:[]};
+    const st=this.state, t=D.byId[1]||D.all[0];
+    const S=[['Watching','#5AB0FF'],['Completed','#4ED98A'],['Planning','#A6ADC2'],['Paused','#F5B83D'],['Dropped','#FF6B8B'],['Rewatching','#3DD6D0']];
+    const cellsFor=v=>[1,2,3,4,5,6,7,8,9,10].map(n=>({n:String(n), bg:n<=Math.floor(v)?'#F5B83D':(n===Math.ceil(v)&&v%1?'linear-gradient(90deg,#F5B83D 50%,#262C3D 50%)':'#1E2331'), fg:n<=Math.floor(v)?'#2A1B02':'#A6ADC2'}));
+    const fmt=v=>v?(v%1?v.toFixed(1):String(v)):'—';
+    const sheetDown=e=>{ if(e.target.closest&&e.target.closest('button')) return; MG.drag(e,{axis:'y',
+      onMove:(dx,dy)=>this.setState({sdy:dy>0?dy:dy*.2,sdrag:true}),
+      onEnd:(dx,dy,vx,vy)=>{ if(dy>120||(vy>.5&&dy>24)) this.close(); else this.setState({sdy:0,sdrag:false}); }}); };
+    const scrubDown=e=>{ const p0=st.p; MG.drag(e,{axis:'x',slop:4,
+      onMove:dx=>{ if(this.state.scrub==null) this.setState({scrub:p0}); this.setP(Math.max(0,Math.min(28,p0+Math.round(dx/14)))); },
+      onEnd:()=>this.setState({scrub:null}), onCancel:()=>this.setState({scrub:null})}); };
+    const scoreDown=e=>{ const r=e.currentTarget.getBoundingClientRect(), x0=e.clientX;
+      const pos=x=>Math.max(0,Math.min(9.999,(x-r.left)/r.width*10));
+      MG.drag(e,{axis:'x',slop:4,
+        onMove:dx=>{ const q=pos(x0+dx), c=Math.floor(q)+1, v=(q-Math.floor(q))<.5?c-.5:c; if(v!==this.state.score){ this.setState({score:v}); this.hap('Selection'); } },
+        onEnd:()=>{},
+        onCancel:l=>{ if(l==null){ const c=Math.floor(pos(x0))+1; this.setState(s=>({score:s.score===c?c-.5:c})); this.hap('Selection'); } }}); };
+    const delDown=e=>{ if(e.button>0) return; e.preventDefault(); const t0=performance.now();
+      const stop=()=>{ cancelAnimationFrame(this._raf); window.removeEventListener('pointerup',up); window.removeEventListener('pointercancel',up); };
+      const up=()=>{ stop(); this.setState({del:0}); };
+      const run=()=>{ const k=Math.min(1,(performance.now()-t0)/800); this.setState({del:k});
+        if(k>=1){ stop(); this.hap('Warning'); this.setState({open:false,del:0,deleted:true,sdy:0}); this.say('Removed from your list',{icon:'delete',ic:'#FF8FA8',undo:true},5000); return; }
+        this._raf=requestAnimationFrame(run); };
+      window.addEventListener('pointerup',up); window.addEventListener('pointercancel',up); this.hap('Light'); this._raf=requestAnimationFrame(run); };
+    const hc={'—':['#7C849C','rgba(255,255,255,.05)'],Selection:['#D7DBE6','rgba(255,255,255,.08)'],Success:['#4ED98A','rgba(78,217,138,.14)'],Warning:['#FF8FA8','rgba(255,107,139,.14)']};
+    const pf=(p,o)=>({k:'prog',p:String(p),pct:Math.round(p/28*100)+'%',fieldBg:o&&o.scrub?'#1E2331':'#10131C',fieldBd:o&&o.scrub?'1px solid rgba(255,106,85,.6)':'1px solid rgba(255,255,255,.08)',...(o||{})});
+    const F=[
+      {n:'01',h:'Pull to close',d:'Drag the handle or header down. The sheet follows your finger and the scrim fades. Every edit is already saved, so there is nothing to confirm.',hap:'—',tag:'dy +80',k:'sheet',shy:'translateY(80px)',scrim:'.5',finger:false},
+      {n:'02',h:'Scrub the count',d:'Drag sideways on the episode count. Every 14px is one episode, and a chip shows how far you\'ve moved. A vertical start scrolls instead.',hap:'Selection',tag:'dx +70',...pf(12,{scrub:true,delta:true,deltaLbl:'+5',note:true,noteT:'14px = 1 episode'}),finger:true,fx:'150px',fy:'107px'},
+      {n:'03',h:'Hold to count',d:'Hold +1 and it repeats after 450ms, every 150ms, then every 70ms after 2s. It stops at the last episode.',hap:'Selection',tag:'held 1.6s',...pf(19,{note:true,noteT:'450ms → 150ms → 70ms'}),finger:true,fx:'247px',fy:'107px'},
+      {n:'04',h:'Last episode',d:'The count stops at the total with a Success haptic and offers Completed. The status never changes by itself.',hap:'Success',tag:'28 / 28',...pf(28,{banner:true})},
+      {n:'05',h:'Drag to score',d:'The score cells act as a slider. Drag across them and the score follows your finger, one haptic per change.',hap:'Selection',tag:'dx −40',k:'score',sc:7,noteT:'right half = whole point',finger:true,fx:'190px',fy:'120px'},
+      {n:'06',h:'Half points',d:'The left half of a cell gives the half point, so 7.5 takes one drag. Tapping still works: tap a cell twice for the half.',hap:'Selection',tag:'left half of 8',k:'score',sc:7.5,noteT:'left half = .5',finger:true,fx:'211px',fy:'120px'},
+      {n:'07',h:'Hold to delete',d:'Delete fills over 0.8s while you hold it. Letting go early drains it back and nothing happens.',hap:'—',tag:'held 0.5s',k:'del',holding:true,fill:'62%',finger:true,fx:'82px',fy:'197px'},
+      {n:'08',h:'Undo',d:'When it fills, the entry is removed with a Warning haptic. The sheet closes and Undo stays up for 5 seconds.',hap:'Warning',tag:'800ms',k:'del',toast:true},
+    ];
+    const frames=F.map(x=>{ const [hC,hB]=hc[x.hap]||hc['—']; return {...x, isSheet:x.k==='sheet', isProg:x.k==='prog', isScore:x.k==='score', isDel:x.k==='del',
+      cover:t.cover, title:t.title, finger:!!x.finger, fx:x.fx||'50%', fy:x.fy||'50%', delta:!!x.delta, deltaLbl:x.deltaLbl||'', banner:!!x.banner, note:!!x.note, noteT:x.noteT||'',
+      cells:x.k==='score'?cellsFor(x.sc):[], scoreLbl:x.k==='score'?fmt(x.sc):'', holding:!!x.holding, toast:!!x.toast, fill:x.fill||'0%',
+      shy:x.shy||'none', scrim:x.scrim||'1', p:x.p||'', pct:x.pct||'0%', fieldBg:x.fieldBg||'#10131C', fieldBd:x.fieldBd||'none', hapC:hC, hapBg:hB}; });
+    const hk=st.hap, hapMap={Light:'#8CC8FF',Medium:'#B9A9FF',Selection:'#D7DBE6',Warning:'#FF8FA8'}, T=st.toast, d=st.scrub!=null?st.p-st.scrub:0;
+    return {
+      t,
+      underLine:st.deleted?'Not on your list':`${st.s} · ${st.p} / 28 · ${fmt(st.score)}`,
+      reopenLbl:st.deleted?'Add to list':'Edit entry', reopenI:st.deleted?'add':'edit',
+      reopen:()=>this.setState(s=>({open:true,deleted:false,toast:null,s:s.deleted?'Planning':s.s,p:s.deleted?0:s.p,score:s.deleted?0:s.score})),
+      close:()=>this.close(), sheetDown,
+      scrimO:st.open?String(Math.max(0,1-st.sdy/500)):'0', scrimPE:st.open?'auto':'none',
+      shTf:st.open?`translateY(${st.sdy}px)`:'translateY(105%)', shTr:st.sdrag?'none':'transform .36s cubic-bezier(.2,.9,.25,1)',
+      statuses:S.map(([n,hex])=>{ const on=n===st.s; return {n,hex,bg:on?hex+'22':'#10131C',bd:on?`1px solid ${hex}88`:'1px solid rgba(255,255,255,.08)',fg:on?'#EEF0F6':'#A6ADC2',pick:()=>this.setState(s=>({s:n,p:n==='Completed'?28:s.p}))}; }),
+      p:st.p, pct:Math.round(st.p/28*100)+'%', barTr:st.scrub!=null?'none':'width .2s', atEnd:st.p===28&&st.s!=='Completed', complete:()=>{ this.setState({s:'Completed'}); this.hap('Success'); },
+      scrubDown, decDown:this.stepper(-1), incDown:this.stepper(1),
+      fieldBg:st.scrub!=null?'#1E2331':'#10131C', fieldBd:st.scrub!=null?'1px solid rgba(255,106,85,.6)':'1px solid rgba(255,255,255,.08)',
+      hasDelta:st.scrub!=null&&d!==0, deltaLbl:(d>0?'+':'')+d,
+      incBg:st.p>=28?'#7A3A31':'#FF6A55', incTf:st.inc?'scale(.96)':'none',
+      scoreLbl:fmt(st.score), scoreCells:cellsFor(st.score), scoreDown,
+      datesLbl:st.s==='Completed'?'Oct 2 → Oct 9':'Oct 2 → —',
+      delDown, delW:(st.del*100)+'%', delTr:st.del>0?'none':'width .3s',
+      undo:()=>{ clearTimeout(this._tt); this.setState({deleted:false,open:true,toast:null}); this.hap('Light'); },
+      frames,
+      reset:()=>{ clearTimeout(this._tt); this.setState({open:true,sdy:0,s:'Watching',p:7,score:8,scrub:null,del:0,deleted:false,toast:null}); },
+      hasHap:!!hk, hapLbl:hk?hk.lbl:'', hapC:hk?(hapMap[hk.k]||'#4ED98A'):'#D7DBE6',
+      hasToast:!!T, toastMsg:T?T.msg:'', toastI:T&&T.icon||'check_circle', toastIc:T&&T.ic||'#4ED98A', hasUndo:!!(T&&T.undo),
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  miruyo's own privacy manifest. The plugins (shared_preferences,
+  flutter_secure_storage, sqflite, url_launcher, connectivity_plus, …) and
+  Flutter ship their own; Xcode merges them into the archive's privacy
+  report (Product → Archive → Generate Privacy Report).
+  No tracking, nothing collected: the app talks only to AniList, and what it
+  keeps stays on the phone. Keep this in step with the App Store privacy
+  labels and the privacy policy.
+-->
+<plist version="1.0">
+<dict>
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array/>
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<!-- preferences (mode, layout, alerts), read and written only by the app itself -->
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>CA92.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

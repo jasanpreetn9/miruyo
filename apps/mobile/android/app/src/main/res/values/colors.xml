@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- the app's base surface (#090B11), so launch doesn't flash white -->
+    <color name="launch_background">#090B11</color>
+</resources>

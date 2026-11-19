@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..500,0..1,0&display=block">
+<script src="../miruyo-data.js"></script>
+<style>body{margin:0;background:#090B11;color:#EEF0F6;font-family:'Geist',system-ui,sans-serif}</style>
+</helmet>
+<div style="display:flex;flex-direction:column;gap:10px;min-width:0;width:100%" onMouseEnter="{{ enter }}" onMouseLeave="{{ leave }}">
+  <div onClick="{{ open }}" style="position:relative;aspect-ratio:2/3;border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s;background:{{ cover }};box-shadow:{{ shadow }};transform:{{ lift }}">
+    
+    
+    <div style="position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;gap:4px">
+      <div style="height:22px;padding:0 7px;border-radius:5px;background:rgba(9,11,17,.78);backdrop-filter:blur(8px);display:flex;align-items:center;font:700 10px 'Geist';letter-spacing:.08em;color:{{ t.badgeFg }}">{{ badge }}</div>
+      <div style="height:22px;padding:0 7px;border-radius:5px;background:rgba(9,11,17,.78);backdrop-filter:blur(8px);display:flex;align-items:center;gap:3px;font:600 12px 'Geist Mono';color:#EEF0F6"><span class="material-symbols-rounded" style="font-size:14px;color:#F5B83D;font-variation-settings:'FILL' 1">star</span>{{ t.score }}</div>
+    </div>
+    <sc-if value="{{ showOverlay }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,11,17,0) 25%,rgba(9,11,17,.94) 100%);display:flex;flex-direction:column;justify-content:flex-end;gap:8px;padding:10px">
+        <div style="font-size:12px;line-height:1.4;color:#D7DBE6">{{ genres }}</div>
+        <div style="display:flex;gap:6px">
+          <button onClick="{{ quickAdd }}" style="flex:1;height:36px;border:0;border-radius:8px;font:600 13px 'Geist';display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:{{ accentBtn }};color:{{ accentInk }}"><span class="material-symbols-rounded" style="font-size:18px">add</span>Planning</button>
+          <button style="width:36px;height:36px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#EEF0F6;display:grid;place-items:center;cursor:pointer"><span class="material-symbols-rounded" style="font-size:20px">expand_more</span></button>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ onList }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:0;right:0;bottom:0;padding:8px 8px 11px;display:flex;align-items:center;justify-content:space-between;gap:6px;background:linear-gradient(180deg,rgba(9,11,17,0),rgba(9,11,17,.88))">
+        <div style="height:22px;padding:0 8px;border-radius:999px;background:rgba(9,11,17,.8);display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;white-space:nowrap;color:{{ sColor }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ sColor }}"></span>{{ sLabel }}</div>
+        <sc-if value="{{ canInc }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ inc }}" style="height:28px;padding:0 9px 0 5px;border:0;border-radius:999px;background:#EEF0F6;color:#090B11;font:700 11px 'Geist Mono';display:flex;align-items:center;cursor:pointer" style-active="transform:scale(.94)"><span class="material-symbols-rounded" style="font-size:16px">add</span>1</button>
+        </sc-if>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.12)"><div style="height:100%;transition:width .24s cubic-bezier(.2,.8,.2,1);background:{{ t.accent }};width:{{ pct }}"></div></div>
+    </sc-if>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:#EEF0F6;font-size:{{ titleSize }}">{{ t.title }}</div>
+    <sc-if value="{{ hasReason }}" hint-placeholder-val="{{ false }}">
+      <div style="font-size:12px;line-height:1.35;color:#A6ADC2;display:flex;gap:4px"><span class="material-symbols-rounded" style="font-size:14px;color:#FF8A78;margin-top:1px">auto_awesome</span><span>{{ reason }}</span></div>
+    </sc-if>
+    <sc-if value="{{ hasCountdown }}" hint-placeholder-val="{{ false }}">
+      <div style="align-self:flex-start;height:24px;padding:0 9px 0 6px;border-radius:999px;display:flex;align-items:center;gap:4px;font:500 11px 'Geist Mono';background:{{ cdBg }};color:{{ cdFg }}"><span class="material-symbols-rounded" style="font-size:14px">schedule</span>{{ cdText }}</div>
+    </sc-if>
+    <div style="font-size:12px;color:#7C849C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ meta }}</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:200,&quot;height&quot;:360},&quot;tid&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1,&quot;tsType&quot;:&quot;number&quot;},&quot;loggedOut&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;size&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;md&quot;,&quot;sm&quot;],&quot;default&quot;:&quot;md&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;reason&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;countdown&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;meta&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;default&quot;,&quot;season&quot;],&quot;default&quot;:&quot;default&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { hover:false, p:null, added:false };
+  componentDidMount(){ this._h=()=>this.forceUpdate(); window.addEventListener('kd-ready',this._h); window.addEventListener('kd-art',this._h); }
+  componentWillUnmount(){ window.removeEventListener('kd-ready',this._h); window.removeEventListener('kd-art',this._h); }
+  renderVals(){
+    const D = window.KD; const pr = this.props;
+    const t = D && D.byId[pr.tid] || {title:'',genres:[],me:null};
+    const SC = {Watching:'#5AB0FF',Completed:'#4ED98A',Planning:'#A6ADC2',Paused:'#F5B83D',Dropped:'#FF6B8B',Repeating:'#3DD6D0'};
+    const loggedOut = pr.loggedOut==='true'||pr.loggedOut===true;
+    let me = loggedOut ? null : t.me;
+    if(!me && this.state.added) me = {s:'Planning',p:0};
+    const p = this.state.p ?? (me?me.p:0);
+    const tot = t.total;
+    const isA = t.isAnime;
+    const sName = me ? (me.s==='Watching' && !isA ? 'Reading' : me.s) : '';
+    const inProg = me && (me.s==='Watching'||me.s==='Repeating'||me.s==='Paused');
+    const hover = this.state.hover || pr.forceHover==='true';
+    const nx = t.next;
+    const soon = nx && /^\d+h|^\d+m/.test(nx.in);
+    const metaMode = pr.meta || 'default';
+    const meta = metaMode==='season' ? [t.format, t.season].join(' · ') : [t.format, t.countLabel, isA ? t.studio : (t.author||'').split(' · ')[0]].filter(Boolean).join(' · ');
+    return {
+      t, cover:t.cover, badge: (t.format||t.type).toUpperCase(), genres:(t.genres||[]).join(' · '),
+      shadow: hover ? t.glow : 'none', lift: hover ? 'translateY(-4px)' : 'none',
+      showOverlay: hover && !me && pr.noHover!=='true',
+      onList: !!me,
+      sColor: me ? SC[me.s] : '#fff',
+      sLabel: me ? (inProg ? `${sName} · ${p}/${tot||'?'}` : sName) : '',
+      canInc: !!inProg,
+      pct: me ? (me.s==='Completed' ? '100%' : Math.round(p/(tot||Math.max(p+20,24))*100)+'%') : '0%',
+      inc: (e)=>{ e&&e.stopPropagation&&e.stopPropagation(); this.setState({p: Math.min(tot||9999, p+1)}); },
+      quickAdd: (e)=>{ e&&e.stopPropagation&&e.stopPropagation(); this.setState({added:true}); },
+      accentBtn: isA ? '#FF6A55' : '#A08CFF', accentInk: isA ? '#1A0B08' : '#140E2B',
+      enter: ()=>this.setState({hover:true}), leave: ()=>this.setState({hover:false}),
+      titleSize: pr.size==='sm' ? '13px' : '14px',
+      hasReason: !!pr.reason, reason: pr.reason || '',
+      hasCountdown: pr.countdown==='true' && !!nx,
+      cdText: nx ? `EP ${nx.ep} · ${nx.in}` : '',
+      cdBg: soon ? 'rgba(255,106,85,.16)' : 'rgba(90,176,255,.14)', cdFg: soon ? '#FF8A78' : '#8CC8FF',
+      meta,
+      open: ()=>{ if(t.id) location.href='miruyo Detail.dc.html?id='+t.id; },
+    };
+  }
+}
+</script>
+</body>
+</html>

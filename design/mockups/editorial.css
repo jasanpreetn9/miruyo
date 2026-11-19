@@ -1,0 +1,72 @@
+/* Shared base for the editorial mockups (home, title). Seasonal is self-contained. */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200..800;1,9..144,300..700&family=Schibsted+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+	--paper: #13110f; /* warm off-black, not blue-black */
+	--paper-2: #1b1815;
+	--ink: #efe7da; /* cream ink */
+	--ink-2: #b3a996;
+	--ink-3: #7d7465;
+	--rule: rgb(239 231 218 / 0.14);
+	--shu: #e8452c; /* vermilion: the one brand accent */
+	--serif: 'Fraunces', Georgia, serif;
+	--sans: 'Schibsted Grotesk', system-ui, sans-serif;
+	--jp: 'Zen Kaku Gothic New', sans-serif;
+	--mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; font-size: 15px; }
+a { color: inherit; text-decoration: none; }
+img { display: block; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+
+/* nav: plain text, no pills */
+nav { display: flex; align-items: center; gap: 32px; height: 60px; border-bottom: 1px solid var(--rule); }
+.logo { font-family: var(--serif); font-weight: 700; font-size: 22px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; }
+.logo i { font-style: normal; font-family: var(--jp); font-weight: 700; background: var(--shu); color: var(--paper); width: 26px; height: 26px; display: grid; place-items: center; font-size: 15px; border-radius: 3px; }
+nav .links { display: flex; gap: 24px; font-size: 14px; color: var(--ink-2); }
+nav .links a.on { color: var(--ink); box-shadow: inset 0 -2px 0 var(--shu); padding-bottom: 19px; margin-bottom: -21px; }
+nav .mode { margin-left: auto; font-size: 13px; color: var(--ink-3); }
+nav .mode b { color: var(--ink); font-weight: 600; }
+nav .search { font-family: var(--mono); font-size: 12px; color: var(--ink-3); border-bottom: 1px solid var(--rule); padding: 4px 0; width: 180px; }
+
+/* section heading: serif title, Japanese gloss, count, hairline */
+.sect-h { display: flex; align-items: baseline; gap: 14px; margin: 56px 0 18px; }
+.sect-h h2 { font-family: var(--serif); font-weight: 500; font-size: 30px; letter-spacing: -0.02em; margin: 0; }
+.sect-h .jp { font-family: var(--jp); font-size: 13px; color: var(--ink-3); }
+.sect-h .n { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+.sect-h .fill { flex: 1; border-bottom: 1px solid var(--rule); transform: translateY(-6px); }
+.sect-h .more { font-size: 13px; color: var(--ink-2); }
+.sect-h .more:hover { color: var(--ink); }
+
+.kicker { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c, var(--shu)); font-weight: 600; }
+.mono { font-family: var(--mono); }
+.jp { font-family: var(--jp); }
+
+.btn { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; padding: 12px 20px; background: var(--ink); color: var(--paper); border: 0; border-radius: 2px; }
+.btn:hover { background: var(--c, var(--shu)); }
+.btn.ghost { background: none; color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule); }
+.btn.ghost:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+
+/* quiet circular row action */
+.add { width: 28px; height: 28px; border: 1px solid var(--rule); border-radius: 50%; display: grid; place-items: center; color: var(--ink-2); font-size: 15px; line-height: 1; background: none; flex: none; }
+.add:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* halftone backdrop tinted by --c */
+.tone { position: relative; isolation: isolate; }
+.tone::before { content: ''; position: absolute; inset: 0 -40px; z-index: -1;
+	background:
+		radial-gradient(circle at 1px 1px, color-mix(in oklch, var(--c) 40%, transparent) 1px, transparent 1.6px) 0 0 / 7px 7px,
+		linear-gradient(90deg, color-mix(in oklch, var(--c) 18%, var(--paper)), var(--paper) 70%);
+	mask: radial-gradient(ellipse 60% 75% at 22% 50%, #000 35%, transparent 100%); }
+
+footer { margin: 80px 0 40px; padding-top: 18px; border-top: 3px double var(--rule); font-size: 12px; color: var(--ink-3); display: flex; justify-content: space-between; }
+
+@media (max-width: 900px) {
+	.wrap { padding: 0 16px; }
+	.tone::before { inset: 0 -16px; }
+	nav .links, nav .search { display: none; }
+	.sect-h { margin-top: 40px; }
+	.sect-h h2 { font-size: 24px; }
+}

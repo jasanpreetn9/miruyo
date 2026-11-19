@@ -1,0 +1,19 @@
+# Lints from package:flutter_lints, plus a few the codebase follows.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - "**/*.g.dart"
+
+formatter:
+  page_width: 120
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    unawaited_futures: true
+    directives_ordering: true
+    prefer_final_locals: true

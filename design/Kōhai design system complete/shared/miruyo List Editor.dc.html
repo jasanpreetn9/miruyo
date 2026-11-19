@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..500,0..1,0&display=block">
+<script src="../miruyo-data.js"></script>
+<style>
+body{margin:0;background:#05060A;color:#EEF0F6;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#FF8A78;text-decoration:none}a:hover{color:#FFB3A6}
+</style>
+</helmet>
+<div style="padding:64px;display:flex;flex-direction:column;gap:56px;width:max-content">
+<div style="display:flex;flex-direction:column;gap:14px;max-width:1440px">
+  <div style="font:500 11px 'Geist Mono';color:#FF8A78;letter-spacing:.08em">SCREEN 04 · LIST EDITOR</div>
+  <h1 style="margin:0;font:700 44px/1.05 'Bricolage Grotesque';letter-spacing:-.03em">List editor</h1>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:14px;line-height:1.55;color:#A6ADC2;max-width:1200px">
+    <p style="margin:0"><b style="color:#EEF0F6">Side panel on desktop, sheet on mobile.</b> The page stays visible behind it, so you never lose your place. Esc / swipe-down closes; edits save as you go, so only a half-typed note asks first.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Ordered by frequency.</b> Status → progress → score are above the fold. Dates, repeats and notes are below, collapsed into one group on mobile.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Smart defaults.</b> Setting Watching fills Start date with today; reaching the last episode offers Completed and fills Finish date. All interactive on <a href="#4a">4a</a>.</p>
+  </div>
+</div>
+<div style="display:flex;gap:64px;align-items:flex-start">
+<div id="4a" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">4a</span>Desktop · side panel (anime) · live</div>
+  <div data-screen-label="List editor desktop" style="width:1440px;height:960px;border-radius:14px;overflow:hidden;background:#090B11;border:1px solid rgba(255,255,255,.08);position:relative">
+    <div style="position:absolute;inset:0;background:{{ t.cover }};opacity:.5"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(0deg,#090B11 40%,rgba(9,11,17,.4))"></div>
+    <div style="position:absolute;left:80px;top:300px;display:flex;gap:40px;opacity:.6"><div style="width:240px;aspect-ratio:2/3;border-radius:14px;background:{{ t.cover }}"></div><div style="display:flex;flex-direction:column;gap:14px;padding-top:90px"><div style="font:700 52px 'Bricolage Grotesque';letter-spacing:-.03em">{{ t.title }}</div><div style="width:520px;height:14px;border-radius:4px;background:#1E2331"></div><div style="width:440px;height:14px;border-radius:4px;background:#1E2331"></div></div></div>
+    <div style="position:absolute;inset:0;background:rgba(5,6,10,.55)"></div>
+    <div style="position:absolute;top:0;right:0;bottom:0;width:480px;background:#161A26;border-left:1px solid rgba(255,255,255,.08);box-shadow:-24px 0 64px rgba(0,0,0,.5);display:flex;flex-direction:column">
+      <div style="position:relative;padding:20px 24px;display:flex;gap:16px;align-items:center;border-bottom:1px solid rgba(255,255,255,.06);overflow:hidden">
+        <div style="position:absolute;left:-40px;top:-80px;width:260px;height:220px;border-radius:50%;filter:blur(50px);background:{{ t.tint }}"></div>
+        <div style="position:relative;width:56px;aspect-ratio:2/3;border-radius:8px;flex:none;background:{{ t.cover }}"></div>
+        <div style="position:relative;flex:1;min-width:0;display:flex;flex-direction:column;gap:4px"><div style="font:650 19px/1.2 'Bricolage Grotesque'">{{ t.title }}</div><div style="font-size:12px;color:#A6ADC2">TV · 28 episodes · Releasing</div></div>
+        <button style="position:relative;width:40px;height:40px;border-radius:10px;border:0;background:rgba(255,255,255,.06);color:#EEF0F6;display:grid;place-items:center"><span class="material-symbols-rounded" style="font-size:22px">close</span></button>
+      </div>
+      <div style="flex:1;overflow:auto;padding:20px 24px;display:flex;flex-direction:column;gap:22px;scrollbar-width:thin">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="font:600 11px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C">Status</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+            <sc-for list="{{ statuses }}" as="s" hint-placeholder-count="6">
+              <button onClick="{{ s.pick }}" style="height:44px;border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 12px;font:500 14px 'Geist';cursor:pointer;transition:all .12s;background:{{ s.bg }};border:{{ s.bd }};color:{{ s.fg }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ s.hex }}"></span>{{ s.n }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between"><div style="font:600 11px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C">Episode progress</div><div style="font:500 12px 'Geist Mono';color:#A6ADC2">{{ pct }}</div></div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button onClick="{{ dec }}" style="width:48px;height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#1E2331;color:#EEF0F6;display:grid;place-items:center;cursor:pointer"><span class="material-symbols-rounded" style="font-size:22px">remove</span></button>
+            <div style="flex:1;height:48px;border-radius:12px;background:#10131C;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font:600 18px 'Geist Mono'">{{ p }}<span style="color:#7C849C;font-weight:400"> / 28</span></div>
+            <button onClick="{{ inc }}" style="width:96px;height:48px;border-radius:12px;border:0;background:#FF6A55;color:#1A0B08;font:700 14px 'Geist Mono';display:flex;align-items:center;justify-content:center;gap:2px;cursor:pointer" style-active="transform:scale(.96)"><span class="material-symbols-rounded" style="font-size:20px">add</span>1 EP</button>
+          </div>
+          <div style="height:6px;border-radius:3px;background:rgba(255,255,255,.08)"><div style="height:100%;border-radius:3px;transition:width .24s cubic-bezier(.2,.8,.2,1);background:{{ t.accent }};width:{{ pct }}"></div></div>
+          <sc-if value="{{ atEnd }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(78,217,138,.1);border:1px solid rgba(78,217,138,.3)"><span class="material-symbols-rounded" style="font-size:20px;color:#4ED98A">task_alt</span><div style="flex:1;font-size:13px">Last episode. Mark as completed?</div><button onClick="{{ complete }}" style="height:32px;padding:0 10px;border:0;border-radius:8px;background:#4ED98A;color:#06210F;font:600 12px 'Geist';cursor:pointer">Complete</button></div>
+          </sc-if>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:600 11px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C">Score</div><div style="font:650 22px 'Bricolage Grotesque'">{{ scoreLabel }}<span style="font-size:13px;color:#7C849C"> / 10</span></div></div>
+          <div style="display:grid;grid-template-columns:repeat(10,1fr);gap:4px">
+            <sc-for list="{{ scoreCells }}" as="c" hint-placeholder-count="10">
+              <button onClick="{{ c.pick }}" style="height:40px;border-radius:8px;border:0;font:600 13px 'Geist Mono';cursor:pointer;transition:background .12s;background:{{ c.bg }};color:{{ c.fg }}">{{ c.n }}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;color:#7C849C">Uses your AniList scoring format (10-point). Click twice for half points.</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:12px;font-weight:600;color:#A6ADC2">Started</div><div style="height:44px;border-radius:10px;background:#10131C;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font:400 14px 'Geist Mono'">2026-10-02<span class="material-symbols-rounded" style="font-size:18px;color:#7C849C">calendar_today</span></div></div>
+          <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:12px;font-weight:600;color:#A6ADC2">Finished</div><div style="height:44px;border-radius:10px;background:#10131C;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font:400 14px 'Geist Mono';color:{{ finC }}">{{ fin }}<span class="material-symbols-rounded" style="font-size:18px;color:#7C849C">calendar_today</span></div></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:#10131C;border:1px solid rgba(255,255,255,.06)">
+          <div style="display:flex;flex-direction:column;gap:2px"><div style="font-size:14px">Total rewatches</div><div style="font-size:12px;color:#7C849C">Counted in stats</div></div>
+          <div style="display:flex;align-items:center;gap:4px"><button onClick="{{ rwDec }}" style="width:40px;height:40px;border-radius:10px;border:0;background:#1E2331;color:#EEF0F6;display:grid;place-items:center;cursor:pointer"><span class="material-symbols-rounded" style="font-size:20px">remove</span></button><div style="width:36px;text-align:center;font:600 15px 'Geist Mono'">{{ rw }}</div><button onClick="{{ rwInc }}" style="width:40px;height:40px;border-radius:10px;border:0;background:#1E2331;color:#EEF0F6;display:grid;place-items:center;cursor:pointer"><span class="material-symbols-rounded" style="font-size:20px">add</span></button></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:12px;font-weight:600;color:#A6ADC2">Notes</div><div style="min-height:84px;border-radius:10px;background:#10131C;border:1px solid rgba(255,255,255,.08);padding:12px;font-size:14px;line-height:1.5;color:#D7DBE6">Rewatch EP 1 before S2 finale. Fern's barrier spell scene!</div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;flex-direction:column;gap:2px"><div style="font-size:14px">Private entry</div><div style="font-size:12px;color:#7C849C">Hidden from your public profile</div></div><div style="width:44px;height:26px;border-radius:999px;background:#262C3D;padding:3px"><div style="width:20px;height:20px;border-radius:50%;background:#EEF0F6"></div></div></div>
+      </div>
+      <div style="padding:16px 24px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:8px;align-items:center">
+        <button style="height:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,107,139,.35);background:rgba(255,107,139,.08);color:#FF8FA8;font:600 14px 'Geist';display:flex;align-items:center;gap:6px"><span class="material-symbols-rounded" style="font-size:20px">delete</span>Delete</button>
+        <div style="flex:1;font-size:12px;color:#7C849C;text-align:right">Saved to AniList ✓</div>
+        <button style="height:44px;padding:0 20px;border-radius:10px;border:0;background:#FF6A55;color:#1A0B08;font:600 14px 'Geist'">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">4b</span>Mobile · bottom sheet (manga: chapters + volumes)</div>
+  <div data-screen-label="List editor mobile" style="width:390px;height:844px;border-radius:44px;overflow:hidden;background:#090B11;border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 0 0 8px #11131a">
+    <div style="position:absolute;inset:0;background:{{ m.cover }};filter:blur(40px);opacity:.6"></div>
+    <div style="position:absolute;inset:0;background:rgba(5,6,10,.65)"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:760px;border-radius:24px 24px 0 0;background:#161A26;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:center;padding:10px 0 4px"><div style="width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.2)"></div></div>
+      <div style="display:flex;gap:12px;align-items:center;padding:8px 16px 14px;border-bottom:1px solid rgba(255,255,255,.06)">
+        <div style="width:40px;aspect-ratio:2/3;border-radius:6px;background:{{ m.cover }}"></div>
+        <div style="flex:1;min-width:0"><div style="font:650 17px 'Bricolage Grotesque'">{{ m.title }}</div><div style="font-size:12px;color:#A6ADC2">Manga · Releasing</div></div>
+        <button style="width:40px;height:40px;border-radius:10px;border:0;background:transparent;color:#A6ADC2;display:grid;place-items:center"><span class="material-symbols-rounded" style="font-size:22px">close</span></button>
+      </div>
+      <div style="flex:1;overflow:hidden;padding:16px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;flex-direction:column;gap:10px"><div style="font:600 11px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C">Status</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><div style="height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:600;background:rgba(90,176,255,.14);border:1px solid rgba(90,176,255,.45);color:#EEF0F6"><span style="width:7px;height:7px;border-radius:50%;background:#5AB0FF"></span>Reading</div><div style="height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:600;background:#10131C;border:1px solid rgba(255,255,255,.08);color:#D7DBE6"><span style="width:7px;height:7px;border-radius:50%;background:#4ED98A"></span>Completed</div><div style="height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:600;background:#10131C;border:1px solid rgba(255,255,255,.08);color:#D7DBE6"><span style="width:7px;height:7px;border-radius:50%;background:#A6ADC2"></span>Planning</div><div style="height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:600;background:#10131C;border:1px solid rgba(255,255,255,.08);color:#D7DBE6"><span style="width:7px;height:7px;border-radius:50%;background:#F5B83D"></span>Paused</div><div style="height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:600;background:#10131C;border:1px solid rgba(255,255,255,.08);color:#D7DBE6"><span style="width:7px;height:7px;border-radius:50%;background:#FF6B8B"></span>Dropped</div><div style="height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:600;background:#10131C;border:1px solid rgba(255,255,255,.08);color:#D7DBE6"><span style="width:7px;height:7px;border-radius:50%;background:#3DD6D0"></span>Rereading</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:600 11px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C">Chapter progress</div><div style="font:500 12px 'Geist Mono';color:#7C849C">93 out · ongoing</div></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button onClick="{{ mDec }}" style="width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#1E2331;color:#EEF0F6;display:grid;place-items:center"><span class="material-symbols-rounded" style="font-size:22px">remove</span></button>
+            <div style="flex:1;height:44px;border-radius:10px;background:#10131C;display:flex;align-items:center;justify-content:center;gap:6px;font:500 16px 'Geist Mono'">{{ mp }}<span style="color:#7C849C">/ ?</span></div>
+            <button onClick="{{ mInc }}" style="height:44px;padding:0 14px;border-radius:10px;border:0;background:#EEF0F6;color:#090B11;font:700 14px 'Geist Mono';display:flex;align-items:center;gap:2px"><span class="material-symbols-rounded" style="font-size:20px">add</span>1 CH</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0"><div style="font-size:14px;color:#D7DBE6">Volumes</div><div style="display:flex;align-items:center;gap:4px"><div style="width:36px;height:36px;border-radius:8px;background:#1E2331;display:grid;place-items:center"><span class="material-symbols-rounded" style="font-size:18px">remove</span></div><div style="width:52px;text-align:center;font:600 15px 'Geist Mono'">7<span style="color:#7C849C;font-weight:400">/8</span></div><div style="width:36px;height:36px;border-radius:8px;background:#1E2331;display:grid;place-items:center"><span class="material-symbols-rounded" style="font-size:18px">add</span></div></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;justify-content:space-between"><div style="font:600 11px 'Geist';letter-spacing:.08em;text-transform:uppercase;color:#7C849C">Score</div><div style="font:600 14px 'Geist Mono'">8.5</div></div><div style="display:grid;grid-template-columns:repeat(10,1fr);gap:4px"><div style="height:36px;border-radius:8px;display:grid;place-items:center;font:500 13px 'Geist Mono';background:#A08CFF;color:#140E2B">1</div><div style="height:36px;border-radius:8px;display:grid;place-items:center;font:500 13px 'Geist Mono';background:#A08CFF;color:#140E2B">2</div><div style="height:36px;border-radius:8px;display:grid;place-items:center;font:500 13px 'Geist Mono';background:#A08CFF;color:#140E2B">3</div><div style="height:36px;border-radius:8px;display:grid;place-items:center;font:500 13px 'Geist Mono';background:#A08CFF;color:#140E2B">4</div><div style="height:36px;border-radius:8px;display:grid;place-items:center;font:500 13px 'Geist Mono';background:#A08CFF;color:#140E2B">5</div><div style="height:36px;border-radius:8px;display:grid;place-items:center;font:500 13px 'Geist Mono';background:#A08CFF;color:#140E2B">6</div><div style="height:36px;border-radius:8px;display:grid;place-items:center;font:500 13px 'Geist Mono';background:#A08CFF;color:#140E2B">7</div><div style="height:36px;border-radius:8px;display:grid;place-items:center;font:500 13px 'Geist Mono';background:#A08CFF;color:#140E2B">8</div><div style="height:36px;border-radius:8px;display:grid;place-items:center;font:500 13px 'Geist Mono';background:#10131C;color:#A6ADC2">9</div><div style="height:36px;border-radius:8px;display:grid;place-items:center;font:500 13px 'Geist Mono';background:#10131C;color:#A6ADC2">10</div></div><div style="font-size:12px;color:#7C849C">Uses your AniList scoring format (10-point). Click twice for half points.</div></div>
+        <div style="display:flex;flex-direction:column;border-top:1px solid rgba(255,255,255,.06);padding-top:6px">
+          <div style="height:44px;display:flex;align-items:center;justify-content:space-between;font-size:14px"><span>Dates</span><span style="color:#A6ADC2;display:flex;align-items:center;gap:4px;font-family:'Geist Mono';font-size:13px">Jan 4 → —<span class="material-symbols-rounded" style="font-size:20px">chevron_right</span></span></div>
+          <div style="height:44px;display:flex;align-items:center;justify-content:space-between;font-size:14px"><span>Rereads</span><span style="color:#A6ADC2;display:flex;align-items:center;gap:4px;font-family:'Geist Mono';font-size:13px">0<span class="material-symbols-rounded" style="font-size:20px">chevron_right</span></span></div>
+          <div style="height:44px;display:flex;align-items:center;justify-content:space-between;font-size:14px"><span>Notes</span><span style="color:#A6ADC2;display:flex;align-items:center;gap:4px;font-size:13px">Add<span class="material-symbols-rounded" style="font-size:20px">chevron_right</span></span></div>
+          <div style="height:52px;display:flex;align-items:center;justify-content:space-between;font-size:14px"><div><div>Private entry</div><div style="font-size:12px;color:#7C849C">Hidden from your public profile</div></div><div style="width:40px;height:24px;border-radius:999px;background:#262C3D;position:relative"><span style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff"></span></div></div>
+        </div>
+      </div>
+      <div style="padding:12px 16px 30px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center"><button style="height:44px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:#FF8FA8;font:600 14px 'Geist';display:flex;align-items:center;gap:6px"><span class="material-symbols-rounded" style="font-size:20px">delete</span>Delete</button><button style="height:44px;padding:0 20px;border:0;border-radius:10px;background:#A08CFF;color:#140E2B;font:600 14px 'Geist'">Done</button></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { s:'Watching', p:7, score:9.5, rw:0, mp:88 };
+  componentDidMount(){ if(!window.KD){ this._h=()=>this.forceUpdate(); window.addEventListener('kd-ready',this._h);} }
+  componentWillUnmount(){ this._h && window.removeEventListener('kd-ready',this._h); }
+  renderVals(){
+    const D=window.KD; const _q=+new URLSearchParams(location.search).get('id'); const t=D?((D.byId[_q]&&D.byId[_q].isAnime)?D.byId[_q]:D.byId[1]):{}; const m=D?D.byId[24]:{};
+    const S=[['Watching','#5AB0FF'],['Completed','#4ED98A'],['Planning','#A6ADC2'],['Paused','#F5B83D'],['Dropped','#FF6B8B'],['Rewatching','#3DD6D0']];
+    const st=this.state;
+    const today='2026-10-07';
+    return {
+      t, m,
+      statuses:S.map(([n,hex])=>{const on=n===st.s;return {n,hex,bg:on?hex+'22':'#10131C',bd:on?`1px solid ${hex}88`:'1px solid rgba(255,255,255,.08)',fg:on?'#EEF0F6':'#A6ADC2',pick:()=>this.setState({s:n,p:n==='Completed'?28:st.p})};}),
+      p:st.p, pct:Math.round(st.p/28*100)+'%', atEnd: st.p===28 && st.s!=='Completed',
+      inc:()=>this.setState(s=>({p:Math.min(28,s.p+1)})), dec:()=>this.setState(s=>({p:Math.max(0,s.p-1)})),
+      complete:()=>this.setState({s:'Completed'}),
+      scoreLabel:st.score?String(st.score):'—',
+      scoreCells:[1,2,3,4,5,6,7,8,9,10].map(n=>({n,bg:n<=Math.ceil(st.score)?(n===Math.ceil(st.score)&&st.score%1?'linear-gradient(90deg,#F5B83D 50%,#262C3D 50%)':'#F5B83D'):'#1E2331',fg:n<=Math.floor(st.score)?'#2A1B02':'#A6ADC2',pick:()=>this.setState(s=>({score: s.score===n? n-0.5 : n}))})),
+      fin: st.s==='Completed'?today:'—', finC: st.s==='Completed'?'#EEF0F6':'#7C849C',
+      rw:st.rw, rwInc:()=>this.setState(s=>({rw:s.rw+1})), rwDec:()=>this.setState(s=>({rw:Math.max(0,s.rw-1)})),
+      mp:st.mp, mPct:Math.min(100,Math.round(st.mp/110*100))+'%',
+      mInc:()=>this.setState(s=>({mp:s.mp+1})), mDec:()=>this.setState(s=>({mp:Math.max(0,s.mp-1)})),
+    };
+  }
+}
+</script>
+</body>
+</html>

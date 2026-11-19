@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..500,0..1,0&display=block">
+<script src="../miruyo-gestures.js"></script>
+<style>
+body{margin:0;background:#05060A;color:#EEF0F6;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#FF8A78;text-decoration:none}a:hover{color:#FFB3A6}
+</style>
+</helmet>
+<div style="padding:64px;display:flex;flex-direction:column;gap:56px;width:max-content">
+
+<div style="display:flex;flex-direction:column;gap:14px;max-width:1440px">
+  <div style="font:500 11px 'Geist Mono';color:#FF8A78;letter-spacing:.08em">SCREEN 16 · GESTURES · SCHEDULE</div>
+  <h1 style="margin:0;font:700 44px/1.05 'Bricolage Grotesque';letter-spacing:-.03em">Schedule gestures</h1>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:14px;line-height:1.55;color:#A6ADC2;max-width:1200px">
+    <p style="margin:0"><b style="color:#EEF0F6">Days stack, the strip scrubs.</b> The schedule reads top to bottom, as in <a href="../shared/miruyo Seasonal.dc.html">Seasonal</a>. A pinned day strip follows your scroll. Tap a day to jump to it, or drag along the strip to scrub through the week.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Weeks page on the header.</b> Swipe the week bar to go to the previous or next week, up to four weeks either way. Content swipes stay with the slots, so a vertical list never pages sideways.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Slots swipe by what they can do.</b> Swipe right on an aired episode to log it (+1), on an upcoming one to set a reminder, and on someone else's show to add it to Planning. Left is −1. Try it on <a href="#16a">16a</a>.</p>
+  </div>
+</div>
+
+<div style="display:flex;gap:64px;align-items:flex-start">
+
+<div id="16a" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">16a</span>Live · drag with mouse or touch<div style="flex:1"></div><button onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#EEF0F6;font:600 12px 'Geist';display:flex;align-items:center;gap:6px;cursor:pointer"><span class="material-symbols-rounded" style="font-size:16px">replay</span>Reset</button></div>
+  <div data-screen-label="Gestures schedule live" style="width:390px;height:844px;border-radius:44px;overflow:hidden;background:#05060A;border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 0 0 8px #11131a;user-select:none;-webkit-user-select:none">
+    <div ref="{{ scRef }}" onScroll="{{ onScroll }}" style="position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding-bottom:140px;scrollbar-width:none">
+      <div style="height:44px"></div>
+      <dc-import name="../shared/TopBar" device="mobile" mode="anime" hint-size="100%,56px"></dc-import>
+      <div style="padding:12px 16px 4px;display:flex;justify-content:space-between;align-items:baseline"><div style="font:650 24px 'Bricolage Grotesque'">Airing</div><div style="font-size:12px;color:#7C849C">Fall 2026 · CEST · UTC+2</div></div>
+      <div style="position:sticky;top:44px;z-index:5;background:#05060A;padding:8px 16px 10px;border-bottom:1px solid rgba(255,255,255,.06)">
+        <div style="display:flex;align-items:center;gap:6px">
+          <button onClick="{{ prevWeek }}" aria-label="Previous week" style="width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#10131C;color:#EEF0F6;display:grid;place-items:center;cursor:pointer;flex:none"><span class="material-symbols-rounded" style="font-size:20px">chevron_left</span></button>
+          <div onPointerDown="{{ weekDown }}" style="flex:1;min-width:0;height:44px;border-radius:10px;background:#10131C;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;touch-action:pan-y;cursor:grab;overflow:hidden">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1px;transform:{{ wbTf }};transition:{{ wTr }}"><span style="font:600 14px 'Geist'">{{ weekLbl }}</span><span style="font:500 11px 'Geist Mono';color:#7C849C">{{ weekSub }}</span></div>
+          </div>
+          <button onClick="{{ nextWeek }}" aria-label="Next week" style="width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#10131C;color:#EEF0F6;display:grid;place-items:center;cursor:pointer;flex:none"><span class="material-symbols-rounded" style="font-size:20px">chevron_right</span></button>
+          <button onClick="{{ toggleMine }}" aria-label="My list only" style="width:44px;height:44px;border-radius:10px;display:grid;place-items:center;cursor:pointer;flex:none;background:{{ mineBg }};border:{{ mineBd }};color:{{ mineFg }}"><span class="material-symbols-rounded" style="font-size:20px">{{ mineIcon }}</span></button>
+        </div>
+        <div onPointerDown="{{ stripDown }}" style="margin-top:8px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;touch-action:none">
+          <sc-for list="{{ strip }}" as="c" hint-placeholder-count="7">
+            <div onClick="{{ c.go }}" style="height:52px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;transition:background .15s;background:{{ c.bg }};color:{{ c.fg }}">
+              <span style="font:600 10px 'Geist Mono';letter-spacing:.04em;opacity:.8">{{ c.l }}</span>
+              <span style="font:650 16px/1 'Geist'">{{ c.n }}</span>
+              <span style="width:4px;height:4px;border-radius:50%;background:{{ c.dot }}"></span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="padding:18px 16px 0;transform:{{ wTf }};transition:{{ wTr }};opacity:{{ wOp }}">
+        <sc-for list="{{ days }}" as="d" hint-placeholder-count="3">
+          <div data-day="{{ d.i }}" style="display:flex;flex-direction:column;gap:14px;padding-bottom:32px">
+            <sc-if value="{{ d.firstPast }}" hint-placeholder-val="{{ false }}"><div style="padding-top:20px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#7C849C">Earlier this week</div></sc-if>
+            <h3 style="margin:0;display:flex;align-items:baseline;gap:10px;font:650 22px/1 'Bricolage Grotesque';color:{{ d.hc }}">{{ d.weekday }}<sc-if value="{{ d.today }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 8px;border-radius:6px;font:600 12px 'Geist';background:rgba(255,106,85,.14);color:#FF8A78">Today</span></sc-if><span style="font:500 13px 'Geist Mono';color:#7C849C">{{ d.date }}</span></h3>
+            <sc-if value="{{ d.empty }}" hint-placeholder-val="{{ false }}"><div style="height:52px;border-radius:10px;border:1px dashed rgba(255,255,255,.1);display:grid;place-items:center;font-size:13px;color:#7C849C">Nothing from your list</div></sc-if>
+            <sc-for list="{{ d.items }}" as="e" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <sc-if value="{{ e.nowBefore }}" hint-placeholder-val="{{ false }}"><div data-now="1" style="display:flex;align-items:center;gap:8px;margin:-2px 0"><span style="width:8px;height:8px;border-radius:50%;background:#FF6A55;box-shadow:0 0 0 4px rgba(255,106,85,.2)"></span><span style="font:600 11px 'Geist Mono';letter-spacing:.06em;color:#FF8A78">NOW · 18:20</span><span style="flex:1;height:1px;background:rgba(255,106,85,.4)"></span></div></sc-if>
+                <div style="position:relative">
+                  <div style="position:relative;min-height:88px;border-radius:10px;overflow:hidden;background:{{ e.c.bg }}">
+                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 18px">
+                      <div style="display:flex;align-items:center;gap:6px;font:600 13px 'Geist Mono';transition:transform .15s;opacity:{{ e.c.lo }};color:{{ e.c.lC }};transform:{{ e.c.lS }}"><span class="material-symbols-rounded" style="font-size:20px">{{ e.c.lI }}</span>{{ e.c.lLbl }}</div>
+                      <div style="display:flex;align-items:center;gap:6px;font:600 13px 'Geist Mono';transition:transform .15s;opacity:{{ e.c.ro }};color:{{ e.c.rC }};transform:{{ e.c.rS }}">{{ e.c.rLbl }}<span class="material-symbols-rounded" style="font-size:20px">remove</span></div>
+                    </div>
+                    <div onPointerDown="{{ e.down }}" style="position:absolute;inset:0;display:flex;border-radius:10px;touch-action:pan-y;cursor:grab;background:{{ e.fbg }};box-shadow:{{ e.ring }};transform:{{ e.c.tf }};transition:{{ e.tr }}">
+                      <div style="width:62px;flex:none;border-radius:10px 0 0 10px;background:{{ e.cover }}"></div>
+                      <div style="flex:1;min-width:0;padding:10px 8px 10px 14px;display:flex;flex-direction:column;justify-content:center;gap:4px">
+                        <div style="font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.title }}</div>
+                        <div style="font-size:13px;color:#A6ADC2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.status }}<sc-if value="{{ e.hasUntil }}" hint-placeholder-val="{{ false }}"><span style="font:500 12px 'Geist Mono';color:{{ e.untilC }}"> · in {{ e.until }}</span></sc-if></div>
+                        <sc-if value="{{ e.mine }}" hint-placeholder-val="{{ false }}"><div style="font:500 12px 'Geist Mono';color:#8CC8FF">{{ e.prog }}</div></sc-if>
+                      </div>
+                      <sc-if value="{{ e.canInc }}" hint-placeholder-val="{{ false }}"><button onClick="{{ e.inc }}" aria-label="Add one" style="margin:auto 12px auto 0;width:44px;height:44px;flex:none;border:0;border-radius:12px;background:#EEF0F6;color:#090B11;display:grid;place-items:center;cursor:pointer"><span class="material-symbols-rounded" style="font-size:20px">add</span></button></sc-if>
+                      <sc-if value="{{ e.rem }}" hint-placeholder-val="{{ false }}"><span style="margin:auto 12px auto 0;width:32px;height:32px;flex:none;border-radius:10px;background:rgba(90,176,255,.16);color:#8CC8FF;display:grid;place-items:center"><span class="material-symbols-rounded" style="font-size:18px;font-variation-settings:'FILL' 1">notifications_active</span></span></sc-if>
+                      <sc-if value="{{ e.planned }}" hint-placeholder-val="{{ false }}"><span style="margin:auto 12px auto 0;width:32px;height:32px;flex:none;border-radius:10px;background:#1E2331;color:#D7DBE6;display:grid;place-items:center"><span class="material-symbols-rounded" style="font-size:18px;font-variation-settings:'FILL' 1">bookmark</span></span></sc-if>
+                    </div>
+                  </div>
+                  <sc-if value="{{ e.next }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-10px;right:12px;z-index:2;padding:2px 8px;border-radius:6px;background:#5AB0FF;color:#090B11;font-size:11px;font-weight:600">Airing next</span></sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="position:absolute;top:0;left:0;right:0;height:44px;z-index:8;background:#05060A;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font:600 15px 'Geist'"><span>9:41</span><span style="display:flex;gap:4px"><span class="material-symbols-rounded" style="font-size:18px">signal_cellular_alt</span><span class="material-symbols-rounded" style="font-size:18px">wifi</span><span class="material-symbols-rounded" style="font-size:18px">battery_full</span></span></div>
+    <sc-if value="{{ scrub }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:50%;top:330px;transform:translateX(-50%);z-index:30;min-width:180px;padding:16px 22px;border-radius:18px;background:rgba(22,26,38,.94);border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 48px rgba(0,0,0,.55);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none"><span style="font:700 28px/1 'Bricolage Grotesque';letter-spacing:-.02em">{{ scrubDay }}</span><span style="font:500 12px 'Geist Mono';color:#A6ADC2">{{ scrubSub }}</span></div>
+    </sc-if>
+    <sc-if value="{{ hasPill }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ pillGo }}" style="position:absolute;left:50%;bottom:100px;transform:translateX(-50%);z-index:15;height:40px;padding:0 14px 0 10px;border-radius:999px;border:1px solid rgba(255,106,85,.45);background:#1F2433;color:#FFB3A6;box-shadow:0 12px 32px rgba(0,0,0,.5);font:600 13px 'Geist';display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap"><span class="material-symbols-rounded" style="font-size:18px">{{ pillI }}</span>{{ pillLbl }}</button>
+    </sc-if>
+    <sc-if value="{{ hasHap }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:56px;left:50%;transform:translateX(-50%);height:26px;padding:0 10px 0 8px;border-radius:999px;background:rgba(9,11,17,.9);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;gap:6px;font:600 11px 'Geist Mono';z-index:60;white-space:nowrap;color:{{ hapC }}"><span class="material-symbols-rounded" style="font-size:15px">vibration</span>{{ hapLbl }}</div>
+    </sc-if>
+    <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:16px;right:16px;bottom:100px;height:48px;padding:0 6px 0 14px;border-radius:12px;background:#1F2433;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;font-size:14px;z-index:20"><span class="material-symbols-rounded" style="font-size:20px;color:{{ toastIc }}">{{ toastI }}</span><span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ toastMsg }}</span><button onClick="{{ toastUndo }}" style="height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;font:600 14px 'Geist';cursor:pointer;color:#FF8A78">Undo</button></div>
+    </sc-if>
+    <div style="position:absolute;left:0;right:0;bottom:0;z-index:10"><dc-import name="../shared/TabBar" active="seasonal" mode="anime" hint-size="100%,84px"></dc-import></div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:40px">
+<div id="16b" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">16b</span>Storyboard · strip, week, slots</div>
+  <div style="display:grid;grid-template-columns:repeat(4,300px);gap:20px">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="8">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="height:236px;padding-top:30px;border-radius:18px;background:#05060A;border:1px solid rgba(255,255,255,.08);position:relative;overflow:hidden">
+          <sc-if value="{{ f.isStrip }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:0 14px;display:flex;flex-direction:column;gap:12px;position:relative">
+              <div style="position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:3px">
+                <sc-for list="{{ f.chips }}" as="c" hint-placeholder-count="7"><div style="height:40px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:{{ c.bg }};color:{{ c.fg }}"><span style="font:600 9px 'Geist Mono'">{{ c.l }}</span><span style="font:650 13px/1 'Geist'">{{ c.n }}</span></div></sc-for>
+                <div style="position:absolute;top:20px;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18);left:{{ f.fx }}"></div>
+              </div>
+              <div style="font:650 15px 'Bricolage Grotesque'">{{ f.dayH }}</div>
+              <sc-for list="{{ f.bars }}" as="b" hint-placeholder-count="2"><div style="height:44px;border-radius:8px;display:flex;overflow:hidden;background:#10131C"><div style="width:30px;background:{{ b.cover }}"></div><div style="flex:1;padding:0 10px;display:flex;align-items:center;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden">{{ b.title }}</div></div></sc-for>
+              <sc-if value="{{ f.bub }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;top:78px;transform:translateX(-50%);padding:10px 16px;border-radius:14px;background:rgba(22,26,38,.95);border:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font:700 20px/1 'Bricolage Grotesque'">{{ f.bubL }}</span><span style="font:500 10px 'Geist Mono';color:#A6ADC2">{{ f.bubS }}</span></div></sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isWeek }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 14px;display:flex;flex-direction:column;gap:12px">
+              <div style="position:relative;height:40px;border-radius:10px;background:#10131C;display:grid;place-items:center;overflow:hidden">
+                <div style="display:flex;flex-direction:column;align-items:center;transform:{{ f.lbx }}"><span style="font:600 13px 'Geist'">{{ f.wl }}</span><span style="font:500 10px 'Geist Mono';color:#7C849C">{{ f.ws }}</span></div>
+                <div style="position:absolute;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18);left:{{ f.fx }}"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;transform:{{ f.ctx }};opacity:{{ f.cop }}">
+                <div style="font:650 15px 'Bricolage Grotesque'">{{ f.dayH }}</div>
+                <sc-for list="{{ f.bars }}" as="b" hint-placeholder-count="3"><div style="height:36px;border-radius:8px;display:flex;overflow:hidden;background:#10131C"><div style="width:26px;background:{{ b.cover }}"></div><div style="flex:1;padding:0 10px;display:flex;align-items:center;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden">{{ b.title }}</div></div></sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isSlot }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:48px 14px 0">
+              <div style="position:relative;height:84px;border-radius:10px;overflow:hidden;background:{{ f.c.bg }}">
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 14px">
+                  <div style="display:flex;align-items:center;gap:5px;font:600 12px 'Geist Mono';opacity:{{ f.c.lo }};color:{{ f.c.lC }};transform:{{ f.c.lS }}"><span class="material-symbols-rounded" style="font-size:18px">{{ f.c.lI }}</span>{{ f.c.lLbl }}</div>
+                  <div style="display:flex;align-items:center;gap:5px;font:600 12px 'Geist Mono';opacity:{{ f.c.ro }};color:{{ f.c.rC }};transform:{{ f.c.rS }}">{{ f.c.rLbl }}<span class="material-symbols-rounded" style="font-size:18px">remove</span></div>
+                </div>
+                <div style="position:absolute;inset:0;display:flex;border-radius:10px;background:{{ f.s.fbg }};box-shadow:{{ f.s.ring }};transform:{{ f.c.tf }}">
+                  <div style="width:52px;flex:none;border-radius:10px 0 0 10px;background:{{ f.s.cover }}"></div>
+                  <div style="flex:1;min-width:0;padding:8px 10px;display:flex;flex-direction:column;justify-content:center;gap:3px"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ f.s.title }}</div><div style="font-size:11px;color:#A6ADC2;white-space:nowrap;overflow:hidden">{{ f.s.status }}</div><sc-if value="{{ f.s.mine }}" hint-placeholder-val="{{ false }}"><div style="font:500 11px 'Geist Mono';color:#8CC8FF">{{ f.s.prog }}</div></sc-if></div>
+                  <div style="position:absolute;left:46%;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18)"></div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isNow }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 14px;display:flex;flex-direction:column;gap:8px;opacity:.75">
+              <div style="font:650 15px 'Bricolage Grotesque';color:#A6ADC2">Friday <span style="font:500 11px 'Geist Mono';color:#7C849C">Oct 9</span></div>
+              <sc-for list="{{ f.bars }}" as="b" hint-placeholder-count="3"><div style="height:36px;border-radius:8px;display:flex;overflow:hidden;background:#10131C"><div style="width:26px;background:{{ b.cover }}"></div><div style="flex:1;padding:0 10px;display:flex;align-items:center;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden">{{ b.title }}</div></div></sc-for>
+            </div>
+            <div style="position:absolute;left:50%;bottom:16px;transform:translateX(-50%);height:34px;padding:0 12px 0 8px;border-radius:999px;border:1px solid rgba(255,106,85,.45);background:#1F2433;color:#FFB3A6;font:600 12px 'Geist';display:flex;align-items:center;gap:5px;white-space:nowrap"><span class="material-symbols-rounded" style="font-size:16px">arrow_upward</span>Now · 18:20</div>
+          </sc-if>
+          <div style="position:absolute;top:10px;left:14px;z-index:4;font:500 11px 'Geist Mono';color:#7C849C">{{ f.tag }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="font:600 11px 'Geist Mono';color:#7C849C">{{ f.n }}</span><span style="font:650 16px 'Bricolage Grotesque'">{{ f.h }}</span><div style="flex:1"></div><span style="height:22px;padding:0 8px;border-radius:999px;display:flex;align-items:center;gap:4px;font:600 11px 'Geist Mono';white-space:nowrap;color:{{ f.hapC }};background:{{ f.hapBg }}"><span class="material-symbols-rounded" style="font-size:13px">vibration</span>{{ f.hap }}</span></div>
+        <div style="font-size:13px;line-height:1.5;color:#A6ADC2;text-wrap:pretty">{{ f.d }}</div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div id="16c" style="display:flex;flex-direction:column;gap:12px;max-width:1260px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">16c</span>Spec · thresholds, haptics, fallbacks</div>
+  <div style="border-radius:16px;background:#10131C;border:1px solid rgba(255,255,255,.06);overflow:hidden;font-size:13px">
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:12px 18px;font:600 11px 'Geist Mono';letter-spacing:.06em;color:#7C849C;border-bottom:1px solid rgba(255,255,255,.06)"><span>GESTURE</span><span>RESULT</span><span>COMMIT AT</span><span>HAPTIC</span><span>NON-GESTURE PATH</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline"><b style="font-weight:600">Scroll</b><span style="color:#C4C9D6">The strip highlights the day at the top of the list. Days stay stacked; scrolling never pages.</span><span style="font-family:'Geist Mono';color:#C4C9D6">Section top under the strip</span><span style="color:#C4C9D6">none</span><span style="color:#A6ADC2">n/a</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Tap day</b><span style="color:#C4C9D6">Scrolls that day's header to just under the strip, with a smooth scroll.</span><span style="font-family:'Geist Mono';color:#C4C9D6">tap</span><span style="color:#C4C9D6">none</span><span style="color:#A6ADC2">Screen reader: “Friday, 3 airing”</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Scrub strip</b><span style="color:#C4C9D6">Drag along the strip. The list jumps day by day with no animation, and a bubble names the day under your finger.</span><span style="font-family:'Geist Mono';color:#C4C9D6">6px, then per chip</span><span style="color:#C4C9D6">Selection per day</span><span style="color:#A6ADC2">Tap day</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Swipe week bar</b><span style="color:#C4C9D6">Previous or next week. The list follows 1:1; the new week slides in from the side you swiped toward and opens at its first day.</span><span style="font-family:'Geist Mono';color:#C4C9D6">117px (30%), or flick &gt;0.5px/ms after 24px</span><span style="color:#C4C9D6">Selection on change</span><span style="color:#A6ADC2">Chevrons</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Week past ±4</b><span style="color:#C4C9D6">Rubber-bands and springs back. AniList schedules are unreliable further out.</span><span style="font-family:'Geist Mono';color:#C4C9D6">0.3× resistance</span><span style="color:#C4C9D6">none</span><span style="color:#A6ADC2">Season chart for later</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Swipe slot right</b><span style="color:#C4C9D6">Depends on the slot. Yours and aired: +1. Upcoming: reminder on or off. Aired but not on your list: Planning. Caught up: nothing arms, and it drags at 0.3×.</span><span style="font-family:'Geist Mono';color:#C4C9D6">72px, or flick after 32px</span><span style="color:#C4C9D6">Light at arm · Success</span><span style="color:#A6ADC2">+ button · bell in Detail</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Swipe slot left</b><span style="color:#C4C9D6">−1 on your shows that have progress. On anything else it doesn't arm.</span><span style="font-family:'Geist Mono';color:#C4C9D6">72px</span><span style="color:#C4C9D6">Light at arm · Light</span><span style="color:#A6ADC2">List editor</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 180px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Back to now</b><span style="color:#C4C9D6">When the Now line is off screen, a pill points to it. On another week, the pill reads This week and pages back.</span><span style="font-family:'Geist Mono';color:#C4C9D6">tap</span><span style="color:#C4C9D6">none</span><span style="color:#A6ADC2">Tap the Seasonal tab again</span></div>
+  </div>
+  <div style="border-radius:16px;background:#10131C;border:1px solid rgba(255,255,255,.06);padding:16px 18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;font-size:13px;line-height:1.5;color:#A6ADC2">
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">1 · WEEK BAR</span>Horizontal swipes page weeks. Vertical drags scroll the list.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">2 · DAY STRIP</span>Owns every drag that starts on it. Use it to scrub, never to scroll.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">3 · SLOTS</span>Horizontal swipes belong to the slot, using the row grammar.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">4 · REPLACES</span>The day pager from <a href="miruyo Gestures Navigation.dc.html">Navigation</a>: days now stack, as in the built app.</div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { week:0, wdx:0, wdrag:false, active:0, scrub:false, mine:false, prog:{}, remind:{}, planned:{}, sdrag:null, pill:null, toast:null, hap:null };
+  scRef = el => { this._sc = el; };
+  componentDidMount(){
+    if(!window.MG){ this._p=setInterval(()=>{ if(window.MG){ clearInterval(this._p); this.forceUpdate(); } },80); }
+    setTimeout(()=>this.spy(),300);
+  }
+  componentWillUnmount(){ clearInterval(this._p); [this._tt,this._ht,this._wt].forEach(clearTimeout); }
+  hap(k,lbl){ window.MG&&MG.buzz(k); clearTimeout(this._ht); this.setState({hap:{k,lbl:lbl||k}}); this._ht=setTimeout(()=>this.setState({hap:null}),800); }
+  say(msg,undo,o){ clearTimeout(this._tt); this.setState({toast:{msg,undo,...(o||{})}}); this._tt=setTimeout(()=>this.setState({toast:null}),4000); }
+  secs(){ return this._sc ? [...this._sc.querySelectorAll('[data-day]')] : []; }
+  scrollToDay(i,smooth){ const sc=this._sc, s=this.secs()[i]; if(!sc||!s) return;
+    const d=s.getBoundingClientRect().top-(sc.getBoundingClientRect().top+172); sc.scrollTo({top:sc.scrollTop+d,behavior:smooth?'smooth':'auto'}); }
+  spy(){ const sc=this._sc; if(!sc) return; const top=sc.getBoundingClientRect().top;
+    let a=0; this.secs().forEach((s,i)=>{ if(s.getBoundingClientRect().top<=top+180) a=i; });
+    if(sc.scrollTop+sc.clientHeight>=sc.scrollHeight-4) a=this.secs().length-1;
+    let pill=null; if(this.state.week!==0) pill='week'; else { const n=sc.querySelector('[data-now]'); if(n){ const r=n.getBoundingClientRect().top-top; pill = r<172?'up' : r>sc.clientHeight-110?'down' : null; } }
+    const up={}; if(!this.state.scrub&&a!==this.state.active) up.active=a; if(pill!==this.state.pill) up.pill=pill; if(Object.keys(up).length) this.setState(up); }
+  goWeek(dir){ const w=this.state.week+dir; if(w<-4||w>4) return;
+    this.setState({week:w,wdx:Math.sign(dir)*390,wdrag:true,active:0,sdrag:null}); this.hap('Selection',this.wLabel(w)[0]);
+    clearTimeout(this._wt); this._wt=setTimeout(()=>{ this.scrollToDay(0,false); this.setState({wdx:0,wdrag:false}); setTimeout(()=>this.spy(),400); },30); }
+  wLabel(w){ const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], a=new Date(2026,9,5+7*w), b=new Date(2026,9,11+7*w);
+    const r=`${MN[a.getMonth()]} ${a.getDate()} – ${a.getMonth()===b.getMonth()?'':MN[b.getMonth()]+' '}${b.getDate()}`;
+    return [w===0?'This week':w===-1?'Last week':w===1?'Next week':w<0?`${-w} weeks ago`:`In ${w} weeks`, r]; }
+  P(e){ return this.state.prog[e.id] ?? e.p ?? 0; }
+  short(t){ return t.replace(/ Season \d+| \d+(st|nd|rd|th) Season|:.*$/,''); }
+  acts(e){ const p=this.P(e), mine=!!e.mine, planned=!!this.state.planned[e.id];
+    const ra = mine&&e.aired&&p<e.ep ? 'inc' : !e.aired ? 'remind' : (!mine&&!planned) ? 'plan' : null;
+    return { p, ra, la: mine&&p>0 ? 'dec' : null }; }
+  card(e,dx,acc,ink){ const {p,ra,la}=this.acts(e), rem=!!this.state.remind[e.key];
+    const R={inc:['add',`+1 · Ep ${p+1}`,acc,ink],remind:[rem?'notifications_off':'notifications_active',rem?'Reminder off':'Remind me','#5AB0FF','#06121F'],plan:['bookmark_add','Planning',acc,ink]}[ra]||[e.mine?'done_all':'bookmark',e.mine?'Caught up':'In Planning','#1E2331','#D7DBE6'];
+    const ar=dx>=72&&!!ra, al=dx<=-72&&!!la;
+    return { bg: dx>0?(ar?R[2]:'#1E2331'):(al?'#2A3042':'#1E2331'), lo:dx>0?String(Math.min(1,dx/44)):'0', ro:dx<0&&la?String(Math.min(1,-dx/44)):'0',
+      lI:R[0], lLbl:R[1], lC:ar?R[3]:'#D7DBE6', lS:ar?'scale(1.1)':'scale(.92)', rLbl:'−1', rC:'#EEF0F6', rS:al?'scale(1.1)':'scale(.92)', tf:`translateX(${dx}px)` }; }
+  doR(e,ra){ const s=this.state, p=this.P(e), sh=this.short(e.title);
+    if(ra==='inc'){ this.setState(x=>({prog:{...x.prog,[e.id]:p+1}})); this.hap('Success'); this.say(`Ep ${p+1} watched · ${sh}`,()=>this.setState(x=>({prog:{...x.prog,[e.id]:p},toast:null}))); }
+    else if(ra==='remind'){ const on=!s.remind[e.key]; this.setState(x=>({remind:{...x.remind,[e.key]:on}})); this.hap(on?'Success':'Light');
+      this.say(on?`Reminder · Ep ${e.ep} at ${e.time}`:`Reminder off · ${sh}`,()=>this.setState(x=>({remind:{...x.remind,[e.key]:!on},toast:null})),{icon:on?'notifications_active':'notifications_off',ic:'#8CC8FF'}); }
+    else if(ra==='plan'){ this.setState(x=>({planned:{...x.planned,[e.id]:true}})); this.hap('Success'); this.say(`Added to Planning · ${sh}`,()=>this.setState(x=>({planned:{...x.planned,[e.id]:false},toast:null}))); } }
+  doL(e){ const p=this.P(e); this.setState(x=>({prog:{...x.prog,[e.id]:p-1}})); this.hap('Light'); this.say(`Back to Ep ${p-1} · ${this.short(e.title)}`,()=>this.setState(x=>({prog:{...x.prog,[e.id]:p},toast:null})),{icon:'remove_circle',ic:'#A6ADC2'}); }
+  renderVals(){
+    if(!window.MG) return {strip:[],days:[],frames:[]};
+    const st=this.state, w=st.week, acc='#FF6A55', ink='#1A0B08';
+    const cover=c=>`linear-gradient(160deg, color-mix(in oklch, ${c} 72%, #fff) 0%, ${c} 42%, color-mix(in oklch, ${c} 45%, #05060a) 100%)`;
+    const S=[
+      {id:11,title:'Kusuriya no Hitorigoto Season 3',c:'#4fae8a',day:2,time:'00:30',ep:2,mine:true,p:1,total:24},
+      {id:12,title:'Re:Zero kara Hajimeru Isekai Seikatsu 3rd Season',c:'#7a8ae0',day:2,time:'16:30',ep:3},
+      {id:13,title:'Sakamoto Days',c:'#3fbf9a',day:2,time:'20:00',ep:9,next:true},
+      {id:14,title:'Kaijuu 8-gou',c:'#5ab0ff',day:2,time:'23:00',ep:5,mine:true,p:4,total:12},
+      {id:15,title:'Ao no Hako',c:'#5ab4e0',day:3,time:'00:00',ep:4},
+      {id:16,title:'Dr. Stone: Science Future',c:'#6fbf4a',day:3,time:'23:30',ep:7},
+      {id:17,title:'Sousou no Frieren Season 2',c:'#d9a75e',day:4,time:'01:30',ep:3,mine:true,p:2,total:28},
+      {id:18,title:'Gachiakuta',c:'#e88a3c',day:4,time:'23:00',ep:6},
+      {id:19,title:'Ranma ½',c:'#e0574a',day:5,time:'23:45',ep:6},
+      {id:23,title:'Kimi to Idol Precure',c:'#f0b4cf',day:6,time:'08:30',ep:36},
+      {id:20,title:'Mahoutsukai no Yakusoku',c:'#a08cff',day:0,time:'01:00',ep:5},
+      {id:21,title:'Dandadan Season 2',c:'#e5487a',day:0,time:'17:30',ep:2,mine:true,p:1,total:12},
+      {id:22,title:'Tongari Boushi no Atelier',c:'#c9a56a',day:1,time:'00:00',ep:2},
+    ];
+    const WD=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], WL=['M','T','W','T','F','S','S'], MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const untils={13:'1h 40m',14:'4h 40m',15:'5h 40m',16:'1d 5h',17:'1d 7h',18:'2d 4h',19:'3d 5h',23:'3d 14h'};
+    const nowMin=18*60+20, order=w===0?[2,3,4,5,6,0,1]:[0,1,2,3,4,5,6];
+    const mins=t=>{ const [h,m]=t.split(':').map(Number); return h*60+m; };
+    const mkSlot=(e,md)=>{ const aired = w<0 || (w===0 && (md<2 || (md===2 && mins(e.time)<nowMin))), ep=Math.max(1,e.ep+w), key=`${e.id}:${w}`;
+      return {...e, ep, aired, key}; };
+    let nowPlaced=false;
+    const days=order.map((md,i)=>{ const date=new Date(2026,9,5+7*w+md), today=w===0&&md===2, past=w<0||(w===0&&md<2);
+      let src=S.filter(e=>e.day===md).sort((a,b)=>a.time.localeCompare(b.time)).map(e=>mkSlot(e,md)); const mineN=src.filter(e=>e.mine).length;
+      if(st.mine) src=src.filter(e=>e.mine);
+      const items=src.map(e=>{ const {p,ra,la}=this.acts(e), drag=st.sdrag&&st.sdrag.key===e.key, dx=drag?st.sdrag.dx:0, rem=!!st.remind[e.key];
+        let nowBefore=false; if(today&&!nowPlaced&&!e.aired){ nowBefore=true; nowPlaced=true; }
+        return { title:e.title, cover:cover(e.c), mine:!!e.mine, next:!!e.next&&w===0, nowBefore, rem, planned:!e.mine&&!!st.planned[e.id],
+          fbg:e.mine?'#161A26':'#10131C', ring:e.mine?`0 0 0 1.5px ${e.c}, 0 10px 24px -14px ${e.c}`:'none',
+          status:`Ep ${e.ep} ${e.aired?'aired':'airing'} at ${e.time}`, hasUntil:w===0&&!e.aired&&!!untils[e.id], until:untils[e.id]||'', untilC:(untils[e.id]||'').includes('d')?'#8CC8FF':'#FF8A78',
+          prog:`${p}/${e.total}`, canInc:ra==='inc', inc:()=>this.doR(e,'inc'),
+          c:this.card(e,dx,acc,ink), tr:drag?'none':'transform .34s cubic-bezier(.2,.9,.25,1.12)',
+          down:ev=>{ let armed=null; MG.drag(ev,{axis:'x',
+            onMove:d=>{ const has=d>0?ra:la, v=has?MG.rubber(d,110):d*.3, z=v>=72&&ra?'R':v<=-72&&la?'L':null; if(z!==armed){ if(z) this.hap('Light'); armed=z; } this.setState({sdrag:{key:e.key,dx:v}}); },
+            onEnd:(d,dy,vx)=>{ let z=armed; if(!z&&ra&&vx>.6&&d>32) z='R'; this.setState({sdrag:null}); if(z==='R') this.doR(e,ra); else if(z==='L') this.doL(e); }}); } }; });
+      return { i, md, weekday:WD[md], date:`${MN[date.getMonth()]} ${date.getDate()}`, dnum:date.getDate(), today, past, items, empty:!items.length, n:src.length, mineN, hc:past?'#A6ADC2':'#EEF0F6' }; })
+      .map((d,i,all)=>({...d, firstPast:w===0&&d.past&&!(all[i-1]&&all[i-1].past)}));
+    const strip=days.map((d,i)=>{ const on=i===st.active;
+      return { l:WL[d.md], n:String(d.dnum), bg:on?'#EEF0F6':d.today?'rgba(255,106,85,.14)':'#10131C', fg:on?'#090B11':d.past?'#7C849C':d.today?'#FFB3A6':'#EEF0F6',
+        dot:d.mineN?(on?'#090B11':'#FF8A78'):'transparent',
+        go:()=>{ if(Date.now()-(this._noClick||0)<300) return; this.setState({active:i}); this.scrollToDay(i,true); } }; });
+    const stripDown=e=>{ const r=e.currentTarget.getBoundingClientRect(), idx=x=>Math.max(0,Math.min(6,Math.floor((x-r.left)/r.width*7)));
+      MG.drag(e,{axis:'x',slop:6,
+        onMove:dx=>{ const i=idx(e.clientX+dx); if(!this.state.scrub) this.setState({scrub:true}); if(i!==this.state.active){ this.setState({active:i}); this.scrollToDay(i,false); this.hap('Selection',days[i].weekday); } },
+        onEnd:()=>{ this._noClick=Date.now(); this.setState({scrub:false}); }}); };
+    const weekDown=e=>{ MG.drag(e,{axis:'x',
+      onMove:dx=>{ const end=(dx<0&&w>=4)||(dx>0&&w<=-4); this.setState({wdx:end?dx*.3:dx,wdrag:true}); },
+      onEnd:(dx,dy,vx)=>{ let dir=0; if(dx<-117||(vx<-.5&&dx<-24)) dir=1; else if(dx>117||(vx>.5&&dx>24)) dir=-1;
+        if((dir>0&&w>=4)||(dir<0&&w<=-4)) dir=0; if(dir) this.goWeek(dir); else this.setState({wdx:0,wdrag:false}); }}); };
+    const ad=days[st.active]||days[0], [wl,ws]=this.wLabel(w);
+    // storyboard
+    const hc={'—':['#7C849C','rgba(255,255,255,.05)'],Selection:['#D7DBE6','rgba(255,255,255,.08)'],Light:['#8CC8FF','rgba(90,176,255,.14)'],Success:['#4ED98A','rgba(78,217,138,.14)'],'Light → Success':['#4ED98A','rgba(78,217,138,.14)']};
+    const B=id=>{ const e=S.find(x=>x.id===id); return {title:e.title,cover:cover(e.c)}; };
+    const chipsAt=a=>[2,3,4,5,6,0,1].map((md,i)=>({l:WL[md],n:String(5+md),bg:i===a?'#EEF0F6':i===0?'rgba(255,106,85,.14)':'#10131C',fg:i===a?'#090B11':i>=5?'#7C849C':i===0?'#FFB3A6':'#EEF0F6'}));
+    const slotF=(id,aired,p,dx)=>{ const e={...S.find(x=>x.id===id)}; e.aired=aired; e.key=`sb${id}`; if(p!=null) e.p=p;
+      const s={title:e.title,cover:cover(e.c),mine:!!e.mine,fbg:e.mine?'#161A26':'#10131C',ring:e.mine?`0 0 0 1.5px ${e.c}`:'none',status:`Ep ${e.ep} ${aired?'aired':'airing'} at ${e.time}`,prog:`${e.p??0}/${e.total}`};
+      const c=this.card(e,dx,acc,ink);
+      return {s,c}; };
+    const F=[
+      {n:'01',h:'Scrub the strip',d:'Drag along the day strip. The list jumps a day at a time and a bubble names the day under your finger.',hap:'Selection',tag:'drag → Fri',k:'strip',a:2,fx:'35.7%',bub:true,bubL:'Friday',bubS:'2 airing · 1 yours',dayH:'Friday · Oct 9',bars:[B(17),B(18)]},
+      {n:'02',h:'Tap a day',d:'Tapping a day smooth-scrolls its header to just under the strip. The strip then follows your scroll.',hap:'—',tag:'tap Sun',k:'strip',a:4,fx:'64.3%',dayH:'Sunday · Oct 11',bars:[B(23)]},
+      {n:'03',h:'Swipe the week',d:'Drag the week bar sideways. Past 30%, or after a flick, the next week slides in and opens at Monday.',hap:'Selection',tag:'dx −130 → next',k:'week',wl:'Next week',ws:'Oct 12 – 18',lbx:'translateX(-40px)',fx:'40%',ctx:'translateX(-120px)',cop:'.6',dayH:'Wednesday',bars:[B(11),B(12),B(13)]},
+      {n:'04',h:'Edge band',d:'Four weeks out, the bar stretches at 0.3× and springs back. Use the season chart to look further ahead.',hap:'—',tag:'+4 · dx −80 × 0.3',k:'week',wl:'In 4 weeks',ws:'Nov 2 – 8',lbx:'translateX(-12px)',fx:'44%',ctx:'translateX(-24px)',cop:'1',dayH:'Monday',bars:[B(20),B(21),B(22)]},
+      {n:'05',h:'+1 an aired episode',d:'On your aired shows, swipe right past 72px to log the next episode. It follows the row grammar from My List.',hap:'Light → Success',tag:'dx +96',k:'slot',...slotF(11,true,1,96)},
+      {n:'06',h:'Remind me',d:'On an upcoming slot, the same swipe sets a reminder for air time, and a bell stays on the slot. Swipe again to turn it off.',hap:'Light → Success',tag:'dx +96',k:'slot',...slotF(13,false,null,96)},
+      {n:'07',h:'−1',d:'Swipe left on your shows to step back an episode. Slots that aren\'t yours don\'t arm on the left.',hap:'Light',tag:'dx −96',k:'slot',...slotF(21,true,1,-96)},
+      {n:'08',h:'Back to now',d:'Once the Now line leaves the screen, a pill points to it. On another week, it reads This week instead.',hap:'—',tag:'Now off screen',k:'now',bars:[B(17),B(18),B(19)]},
+    ];
+    const frames=F.map(f=>{ const [hC,hB]=hc[f.hap]||hc['—']; return {...f, isStrip:f.k==='strip', isWeek:f.k==='week', isSlot:f.k==='slot', isNow:f.k==='now', bub:!!f.bub,
+      hapC:hC, hapBg:hB, chips:chipsAt(f.a||0), bars:f.bars||[], c:f.c||{}, s:f.s||{}, fx:f.fx||'50%', lbx:f.lbx||'none', ctx:f.ctx||'none', cop:f.cop||'1'}; });
+    const hk=st.hap, hapMap={Light:'#8CC8FF',Medium:'#B9A9FF',Success:'#4ED98A',Selection:'#D7DBE6'}, T=st.toast;
+    return {
+      scRef:this.scRef, onScroll:()=>this.spy(),
+      weekLbl:wl, weekSub:ws, wbTf:`translateX(${st.wdx*.35}px)`, wTf:`translateX(${st.wdx}px)`, wOp:String(1-Math.min(.6,Math.abs(st.wdx)/500)),
+      wTr: st.wdrag?'none':'transform .36s cubic-bezier(.2,.9,.25,1), opacity .36s',
+      weekDown, prevWeek:()=>this.goWeek(-1), nextWeek:()=>this.goWeek(1),
+      toggleMine:()=>{ this.setState({mine:!st.mine}); setTimeout(()=>this.spy(),50); },
+      mineBg:st.mine?'rgba(255,106,85,.14)':'#10131C', mineBd:st.mine?'1px solid rgba(255,106,85,.45)':'1px solid rgba(255,255,255,.1)', mineFg:st.mine?'#FFB3A6':'#D7DBE6', mineIcon:st.mine?'bookmark_added':'bookmark',
+      strip, stripDown, days, scrub:st.scrub, scrubDay:ad?ad.weekday:'', scrubSub:ad?`${ad.n} airing${ad.mineN?` · ${ad.mineN} yours`:''}`:'',
+      hasPill:!!st.pill&&!st.toast, pillI:st.pill==='week'?(w>0?'chevron_left':'chevron_right'):st.pill==='up'?'arrow_upward':'arrow_downward', pillLbl:st.pill==='week'?'This week':'Now · 18:20',
+      pillGo:()=>{ if(st.pill==='week'){ this.goWeek(-w); } else { const sc=this._sc, n=sc&&sc.querySelector('[data-now]'); if(n) sc.scrollTo({top:sc.scrollTop+n.getBoundingClientRect().top-sc.getBoundingClientRect().top-260,behavior:'smooth'}); } },
+      frames,
+      reset:()=>{ clearTimeout(this._tt); this.setState({week:0,wdx:0,wdrag:false,active:0,mine:false,prog:{},remind:{},planned:{},toast:null}); if(this._sc) this._sc.scrollTop=0; setTimeout(()=>this.spy(),50); },
+      hasHap:!!hk, hapLbl:hk?hk.lbl:'', hapC:hk?(hapMap[hk.k]||'#D7DBE6'):'#D7DBE6',
+      hasToast:!!T, toastMsg:T?T.msg:'', toastI:T&&T.icon||'check_circle', toastIc:T&&T.ic||'#4ED98A', toastUndo:()=>{ clearTimeout(this._tt); T&&T.undo&&T.undo(); this.hap('Light'); },
+    };
+  }
+}
+</script>
+</body>
+</html>

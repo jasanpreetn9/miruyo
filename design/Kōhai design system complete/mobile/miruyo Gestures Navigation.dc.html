@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..500,0..1,0&display=block">
+<script src="../miruyo-data.js"></script>
+<script src="../miruyo-gestures.js"></script>
+<style>
+body{margin:0;background:#05060A;color:#EEF0F6;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#FF8A78;text-decoration:none}a:hover{color:#FFB3A6}
+</style>
+</helmet>
+<div style="padding:64px;display:flex;flex-direction:column;gap:56px;width:max-content">
+
+<div style="display:flex;flex-direction:column;gap:14px;max-width:1440px">
+  <div style="font:500 11px 'Geist Mono';color:#FF8A78;letter-spacing:.08em">SCREEN 13 · GESTURES · NAVIGATION</div>
+  <h1 style="margin:0;font:700 44px/1.05 'Bricolage Grotesque';letter-spacing:-.03em">Moving between places</h1>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:14px;line-height:1.55;color:#A6ADC2;max-width:1200px">
+    <p style="margin:0"><b style="color:#EEF0F6">Mode lives on the toggle.</b> Drag the toggle's thumb, or tap it, to switch between Anime and Manga. Swiping content never changes mode, because switching mode by accident would be the most disorienting mistake in the app.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Content swipes page.</b> My List status pages swipe sideways, and the tab underline follows your finger. Schedule is different: days stack vertically, and swiping the week bar changes the week (see <a href="miruyo Gestures Schedule.dc.html" style="color:#EEF0F6">Schedule gestures</a>). Swipes that start in the 20px nearest the left edge are left for the system back gesture.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Hold a poster to peek.</b> Wherever a poster card appears (Browse, For You, My List grid), holding it opens a peek with quick actions. Try both on <a href="#13a">13a</a>. Row gestures are covered on <a href="miruyo Gestures Rows.dc.html">Rows</a>.</p>
+  </div>
+</div>
+
+<div style="display:flex;gap:64px;align-items:flex-start">
+
+<div id="13a" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">13a</span>Live · drag the toggle, swipe pages, hold a poster</div>
+  <div data-screen-label="Gestures navigation live" style="width:390px;height:844px;border-radius:44px;overflow:hidden;background:#090B11;border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 0 0 8px #11131a;user-select:none;-webkit-user-select:none">
+    <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font:600 15px 'Geist'"><span>9:41</span><span style="display:flex;gap:4px"><span class="material-symbols-rounded" style="font-size:18px">signal_cellular_alt</span><span class="material-symbols-rounded" style="font-size:18px">wifi</span><span class="material-symbols-rounded" style="font-size:18px">battery_full</span></span></div>
+    <div style="height:56px;padding:0 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.06)">
+      <div style="width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font:800 16px/1 'Bricolage Grotesque';transition:background .2s;background:{{ acc }};color:{{ ink }}">見</div>
+      <div style="flex:1;font:700 18px/1 'Bricolage Grotesque';letter-spacing:-.02em">miruyo</div>
+      <div onPointerDown="{{ tDown }}" style="position:relative;width:176px;height:40px;padding:3px;border-radius:999px;background:#10131C;border:1px solid rgba(255,255,255,.1);touch-action:none;cursor:grab">
+        <div style="position:absolute;top:3px;width:84px;height:32px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.35);left:{{ thumbX }};transition:{{ thumbTr }};background:{{ thumbBg }}"></div>
+        <div style="position:relative;height:100%;display:grid;grid-template-columns:1fr 1fr;pointer-events:none">
+          <span style="display:flex;align-items:center;justify-content:center;gap:4px;font:600 12px 'Geist';color:{{ aFg }}"><span class="material-symbols-rounded" style="font-size:16px">play_circle</span>Anime</span>
+          <span style="display:flex;align-items:center;justify-content:center;gap:4px;font:600 12px 'Geist';color:{{ mFg }}"><span class="material-symbols-rounded" style="font-size:16px">menu_book</span>Manga</span>
+        </div>
+      </div>
+    </div>
+    <div style="padding:16px 16px 0;font:700 28px/1 'Bricolage Grotesque';letter-spacing:-.02em">My List</div>
+    <div style="position:relative;margin-top:14px;height:44px;padding:0 16px;display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid rgba(255,255,255,.06)">
+      <sc-for list="{{ tabs }}" as="b" hint-placeholder-count="5">
+        <button onClick="{{ b.go }}" style="height:44px;border:0;background:transparent;font:600 12px 'Geist';cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;color:{{ b.c }}">{{ b.l }}<span style="font:500 10px 'Geist Mono';color:#7C849C">{{ b.n }}</span></button>
+      </sc-for>
+      <div style="position:absolute;bottom:-1px;height:2px;border-radius:1px;width:{{ tabW }};left:{{ indX }};transition:{{ indTr }};background:{{ acc }}"></div>
+    </div>
+    <div onPointerDown="{{ pDown }}" style="position:absolute;top:218px;left:0;right:0;bottom:84px;overflow:hidden;touch-action:pan-y">
+      <div style="display:flex;height:100%;width:1950px;transform:{{ trackTf }};transition:{{ trackTr }}">
+        <sc-for list="{{ pages }}" as="pg" hint-placeholder-count="5">
+          <div style="width:390px;height:100%;flex:none;overflow-y:auto;scrollbar-width:none;padding:16px">
+            <sc-if value="{{ pg.empty }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:60px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;color:#A6ADC2;font-size:14px"><span class="material-symbols-rounded" style="font-size:32px;color:#3A4156">inbox</span>{{ pg.emptyMsg }}</div>
+            </sc-if>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px">
+              <sc-for list="{{ pg.items }}" as="it" hint-placeholder-count="6">
+                <div onPointerDown="{{ it.down }}" style="display:flex;flex-direction:column;gap:6px;transition:transform .18s;transform:{{ it.press }}">
+                  <div style="position:relative;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:{{ it.t.cover }}">
+                    <sc-if value="{{ it.hasProg }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(9,11,17,.6)"><div style="height:100%;background:{{ it.t.accent }};width:{{ it.pct }}"></div></div></sc-if>
+                  </div>
+                  <div style="font-size:12px;font-weight:600;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ it.t.title }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <sc-if value="{{ peekOpen }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closePeek }}" style="position:absolute;inset:0;z-index:40;background:rgba(5,6,10,.6);backdrop-filter:blur(10px)"></div>
+      <div style="position:absolute;left:40px;right:40px;top:150px;z-index:41;display:flex;flex-direction:column;gap:10px;transition:transform .22s cubic-bezier(.2,.9,.25,1.2),opacity .18s;transform:{{ peekTf }};opacity:{{ peekO }}">
+        <div style="border-radius:18px;overflow:hidden;background:#10131C;border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 60px rgba(0,0,0,.6)">
+          <div style="position:relative;height:200px;overflow:hidden"><div style="position:absolute;inset:-30px;background:{{ pk.t.cover }};filter:blur(18px)"></div><div style="position:absolute;inset:0;background:linear-gradient(0deg,#10131C,rgba(16,19,28,.1))"></div>
+            <div style="position:absolute;left:16px;bottom:-1px;width:96px;aspect-ratio:2/3;border-radius:8px;background:{{ pk.t.cover }};box-shadow:{{ pk.t.glow }}"></div></div>
+          <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px">
+            <div style="font:700 19px/1.15 'Bricolage Grotesque'">{{ pk.t.title }}</div>
+            <div style="font-size:12px;color:#A6ADC2">{{ pk.meta }}</div>
+            <div style="font:500 12px 'Geist Mono';color:{{ pk.sC }}">{{ pk.s }}</div>
+          </div>
+        </div>
+        <div style="border-radius:14px;overflow:hidden;background:rgba(30,35,49,.96);border:1px solid rgba(255,255,255,.1)">
+          <sc-for list="{{ pk.actions }}" as="a" hint-placeholder-count="3">
+            <button onClick="{{ a.fn }}" style="width:100%;height:48px;padding:0 16px;border:0;border-top:{{ a.bt }};background:transparent;display:flex;align-items:center;gap:12px;font:500 14px 'Geist';cursor:pointer;color:{{ a.c }}"><span style="flex:1;text-align:left">{{ a.l }}</span><span class="material-symbols-rounded" style="font-size:20px">{{ a.i }}</span></button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ hasHap }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:108px;left:50%;transform:translateX(-50%);height:24px;padding:0 10px 0 8px;border-radius:999px;background:rgba(9,11,17,.92);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;gap:6px;font:600 11px 'Geist Mono';z-index:60;color:{{ hapC }}"><span class="material-symbols-rounded" style="font-size:14px">vibration</span>{{ hapLbl }}</div>
+    </sc-if>
+    <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:16px;right:16px;bottom:100px;height:48px;padding:0 14px;border-radius:12px;background:#1F2433;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;font-size:14px;z-index:50"><span class="material-symbols-rounded" style="font-size:20px;color:#4ED98A">check_circle</span>{{ toast }}</div>
+    </sc-if>
+    <div style="position:absolute;left:0;right:0;bottom:0;z-index:10"><dc-import name="../shared/TabBar" active="list" mode="{{ mode }}" hint-size="100%,84px"></dc-import></div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:40px">
+<div id="13b" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">13b</span>Storyboard</div>
+  <div style="display:grid;grid-template-columns:repeat(4,300px);gap:20px">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="8">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="position:relative;height:200px;border-radius:18px;background:#090B11;border:1px solid rgba(255,255,255,.08);padding:16px;display:flex;flex-direction:column;justify-content:center;gap:12px;overflow:hidden">
+          <sc-if value="{{ f.isToggle }}" hint-placeholder-val="{{ true }}">
+            <div style="align-self:center;position:relative;width:200px;height:44px;border-radius:999px;background:#10131C;border:1px solid rgba(255,255,255,.1)">
+              <div style="position:absolute;top:4px;width:94px;height:34px;border-radius:999px;left:{{ f.tx }};background:{{ f.tb }}"></div>
+              <div style="position:relative;height:100%;display:grid;grid-template-columns:1fr 1fr"><span style="display:flex;align-items:center;justify-content:center;font:600 13px 'Geist';color:{{ f.aF }}">Anime</span><span style="display:flex;align-items:center;justify-content:center;font:600 13px 'Geist';color:{{ f.mF }}">Manga</span></div>
+              <sc-if value="{{ f.finger }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:8px;width:26px;height:26px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18);left:{{ f.fx }}"></div></sc-if>
+            </div>
+            <div style="align-self:center;display:flex;gap:6px"><span style="width:56px;height:6px;border-radius:3px;background:{{ f.tb }}"></span><span style="width:36px;height:6px;border-radius:3px;background:#1E2331"></span><span style="width:44px;height:6px;border-radius:3px;background:#1E2331"></span></div>
+          </sc-if>
+          <sc-if value="{{ f.isTabs }}" hint-placeholder-val="{{ false }}">
+            <div style="position:relative;display:grid;grid-template-columns:repeat(5,1fr);height:32px;border-bottom:1px solid rgba(255,255,255,.08)">
+              <sc-for list="{{ f.labels }}" as="l" hint-placeholder-count="5"><span style="display:flex;align-items:center;justify-content:center;font:600 10px 'Geist';color:{{ l.c }}">{{ l.l }}</span></sc-for>
+              <div style="position:absolute;bottom:-1px;height:2px;width:20%;background:#FF6A55;left:{{ f.ix }}"></div>
+            </div>
+            <div style="position:relative;height:92px;overflow:hidden;border-radius:10px">
+              <div style="position:absolute;top:0;height:100%;width:200%;display:flex;gap:0;transform:{{ f.ptf }}">
+                <div style="width:50%;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding-right:6px"><span style="border-radius:6px;background:#2A3a6a"></span><span style="border-radius:6px;background:#3b6b5a"></span><span style="border-radius:6px;background:#7a5a3a"></span><span style="border-radius:6px;background:#1E2331"></span></div>
+                <div style="width:50%;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding-left:6px"><span style="border-radius:6px;background:#6a3a4a"></span><span style="border-radius:6px;background:#1E2331"></span><span style="border-radius:6px;background:#4a4a7a"></span><span style="border-radius:6px;background:#1E2331"></span></div>
+              </div>
+              <sc-if value="{{ f.finger }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:33px;width:26px;height:26px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18);left:{{ f.fx }}"></div></sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isDays }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">
+              <sc-for list="{{ f.days }}" as="d" hint-placeholder-count="7"><div style="height:48px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:600 11px 'Geist';background:{{ d.bg }};color:{{ d.c }}">{{ d.l }}<span style="font:500 10px 'Geist Mono'">{{ d.n }}</span></div></sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;transform:{{ f.ptf }}"><div style="height:30px;border-radius:8px;background:#10131C"></div><div style="height:30px;border-radius:8px;background:#10131C"></div></div>
+          </sc-if>
+          <sc-if value="{{ f.isPeek }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:10px;align-items:center;justify-content:center">
+              <div style="width:70px;aspect-ratio:2/3;border-radius:8px;transform:scale(.96);background:{{ f.cover }};box-shadow:0 0 0 2px #090B11,0 0 0 4px rgba(238,240,246,.4)"></div>
+              <span class="material-symbols-rounded" style="font-size:22px;color:#7C849C">arrow_forward</span>
+              <div style="width:130px;border-radius:12px;overflow:hidden;background:#10131C;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 30px rgba(0,0,0,.6)"><div style="height:70px;background:{{ f.cover }}"></div><div style="padding:8px;display:flex;flex-direction:column;gap:5px"><div style="height:7px;width:80%;border-radius:3px;background:#2A3042"></div><div style="height:22px;border-radius:6px;background:#1E2331"></div><div style="height:22px;border-radius:6px;background:#1E2331"></div></div></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isRule }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <sc-for list="{{ f.rules }}" as="r" hint-placeholder-count="4"><div style="height:30px;padding:0 10px;border-radius:8px;background:#10131C;display:flex;align-items:center;gap:8px;font-size:12px"><span style="font:600 11px 'Geist Mono';color:#7C849C">{{ r.n }}</span><span style="flex:1">{{ r.l }}</span><span style="font:500 11px 'Geist Mono';color:#A6ADC2">{{ r.v }}</span></div></sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="font:600 11px 'Geist Mono';color:#7C849C">{{ f.n }}</span><span style="font:650 16px 'Bricolage Grotesque'">{{ f.h }}</span><div style="flex:1"></div><span style="height:22px;padding:0 8px;border-radius:999px;display:flex;align-items:center;gap:4px;font:600 11px 'Geist Mono';white-space:nowrap;color:{{ f.hapC }};background:{{ f.hapBg }}"><span class="material-symbols-rounded" style="font-size:13px">vibration</span>{{ f.hap }}</span></div>
+        <div style="font-size:13px;line-height:1.5;color:#A6ADC2;text-wrap:pretty">{{ f.d }}</div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div id="13c" style="display:flex;flex-direction:column;gap:12px;max-width:1260px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">13c</span>Spec · and who wins when gestures overlap</div>
+  <div style="border-radius:16px;background:#10131C;border:1px solid rgba(255,255,255,.06);overflow:hidden;font-size:13px">
+    <div style="display:grid;grid-template-columns:180px 1fr 220px 170px 1fr;gap:16px;padding:12px 18px;font:600 11px 'Geist Mono';letter-spacing:.06em;color:#7C849C;border-bottom:1px solid rgba(255,255,255,.06)"><span>GESTURE</span><span>RESULT</span><span>COMMIT AT</span><span>HAPTIC</span><span>NON-GESTURE PATH</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 220px 170px 1fr;gap:16px;padding:14px 18px;align-items:baseline"><b style="font-weight:600">Drag mode toggle</b><span style="color:#C4C9D6">Thumb follows the finger inside the pill. The accent, logo and tab underline recolour when it lands. Tapping either side also works.</span><span style="font-family:'Geist Mono';color:#C4C9D6">Release past the midpoint</span><span style="color:#C4C9D6">Selection at halfway · on tap</span><span style="color:#A6ADC2">Tap either side</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 220px 170px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Swipe status pages</b><span style="color:#C4C9D6">My List grid view. The underline interpolates with drag; first and last pages rubber-band at 0.3×.</span><span style="font-family:'Geist Mono';color:#C4C9D6">30% of width, or flick &gt;0.5px/ms</span><span style="color:#C4C9D6">Selection on page change</span><span style="color:#A6ADC2">Tap a tab</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 220px 170px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Swipe schedule week bar</b><span style="color:#C4C9D6">Days stack vertically and scroll as one list. Only the week bar pages sideways, one week at a time. Content below never pages.</span><span style="font-family:'Geist Mono';color:#C4C9D6">30% of bar width, or flick</span><span style="color:#C4C9D6">Selection on week change</span><span style="color:#A6ADC2">Chevrons</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 220px 170px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Hold poster</b><span style="color:#C4C9D6">Poster dips to 96% while held, then a peek opens with quick actions. Tap outside to close. Any movement first cancels it.</span><span style="font-family:'Geist Mono';color:#C4C9D6">450ms, &lt;8px movement</span><span style="color:#C4C9D6">Medium on open</span><span style="color:#A6ADC2">Tap opens Detail</span></div>
+  </div>
+  <div style="border-radius:16px;background:#10131C;border:1px solid rgba(255,255,255,.06);padding:16px 18px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;font-size:13px;line-height:1.5;color:#C4C9D6">
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">1 · OVERLAYS</span>An open sheet or peek captures every touch.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">2 · SYSTEM EDGE</span>Swipes starting within 20px of the left edge go to the OS back gesture.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">3 · ROWS</span>In list view, horizontal swipes belong to the row. Change status by tapping a tab or swiping the tab strip.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">4 · PAGER</span>In grid view, horizontal swipes on content change the page. On Schedule, only the week bar pages; the day list just scrolls.</div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span style="font:600 11px 'Geist Mono';color:#7C849C">5 · SCROLL</span>Vertical wins whenever the first 8px of movement is mostly vertical.</div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { mode:'anime', tdx:null, page:0, pdx:0, pDrag:false, pressing:null, peek:null, peekIn:false, hap:null, toast:null, prog:{} };
+  componentDidMount(){ if(!window.KD||!window.MG){ this._p=setInterval(()=>{ if(window.KD&&window.MG){ clearInterval(this._p); this.forceUpdate(); } },80); } }
+  componentWillUnmount(){ clearInterval(this._p); [this._tt,this._ht,this._rt].forEach(clearTimeout); }
+  hap(kind){ window.MG&&MG.buzz(kind); clearTimeout(this._ht); this.setState({hap:kind}); this._ht=setTimeout(()=>this.setState({hap:null}),650); }
+  say(msg){ clearTimeout(this._tt); this.setState({toast:msg}); this._tt=setTimeout(()=>this.setState({toast:null}),2400); }
+  setMode(m,quiet){ if(m!==this.state.mode){ this.setState({mode:m}); if(!quiet) this.hap('Selection'); } }
+  goPage(i){ const n=Math.max(0,Math.min(4,i)); if(n!==this.state.page) this.hap('Selection'); this.setState({page:n,pdx:0,pDrag:false}); }
+  renderVals(){
+    const D=window.KD; if(!D||!window.MG) return {tabs:[],pages:[],frames:[],pk:{t:{},actions:[]}};
+    const st=this.state, isA=st.mode==='anime', B=D.byId, W=390, TW=(W-32)/5;
+    const acc=isA?'#FF6A55':'#A08CFF', ink=isA?'#1A0B08':'#140E2B';
+    const names=isA?['Watching','Planning','Completed','Paused','Dropped']:['Reading','Planning','Completed','Paused','Dropped'];
+    const lists=isA?[[1,2,9],[4,3,10,11,12],[6,8,7],[5],[]]:[[21,23,24],[27,28],[22,25],[],[26]];
+    const sc={Watching:'#5AB0FF',Reading:'#5AB0FF',Planning:'#A6ADC2',Completed:'#4ED98A',Paused:'#F5B83D',Dropped:'#FF6B8B'};
+    const P=id=>st.prog[id] ?? (B[id].me?B[id].me.p:0);
+    // toggle
+    const base=isA?0:84, tx=st.tdx==null?base:Math.max(0,Math.min(84,base+st.tdx));
+    const lilacSide=tx>42;
+    const pages=lists.map((ids,pi)=>({ empty:!ids.length, emptyMsg:`Nothing ${names[pi].toLowerCase()} yet`, items:ids.map(id=>{ const t=B[id], p=P(id);
+      return { t, hasProg: pi===0||pi===3, pct: Math.round(p/(t.total||p+30)*100)+'%', press: st.pressing===id?'scale(.96)':'none',
+        down:e=>{ this.setState({pressing:id}); MG.drag(e,{axis:'xy', onLong:()=>{ this.hap('Medium'); this.setState({pressing:null,peek:{id,pi},peekIn:false},()=>requestAnimationFrame(()=>this.setState({peekIn:true}))); }, onMove:()=>{ if(this.state.pressing) this.setState({pressing:null}); }, onEnd:()=>{}, onCancel:()=>this.setState({pressing:null}) }); } }; }) }));
+    const pkT=st.peek?B[st.peek.id]:null, pkS=st.peek?names[st.peek.pi]:'';
+    const close=()=>this.setState({peek:null,peekIn:false});
+    const pk = pkT ? { t:pkT, s:pkS, sC:sc[pkS], meta: isA?`${pkT.format} · ${pkT.countLabel} · ${pkT.studio}`:`${pkT.format} · ${pkT.author}`,
+      actions:[
+        ...(st.peek.pi===0||st.peek.pi===3 ? [{l:`+1 · ${pkT.unit} ${P(pkT.id)+1}`,i:'add',fn:()=>{ this.setState(x=>({prog:{...x.prog,[pkT.id]:P(pkT.id)+1}})); close(); this.hap('Success'); this.say(`${pkT.unit} ${P(pkT.id)+1} ${isA?'watched':'read'}`); }}] : st.peek.pi===1 ? [{l:isA?'Start watching':'Start reading',i:'play_arrow',fn:()=>{ close(); this.hap('Success'); this.say('Moved to '+names[0]); }}] : []),
+        {l:'Change status',i:'swap_horiz',fn:()=>{ close(); this.say('Opens status picker'); }},
+        {l:'Open details',i:'info',fn:()=>{ close(); this.say(`Opens ${pkT.title}`); }},
+        {l:'Share',i:'ios_share',fn:()=>{ close(); this.say('Share sheet'); }},
+      ].map((a,i)=>({...a,bt:i?'1px solid rgba(255,255,255,.06)':'0',c:'#EEF0F6'})) } : {t:{},actions:[]};
+    const hc={'—':['#7C849C','rgba(255,255,255,.05)'],Light:['#8CC8FF','rgba(90,176,255,.14)'],Medium:['#B9A9FF','rgba(160,140,255,.16)'],Selection:['#D7DBE6','rgba(255,255,255,.08)']};
+    const lab=(f)=>['Watching','Planning','Completed','Paused','Dropped'].map((l,i)=>({l,c:Math.round(f)===i?'#EEF0F6':'#7C849C'}));
+    const days=(sel)=>['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((l,i)=>({l,n:String(12+i),bg:i===sel?'#2A3042':'transparent',c:i===sel?'#EEF0F6':'#7C849C'}));
+    const F=[
+      {n:'01',h:'Grab the thumb',d:'The thumb follows the finger inside the pill only. It can’t overshoot, and the colour cross-fades at the midpoint.',hap:'—',isToggle:true,tx:'48px',tb:'#FF6A55',aF:'#1A0B08',mF:'#A6ADC2',finger:true,fx:'88px'},
+      {n:'02',h:'Mode lands',d:'Releasing past the midpoint snaps to Manga. The Selection tick came at halfway, so landing is silent. The accent, logo and indicators recolour to lilac.',hap:'Selection',isToggle:true,tx:'102px',tb:'#A08CFF',aF:'#A6ADC2',mF:'#140E2B'},
+      {n:'03',h:'Page between statuses',d:'Swiping on content drags both pages, and the underline moves with your finger. Mode stays put.',hap:'—',isTabs:true,ix:'10%',f:.5,ptf:'translateX(-25%)',finger:true,fx:'120px'},
+      {n:'04',h:'Page settles',d:'Past 30% of the width, or on a flick, it snaps to the next status. The underline lands on Planning.',hap:'Selection',isTabs:true,ix:'20%',f:1,ptf:'translateX(-50%)'},
+      {n:'05',h:'Edge resistance',d:'Dragging right on the first page rubber-bands at 0.3× and returns, with no haptic and nothing changing.',hap:'—',isTabs:true,ix:'0%',f:0,ptf:'translateX(6%)',finger:true,fx:'60px'},
+      {n:'06',h:'Hold to peek',d:'At 450ms the poster expands into a peek with quick actions. Tapping outside closes it.',hap:'Medium',isPeek:true,cover:B[isA?2:24].cover},
+      {n:'07',h:'Schedule weeks',d:'Schedule doesn\'t page by day. Days stack vertically; swiping the week bar moves a week at a time.',hap:'Selection',isDays:true,sel:3,ptf:'translateX(-18px)'},
+      {n:'08',h:'Who wins',d:'Priority when gestures could overlap. The first match takes the touch.',hap:'—',isRule:true},
+    ];
+    const frames=F.map(f=>{ const [hC,hB]=hc[f.hap]||hc['—']; return {...f, isToggle:!!f.isToggle,isTabs:!!f.isTabs,isDays:!!f.isDays,isPeek:!!f.isPeek,isRule:!!f.isRule,finger:!!f.finger,
+      labels:f.isTabs?lab(f.f):[], days:f.isDays?days(f.sel):[], rules:f.isRule?[{n:'1',l:'Sheet / peek open',v:'all'},{n:'2',l:'Left edge 20px',v:'OS back'},{n:'3',l:'Row (list view)',v:'row'},{n:'4',l:'Content (grid) / week bar',v:'pager'}]:[],
+      hapC:hC, hapBg:hB}; });
+    const pagePos=st.page-st.pdx/W;
+    return {
+      mode:st.mode, acc, ink,
+      thumbX:`${3+tx}px`, thumbTr: st.tdx==null?'left .25s cubic-bezier(.2,.9,.25,1.1), background .2s':'background .2s',
+      thumbBg: lilacSide?'#A08CFF':'#FF6A55', aFg: lilacSide?'#A6ADC2':'#1A0B08', mFg: lilacSide?'#140E2B':'#A6ADC2',
+      tDown:e=>{ const r=e.currentTarget.getBoundingClientRect(), x0=e.clientX; let moved=false; this._tSide=!isA;
+        MG.drag(e,{axis:'xy',slop:3, onMove:(dx)=>{ moved=true; const fx=(isA?0:84)+dx*(176/r.width), side=fx>42; if(side!==this._tSide){ this._tSide=side; this.hap('Selection'); } this.setState({tdx:dx*(176/r.width)}); },
+          onEnd:(dx)=>{ const fx=(isA?0:84)+dx*(176/r.width); this.setState({tdx:null}); this.setMode(fx>42?'manga':'anime',true); },
+          onCancel:()=>{ const f=(x0-r.left)/r.width; this.setMode(f>.5?'manga':'anime'); } }); },
+      tabs:names.map((l,i)=>({l,n:String(lists[i].length),c:Math.round(pagePos)===i?'#EEF0F6':'#7C849C',go:()=>this.goPage(i)})),
+      tabW:`${TW}px`, indX:`${16+Math.max(0,Math.min(4,pagePos))*TW}px`, indTr: st.pDrag?'none':'left .3s cubic-bezier(.2,.9,.25,1), background .2s',
+      pages, trackTf:`translateX(${-st.page*W+st.pdx}px)`, trackTr: st.pDrag?'none':'transform .34s cubic-bezier(.2,.9,.25,1)',
+      pDown:e=>{ if(st.peek) return; const r=e.currentTarget.getBoundingClientRect(); if((e.clientX-r.left)/r.width*W<20) return; const k=W/r.width;
+        MG.drag(e,{axis:'x', onMove:(dx)=>{ let v=dx*k; const pg=this.state.page; if((pg===0&&v>0)||(pg===4&&v<0)) v=v*.3; this.setState({pdx:v,pDrag:true,pressing:null}); },
+          onEnd:(dx,dy,vx)=>{ const v=dx*k, pg=this.state.page; if(v<-W*.3||vx<-0.5) this.goPage(pg+1); else if(v>W*.3||vx>0.5) this.goPage(pg-1); else this.setState({pdx:0,pDrag:false}); } }); },
+      peekOpen:!!pkT, pk, closePeek:close, peekTf: st.peekIn?'scale(1)':'scale(.9)', peekO: st.peekIn?'1':'0',
+      frames,
+      hasHap:!!st.hap, hapLbl:st.hap||'', hapC:({Light:'#8CC8FF',Medium:'#B9A9FF',Success:'#4ED98A',Selection:'#D7DBE6'})[st.hap]||'#D7DBE6',
+      hasToast:!!st.toast, toast:st.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Title mockup</title>
+<link rel="stylesheet" href="editorial.css">
+<style>
+/* ── duotone banner: the art in two tones, the cover's colour and the paper ── */
+.banner{position:relative;height:340px;overflow:hidden;background:var(--c)}
+.banner img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.15) brightness(.9);mix-blend-mode:multiply;opacity:.9}
+.banner::before{content:'';position:absolute;inset:0;z-index:1;background:radial-gradient(circle at 1px 1px,rgb(19 17 15 / .55) 1px,transparent 1.5px) 0 0/5px 5px}
+.banner::after{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(transparent 30%,var(--paper))}
+
+.head{display:grid;grid-template-columns:260px minmax(0,1fr) 220px;gap:72px;margin-top:-180px;position:relative;z-index:3;padding-bottom:36px;border-bottom:3px double var(--rule)}
+.head .cover{position:relative}
+.head .cover img{width:260px;aspect-ratio:2/3;object-fit:cover;box-shadow:12px 12px 0 color-mix(in oklch,var(--c) 60%,var(--paper))}
+.vert{position:absolute;right:-50px;top:0;writing-mode:vertical-rl;font-family:var(--jp);font-weight:700;font-size:18px;letter-spacing:.14em;color:var(--ink)}
+.head .main{align-self:end;padding-top:150px}
+.head h1{font-family:var(--serif);font-weight:600;font-size:88px;line-height:.9;letter-spacing:-.045em;margin:14px 0 14px;font-variation-settings:'opsz' 144}
+.head .alt{font-size:14px;color:var(--ink-2)}
+.head .alt .jp{color:var(--ink-3);margin-left:6px}
+.actions{display:flex;gap:10px;align-items:center;margin-top:28px;flex-wrap:wrap}
+.actions .heart{width:44px;height:44px;border-radius:2px;border:0;background:none;box-shadow:inset 0 0 0 1px var(--rule);font-size:17px}
+.actions .heart:hover{box-shadow:inset 0 0 0 1px var(--shu);color:var(--shu)}
+.watch{margin-left:18px;font-size:13px;color:var(--ink-3)}
+.watch a{color:var(--ink);border-bottom:1px solid var(--rule);margin-left:10px}
+.watch a:hover{border-color:var(--ink)}
+
+/* score column */
+.score{align-self:end;text-align:right}
+.score .big{font-family:var(--serif);font-weight:200;font-size:132px;line-height:.8;letter-spacing:-.06em;color:var(--c);font-variation-settings:'opsz' 144}
+.score .big sup{font-size:32px;letter-spacing:0;vertical-align:top;margin-left:4px;color:var(--ink-3);font-weight:300}
+.score .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:8px 0 18px}
+.ranks{border-top:1px solid var(--rule)}
+.ranks div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--rule);font-size:12.5px;color:var(--ink-2);text-align:left}
+.ranks b{font-family:var(--mono);font-weight:500;color:var(--ink)}
+
+/* tabs: words with a rule, no pills */
+.tabs{display:flex;gap:28px;border-bottom:1px solid var(--rule);font-size:14px;color:var(--ink-3);margin-top:8px}
+.tabs a{padding:16px 0;white-space:nowrap}
+.tabs a.on{color:var(--ink);box-shadow:inset 0 -2px 0 var(--shu)}
+
+/* ── body: facts sidebar + article ── */
+.body{display:grid;grid-template-columns:260px minmax(0,1fr);gap:72px;margin-top:40px}
+.facts{margin:0;border-top:1px solid var(--ink)}
+.facts div{display:grid;grid-template-columns:90px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule);font-size:13px}
+.facts dt{color:var(--ink-3);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding-top:2px}
+.facts dd{margin:0;font-family:var(--mono);font-size:12.5px;line-height:1.5}
+.facts dd.s{font-family:var(--sans);font-size:13px}
+
+.syn{columns:2;column-gap:44px;font-size:16px;line-height:1.7;color:var(--ink-2);margin:0}
+.syn::first-letter{font-family:var(--serif);font-weight:600;font-size:76px;line-height:.8;float:left;margin:6px 10px 0 0;color:var(--c)}
+.tags{margin-top:28px;font-size:13.5px;line-height:2;color:var(--ink-2)}
+.tags span{white-space:nowrap}
+.tags span i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-left:4px}
+.tags span:not(:last-child)::after{content:' /';color:var(--ink-3);margin-right:6px}
+.tags button{background:none;border:0;padding:0;color:var(--ink-3);border-bottom:1px dotted var(--ink-3);font-size:13px;margin-left:8px}
+
+/* ── relations: a timeline ── */
+.timeline{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,1fr);gap:0;overflow-x:auto;padding-bottom:6px}
+.node{--c:#c8b89a;position:relative;padding:30px 18px 0 0}
+.node::before{content:'';position:absolute;left:0;right:0;top:8px;height:1px;background:var(--rule)}
+.node::after{content:'';position:absolute;left:0;top:3px;width:11px;height:11px;border-radius:50%;background:var(--paper);border:1.5px solid var(--c)}
+.node.this::after{background:var(--shu);border-color:var(--shu)}
+.node .yr{font-family:var(--mono);font-size:11px;color:var(--ink-2);position:absolute;top:1px;left:16px;background:var(--paper);padding:0 6px;line-height:14px}
+.node img{width:70px;aspect-ratio:2/3;object-fit:cover;margin-bottom:10px}
+.node .rel{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--c);font-weight:600}
+.node .t{font-size:13px;font-weight:600;line-height:1.3;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.node .t small{display:block;font-weight:400;color:var(--ink-3);font-size:11.5px}
+.node.this .t{color:var(--ink-3)}
+
+/* ── credits: end-roll style with dotted leaders ── */
+.credits{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:56px}
+.cr{display:grid;grid-template-columns:40px auto 1fr auto 40px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule)}
+.cr img{width:40px;height:40px;object-fit:cover;border-radius:50%;filter:grayscale(.3)}
+.cr:hover img{filter:none}
+.cr .n{font-size:14px;font-weight:600;line-height:1.25}
+.cr .n small{display:block;font-weight:400;font-size:11.5px;color:var(--ink-3)}
+.cr .n small .jp{margin-left:4px}
+.cr .lead{border-bottom:1px dotted var(--ink-3);transform:translateY(-4px)}
+.cr .r{text-align:right}
+.staff .cr{grid-template-columns:40px auto 1fr auto}
+
+/* ── numbers ── */
+.nums{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:72px}
+.dist{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;align-items:end;height:170px;border-bottom:1px solid var(--ink)}
+.dist div{background:color-mix(in oklch,var(--c) 70%,var(--paper));position:relative}
+.dist div:hover{background:var(--c)}
+.dist-l{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:6px;text-align:center}
+.cap{font-size:12px;color:var(--ink-3);margin-top:12px}
+.stack{display:flex;height:14px;margin:6px 0 18px}
+.stack i{display:block}
+.legend div{display:grid;grid-template-columns:14px 1fr auto auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule);font-size:13px}
+.legend .sw{width:10px;height:10px}
+.legend .mono{font-size:12.5px}
+.legend .pct{color:var(--ink-3);min-width:44px;text-align:right}
+
+/* ── recommendations ── */
+.recs{display:grid;grid-template-columns:repeat(8,1fr);gap:18px}
+.recs a{--c:#c8b89a}
+.recs img{width:100%;aspect-ratio:2/3;object-fit:cover;transition:box-shadow .18s,transform .18s}
+.recs a:hover img{box-shadow:5px 5px 0 color-mix(in oklch,var(--c) 60%,var(--paper));transform:translate(-2px,-2px)}
+.recs b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;font-weight:600;margin-top:10px;line-height:1.3}
+.recs small{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+
+@media (max-width:900px){
+  .banner{height:220px}
+  .head{grid-template-columns:120px minmax(0,1fr);gap:20px;margin-top:-90px}
+  .head .cover img{width:120px}
+  .vert{display:none}
+  .head .main{padding-top:60px}
+  .head h1{font-size:40px}
+  .actions{grid-column:1/-1}
+  .watch{margin-left:0;width:100%}
+  .score{grid-column:1/-1;text-align:left}
+  .score .big{font-size:80px}
+  .body,.nums,.credits{grid-template-columns:1fr;gap:32px}
+  .syn{columns:1}
+  .tabs{overflow-x:auto;gap:20px}
+  .recs{grid-template-columns:repeat(8,34vw);overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#"><i>見</i>miruyo</a>
+    <div class="links"><a href="#">Home</a><a class="on" href="#">Browse</a><a href="#">Seasonal</a><a href="#">My List</a><a href="#">Profile</a></div>
+    <div class="mode"><b>Anime</b> / Manga</div>
+    <div class="search">Search ⌘K</div>
+  </nav>
+</div>
+<div class="banner" id="banner"></div>
+<div class="wrap" id="page"></div>
+
+<script>
+const M = {"id": 30, "format": "TV", "episodes": 26, "duration": 24, "status": "FINISHED", "season": "FALL", "seasonYear": 1995, "source": "ORIGINAL", "averageScore": 83, "meanScore": 83, "popularity": 506862, "favourites": 43909, "title": {"romaji": "Shin Seiki Evangelion", "english": "Neon Genesis Evangelion", "native": "新世紀エヴァンゲリオン"}, "synonyms": ["NGE", "Eva", "ניאון ג'נסיס אוונגליון", "อีวานเกเลียน มหาสงครามวันพิพากษา", "Евангелион"], "coverImage": {"extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx30-AI1zr74Dh4ye.jpg", "color": "#f17843"}, "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/30-gEMoHHIqxDgN.jpg", "description": "In the year 2015, the Angels, huge, tremendously powerful, alien war machines, appear in Tokyo for the second time. The only hope for Mankind's survival lies in the Evangelion, a humanoid fighting machine developed by NERV, a special United Nations agency. Capable of withstanding anything the Angels can dish out, the Evangelion's one drawback lies in the limited number of people able to pilot them. Only a handful of teenagers, all born fourteen years ago, nine months after the Angels first appeared, are able to interface with the Evangelion. One such teenager is Shinji Ikari, whose father heads the NERV team that developed and maintains the Evangelion. Thrust into a maelstrom of battle and events that he does not understand, Shinji is forced to plumb the depths of his own inner resources for the courage and strength to not only fight, but to survive, or risk losing everything.  Note: Later releases include edited versions of Episodes 21-24 called the \"Director's Cut\" with some visual editing and adding extra scenes that previously appeared in the theatrical recap 'Death'.", "startDate": {"year": 1995, "month": 10, "day": 3}, "endDate": {"year": 1996, "month": 3, "day": 27}, "genres": ["Action", "Drama", "Mecha", "Mystery", "Psychological", "Sci-Fi"], "tags": [{"name": "Philosophy", "rank": 96, "isMediaSpoiler": false}, {"name": "Tragedy", "rank": 88, "isMediaSpoiler": true}, {"name": "Coming of Age", "rank": 88, "isMediaSpoiler": false}, {"name": "Super Robot", "rank": 88, "isMediaSpoiler": false}, {"name": "Cosmic Horror", "rank": 87, "isMediaSpoiler": true}, {"name": "Dystopian", "rank": 85, "isMediaSpoiler": false}, {"name": "Post-Apocalyptic", "rank": 84, "isMediaSpoiler": false}, {"name": "Angels", "rank": 84, "isMediaSpoiler": false}, {"name": "Denpa", "rank": 83, "isMediaSpoiler": false}, {"name": "Meta", "rank": 83, "isMediaSpoiler": true}, {"name": "Primarily Teen Cast", "rank": 81, "isMediaSpoiler": false}, {"name": "Kaiju", "rank": 80, "isMediaSpoiler": false}, {"name": "Psychosexual", "rank": 80, "isMediaSpoiler": false}, {"name": "Conspiracy", "rank": 79, "isMediaSpoiler": false}, {"name": "Male Protagonist", "rank": 79, "isMediaSpoiler": false}, {"name": "Aliens", "rank": 78, "isMediaSpoiler": false}, {"name": "Suicide", "rank": 75, "isMediaSpoiler": true}, {"name": "Mythology", "rank": 74, "isMediaSpoiler": true}, {"name": "Body Horror", "rank": 73, "isMediaSpoiler": true}, {"name": "Religion", "rank": 72, "isMediaSpoiler": false}, {"name": "Military", "rank": 72, "isMediaSpoiler": false}, {"name": "Estranged Family", "rank": 68, "isMediaSpoiler": false}, {"name": "Kuudere", "rank": 67, "isMediaSpoiler": false}, {"name": "Tsundere", "rank": 66, "isMediaSpoiler": false}, {"name": "Clone", "rank": 66, "isMediaSpoiler": true}, {"name": "Tokusatsu", "rank": 66, "isMediaSpoiler": false}, {"name": "Hikikomori", "rank": 64, "isMediaSpoiler": true}, {"name": "Politics", "rank": 63, "isMediaSpoiler": false}, {"name": "Foreign", "rank": 60, "isMediaSpoiler": true}, {"name": "Spearplay", "rank": 60, "isMediaSpoiler": true}, {"name": "Gore", "rank": 58, "isMediaSpoiler": false}, {"name": "Trains", "rank": 57, "isMediaSpoiler": false}, {"name": "Found Family", "rank": 55, "isMediaSpoiler": false}, {"name": "Espionage", "rank": 54, "isMediaSpoiler": false}, {"name": "Heterosexual", "rank": 45, "isMediaSpoiler": false}, {"name": "Masturbation", "rank": 43, "isMediaSpoiler": true}, {"name": "Episodic", "rank": 41, "isMediaSpoiler": false}, {"name": "Family Life", "rank": 40, "isMediaSpoiler": true}, {"name": "Nudity", "rank": 40, "isMediaSpoiler": false}, {"name": "Office Lady", "rank": 33, "isMediaSpoiler": false}, {"name": "Artificial Intelligence", "rank": 30, "isMediaSpoiler": false}, {"name": "Real Robot", "rank": 20, "isMediaSpoiler": false}], "studios": {"nodes": [{"name": "GAINAX"}, {"name": "Tatsunoko Production"}]}, "rankings": [{"rank": 133, "type": "RATED", "allTime": true, "context": "highest rated all time", "year": null, "season": null}, {"rank": 49, "type": "POPULAR", "allTime": true, "context": "most popular all time", "year": null, "season": null}, {"rank": 1, "type": "RATED", "allTime": false, "context": "highest rated", "year": 1995, "season": null}, {"rank": 1, "type": "POPULAR", "allTime": false, "context": "most popular", "year": 1995, "season": null}], "externalLinks": [{"site": "Official Site", "type": "INFO", "color": null, "url": "https://www.evangelion.co.jp/neon_genesis.html"}, {"site": "Netflix", "type": "STREAMING", "color": "#E50914", "url": "https://www.netflix.com/title/81033445"}, {"site": "Twitter", "type": "SOCIAL", "color": "#000000", "url": "https://twitter.com/evangelion_co"}, {"site": "Criterion Channel", "type": "STREAMING", "color": "#141414", "url": "https://www.criterionchannel.com/series/q9n77HtL/neon-genesis-evangelion"}], "trailer": {"id": "kOH2_8MkgZY", "site": "youtube"}, "stats": {"scoreDistribution": [{"score": 10, "amount": 1462}, {"score": 20, "amount": 760}, {"score": 30, "amount": 1635}, {"score": 40, "amount": 2757}, {"score": 50, "amount": 5627}, {"score": 60, "amount": 10492}, {"score": 70, "amount": 26552}, {"score": 80, "amount": 49992}, {"score": 90, "amount": 69552}, {"score": 100, "amount": 64982}], "statusDistribution": [{"status": "CURRENT", "amount": 35716}, {"status": "PLANNING", "amount": 112223}, {"status": "COMPLETED", "amount": 333869}, {"status": "DROPPED", "amount": 8616}, {"status": "PAUSED", "amount": 16438}]}, "relations": {"edges": [{"relationType": "SEQUEL", "node": {"id": 32, "format": "MOVIE", "type": "ANIME", "title": {"english": "Neon Genesis Evangelion: The End of Evangelion", "romaji": "Shin Seiki Evangelion Movie: Air / Magokoro wo, Kimi ni"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx32-5JYsv0wc122I.jpg", "color": "#e46b50"}, "seasonYear": 1997}}, {"relationType": "ADAPTATION", "node": {"id": 30698, "format": "MANGA", "type": "MANGA", "title": {"english": "Neon Genesis Evangelion", "romaji": "Shin Seiki Evangelion"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30698-0niTa3yn2rNK.png", "color": "#e4935d"}, "seasonYear": null}}, {"relationType": "SUMMARY", "node": {"id": 31, "format": "MOVIE", "type": "ANIME", "title": {"english": "Neon Genesis Evangelion: Death & Rebirth", "romaji": "Shin Seiki Evangelion Movie: Shi to Shinsei"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx31-3zRThtzQH62E.png", "color": "#e4785d"}, "seasonYear": 1997}}, {"relationType": "SPIN_OFF", "node": {"id": 4130, "format": "ONA", "type": "ANIME", "title": {"english": null, "romaji": "Petit Eva: Evangelion@School"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b4130-cNTifeekohY6.jpg", "color": "#e49328"}, "seasonYear": 2007}}, {"relationType": "OTHER", "node": {"id": 102096, "format": "MUSIC", "type": "ANIME", "title": {"english": null, "romaji": "Peaceful Times (F02) petit film"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/102096-P27SABRbvxqn.jpg", "color": null}, "seasonYear": null}}, {"relationType": "ALTERNATIVE", "node": {"id": 55594, "format": "NOVEL", "type": "MANGA", "title": {"english": "Neon Genesis Evangelion: ANIMA", "romaji": "Evangelion: ANIMA"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx55594-d0muWcognBKS.jpg", "color": "#e40d1a"}, "seasonYear": null}}, {"relationType": "SPIN_OFF", "node": {"id": 101195, "format": "MANGA", "type": "MANGA", "title": {"english": "Neon Genesis Evangelion: Legend of the Piko Piko Middle School Students", "romaji": "Shin Seiki Evangelion: Pikopiko Chuugakusei Densetsu"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/nx101195-dFpQ9JBSnil0.jpg", "color": "#f1ae5d"}, "seasonYear": null}}, {"relationType": "CHARACTER", "node": {"id": 125785, "format": "SPECIAL", "type": "ANIME", "title": {"english": null, "romaji": "Evangelion x KATE CM"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx125785-ocT9A7Lsiui2.png", "color": "#e45dae"}, "seasonYear": null}}, {"relationType": "CHARACTER", "node": {"id": 125796, "format": "ONA", "type": "ANIME", "title": {"english": null, "romaji": "Evangelion × Attack ZERO"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx125796-SZ4SfxqcSwUJ.png", "color": "#78aed6"}, "seasonYear": null}}, {"relationType": "CHARACTER", "node": {"id": 100620, "format": "TV", "type": "ANIME", "title": {"english": null, "romaji": "Shinkansen Henkei Robo Shinkalion THE ANIMATION"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx100620-VnjYL5B1kdTf.jpg", "color": "#5dbbe4"}, "seasonYear": 2018}}, {"relationType": "CHARACTER", "node": {"id": 110131, "format": "MOVIE", "type": "ANIME", "title": {"english": null, "romaji": "Shinkansen Henkei Robo Shinkalion THE ANIMATION: Mirai kara Kita Shinsoku no ALFA-X"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx110131-byIGt5Ng6yvk.jpg", "color": "#35aee4"}, "seasonYear": 2019}}, {"relationType": "CHARACTER", "node": {"id": 128737, "format": "TV", "type": "ANIME", "title": {"english": null, "romaji": "Shinkansen Henkei Robo Shinkalion Z THE ANIMATION"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx128737-CI5WQAM4LXv6.jpg", "color": "#1aaee4"}, "seasonYear": 2021}}, {"relationType": "OTHER", "node": {"id": 171643, "format": "MANGA", "type": "MANGA", "title": {"english": null, "romaji": "Mogami Sakura no Detama Hokan Keikaku - Kiseki no Kachi wa"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx171643-Cah411fgZLrK.jpg", "color": "#f18635"}, "seasonYear": null}}, {"relationType": "OTHER", "node": {"id": 204270, "format": "SPECIAL", "type": "ANIME", "title": {"english": "Evangelion 30th Anniversary Special Screening", "romaji": "Evangelion: Housou 30 Shuunen Kinen Tokubetsu Kougyou"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx204270-6uMH5dFbyQPw.jpg", "color": null}, "seasonYear": 2026}}, {"relationType": "OTHER", "node": {"id": 208192, "format": null, "type": "ANIME", "title": {"english": null, "romaji": "Evangelion (Shinsaku Series)"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b208192-09FVw3ZPUg96.png", "color": null}, "seasonYear": null}}]}, "characters": {"edges": [{"role": "MAIN", "node": {"name": {"full": "Shinji Ikari", "native": "碇シンジ"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/character/large/b89-ZtZhXkh1rITn.png"}}, "voiceActors": [{"name": {"full": "Megumi Ogata", "native": "緒方恵美"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95287-3moX16xmYedv.png"}}]}, {"role": "MAIN", "node": {"name": {"full": "Misato Katsuragi", "native": "葛城ミサト"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/character/large/b1259-afTQkZ5SVMOn.png"}}, "voiceActors": [{"name": {"full": "Kotono Mitsuishi", "native": "三石琴乃"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95009-d01Dg8mMwcg6.png"}}]}, {"role": "MAIN", "node": {"name": {"full": "Rei Ayanami", "native": "綾波レイ"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/character/large/86-cA1zL7fyls8E.jpg"}}, "voiceActors": [{"name": {"full": "Megumi Hayashibara", "native": "林原めぐみ"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95014-tFYQYYhlVOF0.png"}}]}, {"role": "MAIN", "node": {"name": {"full": "Asuka Langley Souryuu", "native": "惣流・アスカ・ラングレー"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/character/large/b94-d631a3Z2KPvd.png"}}, "voiceActors": [{"name": {"full": "Yuuko Miyamura", "native": "宮村優子"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95458-u1OCiMNqiswq.png"}}]}, {"role": "SUPPORTING", "node": {"name": {"full": "Kensuke Aida", "native": "相田ケンスケ"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/character/large/b1250-GU74dqhQEaUN.png"}}, "voiceActors": [{"name": {"full": "Tetsuya Iwanaga", "native": "岩永哲哉"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95694-jZqfhOJ54AqZ.jpg"}}]}, {"role": "SUPPORTING", "node": {"name": {"full": "Ritsuko Akagi", "native": "赤木リツコ"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/character/large/1251-gLa2Arv5E8a9.png"}}, "voiceActors": [{"name": {"full": "Yuriko Yamaguchi", "native": "山口由里子"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95130-GoO41ve3YWQw.png"}}]}, {"role": "SUPPORTING", "node": {"name": {"full": "Shigeru Aoba", "native": "青葉シゲル"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/character/large/1252-gSQPK15PSOl9.png"}}, "voiceActors": [{"name": {"full": "Takehito Koyasu", "native": "子安武人"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95160-jWevcH7BmfE1.jpg"}}]}, {"role": "SUPPORTING", "node": {"name": {"full": "Kohzou Fuyutsuki", "native": "冬月コウゾウ"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/character/large/b1253-4VmJuD5jUSvJ.png"}}, "voiceActors": [{"name": {"full": "Motomu Kiyokawa", "native": "清川元夢"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95333-11aYjXsaWLIp.png"}}]}, {"role": "SUPPORTING", "node": {"name": {"full": "Hikari Horaki", "native": "洞木ヒカリ"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/character/large/b1254-Ps0twCqNZZH2.png"}}, "voiceActors": [{"name": {"full": "Junko Iwao", "native": "岩男潤子"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95289-B5RApCeWP4xk.png"}}]}, {"role": "SUPPORTING", "node": {"name": {"full": "Makoto Hyuuga", "native": "日向マコト"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/character/large/b1255-U6CSCHcOpUpS.png"}}, "voiceActors": [{"name": {"full": "Hiro Yuuki", "native": "優希比呂"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95322-c2F72UgC1exn.jpg"}}]}]}, "staff": {"edges": [{"role": "Dialogue Editing (English)", "node": {"name": {"full": "Tiffany Grant", "native": null}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n95145-c3MjV5tshGXX.jpg"}}}, {"role": "ADR Director (English; ADV)", "node": {"name": {"full": "Amanda Winn Lee", "native": null}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/873.jpg"}}}, {"role": "ADR Director (Brazilian Portuguese; 3ª dub)", "node": {"name": {"full": "Fábio Lucindo", "native": null}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n96108-MuX1nYAfR6za.png"}}}, {"role": "Director (English; Netflix)", "node": {"name": {"full": "Carolyn Keranen", "native": null}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n96435-q2OMEYsjHGrP.jpg"}}}, {"role": "Key Animation (ep 9)", "node": {"name": {"full": "Keiji Gotou", "native": "後藤圭二"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n97307-zziUpWjBxWFO.png"}}}, {"role": "Script (eps 16, 22, 23)", "node": {"name": {"full": "Hiroshi Yamaguchi", "native": "山口宏"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n97308-TE8Yy0wsf0gl.jpg"}}}, {"role": "Key Animation (ep 23)", "node": {"name": {"full": "Hiroyuki Imaishi", "native": "今石洋之"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n97349-OG5UDDs1g0AI.jpg"}}}, {"role": "In-Between Animation (eps 11, 14-17, 19, 20, 22-26)", "node": {"name": {"full": "Hiroyuki Imaishi", "native": "今石洋之"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n97349-OG5UDDs1g0AI.jpg"}}}, {"role": "Storyboard (eps 13, 18)", "node": {"name": {"full": "Tensai Okamura", "native": "岡村天斎"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n97762-v2ZiOuaBQuMZ.png"}}}, {"role": "Episode Director (eps 13, 18)", "node": {"name": {"full": "Tensai Okamura", "native": "岡村天斎"}, "image": {"large": "https://s4.anilist.co/file/anilistcdn/staff/large/n97762-v2ZiOuaBQuMZ.png"}}}]}, "recommendations": {"nodes": [{"rating": 1000, "mediaRecommendation": {"id": 339, "format": "TV", "seasonYear": 1998, "averageScore": 80, "title": {"english": "Serial Experiments Lain", "romaji": "serial experiments lain", "native": "serial experiments lain"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx339-xF2wp1NQuQ4r.png", "color": "#e4a1d6"}}}, {"rating": 584, "mediaRecommendation": {"id": 9756, "format": "TV", "seasonYear": 2011, "averageScore": 83, "title": {"english": "Puella Magi Madoka Magica", "romaji": "Mahou Shoujo Madoka☆Magica", "native": "魔法少女まどか☆マギカ"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx9756-QnUGwlwwnsuN.jpg", "color": "#f1c95d"}}}, {"rating": 458, "mediaRecommendation": {"id": 2001, "format": "TV", "seasonYear": 2007, "averageScore": 85, "title": {"english": "Gurren Lagann", "romaji": "Tengen Toppa Gurren Lagann", "native": "天元突破グレンラガン"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx2001-XwRnjzGeFWRQ.png", "color": "#f15d35"}}}, {"rating": 437, "mediaRecommendation": {"id": 47, "format": "MOVIE", "seasonYear": 1988, "averageScore": 79, "title": {"english": "Akira", "romaji": "AKIRA", "native": "AKIRA"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx47-4CR68arv452h.jpg", "color": "#e45d50"}}}, {"rating": 372, "mediaRecommendation": {"id": 98460, "format": "ONA", "seasonYear": 2018, "averageScore": 76, "title": {"english": "Devilman Crybaby", "romaji": "DEVILMAN crybaby", "native": "DEVILMAN crybaby"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx98460-bLtH2c3jd6sV.png", "color": "#f1e4c9"}}}, {"rating": 354, "mediaRecommendation": {"id": 227, "format": "OVA", "seasonYear": 2000, "averageScore": 79, "title": {"english": "FLCL", "romaji": "FLCL", "native": "フリクリ"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx227-qOB9ZhVvNnqO.jpg", "color": "#e4865d"}}}, {"rating": 272, "mediaRecommendation": {"id": 949, "format": "OVA", "seasonYear": 1988, "averageScore": 77, "title": {"english": "Gunbuster", "romaji": "Top wo Nerae! GunBuster", "native": "トップをねらえ! GunBuster"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx949-LDCFxDufSwTQ.png", "color": "#e4bba1"}}}, {"rating": 176, "mediaRecommendation": {"id": 132126, "format": "TV", "seasonYear": 2021, "averageScore": 78, "title": {"english": "Sonny Boy", "romaji": "Sonny Boy", "native": "Sonny Boy"}, "coverImage": {"large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx132126-4ugVjXMQLAps.png", "color": null}}}]}};
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cap = s => s.toLowerCase().replace(/_/g,' ').replace(/^\w/, c=>c.toUpperCase());
+const fmt = f => ({TV:'TV',TV_SHORT:'Short',MOVIE:'Film',ONA:'Streaming',OVA:'OVA',SPECIAL:'Special',MANGA:'Manga',NOVEL:'Novel',ONE_SHOT:'One-shot',MUSIC:'Music'}[f] || f);
+const mon = m => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1];
+const C = M.coverImage.color || '#c8b89a';
+document.documentElement.style.setProperty('--c', C);
+document.getElementById('banner').innerHTML = M.bannerImage ? `<img src="${M.bannerImage}" alt="">` : '';
+
+const rated = M.rankings.find(r=>r.type==='RATED'&&r.allTime);
+const pop = M.rankings.find(r=>r.type==='POPULAR'&&r.allTime);
+const yr = M.rankings.find(r=>r.type==='RATED'&&r.year&&!r.season);
+const streams = M.externalLinks.filter(l=>l.type==='STREAMING');
+const studio = M.studios.nodes[0]?.name;
+const k = n => n >= 1000 ? Math.round(n/1000)+'k' : n;
+
+const head = `
+<header class="head">
+  <div class="cover"><img src="${M.coverImage.extraLarge}" alt=""><div class="vert">${esc(M.title.native)}</div></div>
+  <div class="main">
+    <div class="kicker" style="color:var(--ink-2)">${fmt(M.format)} · ${cap(M.season)} ${M.seasonYear} · ${esc(studio)}</div>
+    <h1>${esc(M.title.english)}</h1>
+    <div class="alt">${esc(M.title.romaji)}<span class="jp">${esc(M.title.native)}</span></div>
+    <div class="actions">
+      <a class="btn" href="#">+ Add to list</a>
+      <button class="heart" aria-label="Favourite">♡</button>
+      <a class="btn ghost" href="#">▶ Trailer</a>
+      <span class="watch">Watch on${streams.map(s=>`<a href="#">${esc(s.site)} ↗</a>`).join('')}</span>
+    </div>
+  </div>
+  <div class="score">
+    <div><div class="big">${M.averageScore}<sup>%</sup></div><div class="lbl">Average score · ${k(M.popularity)} members</div></div>
+    <div class="ranks">
+      ${rated?`<div>Highest rated, all time<b>#${rated.rank}</b></div>`:''}
+      ${pop?`<div>Most popular, all time<b>#${pop.rank}</b></div>`:''}
+      ${yr?`<div>Highest rated of ${yr.year}<b>#${yr.rank}</b></div>`:''}
+      <div>Favourited by<b>${k(M.favourites)}</b></div>
+    </div>
+  </div>
+</header>
+<div class="tabs"><a class="on" href="#">Overview</a><a href="#">Relations</a><a href="#">Characters &amp; staff</a><a href="#">Stats</a><a href="#">Recommendations</a></div>`;
+
+const facts = [
+  ['Format', `${fmt(M.format)} · ${M.duration} min`],
+  ['Episodes', M.episodes],
+  ['Status', cap(M.status)],
+  ['Aired', `${mon(M.startDate.month)} ${M.startDate.day}, ${M.startDate.year} – ${mon(M.endDate.month)} ${M.endDate.day}, ${M.endDate.year}`],
+  ['Season', `${cap(M.season)} ${M.seasonYear}`],
+  ['Source', cap(M.source)],
+  ['Studio', studio],
+  ['Genres', M.genres.join(', '), 's'],
+  ['Also', M.synonyms.slice(0,2).join(', '), 's'],
+];
+const tags = M.tags.filter(t=>!t.isMediaSpoiler).slice(0,12);
+const spoil = M.tags.filter(t=>t.isMediaSpoiler).length;
+const overview = `
+<div class="body">
+  <dl class="facts">${facts.filter(f=>f[1]).map(f=>`<div><dt>${f[0]}</dt><dd class="${f[2]||''}">${esc(f[1])}</dd></div>`).join('')}</dl>
+  <div>
+    <p class="syn">${esc(M.description)}</p>
+    <div class="tags">${tags.map(t=>`<span>${esc(t.name)}<i>${t.rank}%</i></span>`).join(' ')}${spoil?`<button>${spoil} spoiler tags</button>`:''}</div>
+  </div>
+</div>`;
+
+/* relations timeline, ordered by year with this title in place */
+const rels = M.relations.edges.filter(e=>e.relationType!=='CHARACTER' && (e.node.type==='ANIME' || ['ADAPTATION','SOURCE'].includes(e.relationType)))
+  .map(e=>({rel:cap(e.relationType), ...e.node, yr:e.node.seasonYear}));
+rels.push({this:true, rel:'This', title:M.title, coverImage:{large:M.coverImage.extraLarge,color:C}, format:M.format, yr:M.seasonYear});
+const ry = r => r.yr ?? (r.this ? M.seasonYear : 9999);
+rels.sort((a,b)=>ry(a)-ry(b));
+const timeline = `
+<div class="sect-h"><h2>The whole story</h2><span class="jp">関連作品</span><span class="n">${rels.length-1}</span><span class="fill"></span></div>
+<div class="timeline">${rels.map(r=>`
+  <a href="#" class="node ${r.this?'this':''}" style="--c:${r.coverImage.color||'#c8b89a'}">
+    <span class="yr">${r.yr ?? ''}</span>
+    <img src="${r.coverImage.large}" alt="" loading="lazy">
+    <div class="rel">${r.this?'You are here':esc(r.rel)}</div>
+    <div class="t">${esc(r.title.english||r.title.romaji)}<small>${fmt(r.format)}</small></div>
+  </a>`).join('')}</div>`;
+
+/* cast & staff */
+const cast = `
+<div class="sect-h"><h2>Cast</h2><span class="jp">キャスト</span><span class="fill"></span><a class="more" href="#">Full cast →</a></div>
+<div class="credits">${M.characters.edges.slice(0,10).map(e=>{const va=e.voiceActors[0];return `
+  <div class="cr">
+    <img src="${e.node.image.large}" alt="" loading="lazy">
+    <div class="n">${esc(e.node.name.full)}<small>${e.role==='MAIN'?'Main':'Supporting'}<span class="jp">${esc(e.node.name.native||'')}</span></small></div>
+    <span class="lead"></span>
+    <div class="n r">${va?esc(va.name.full):''}<small><span class="jp">${va?esc(va.name.native||''):''}</span></small></div>
+    ${va?`<img src="${va.image.large}" alt="" loading="lazy">`:'<span></span>'}
+  </div>`}).join('')}</div>
+<div class="sect-h"><h2>Staff</h2><span class="jp">スタッフ</span><span class="fill"></span><a class="more" href="#">Full staff →</a></div>
+<div class="credits staff">${M.staff.edges.slice(0,8).map(e=>`
+  <div class="cr">
+    <img src="${e.node.image.large}" alt="" loading="lazy">
+    <div class="n">${esc(e.node.name.full)}<small><span class="jp" style="margin:0">${esc(e.node.name.native||'')}</span></small></div>
+    <span class="lead"></span>
+    <div class="n r" style="font-weight:400;color:var(--ink-2);font-size:13px">${esc(e.role)}</div>
+  </div>`).join('')}</div>`;
+
+/* numbers */
+const sd = M.stats.scoreDistribution; const smax = Math.max(...sd.map(s=>s.amount));
+const st = M.stats.statusDistribution; const stot = st.reduce((a,s)=>a+s.amount,0);
+const scol = {COMPLETED:C, CURRENT:'#7fc98f', PLANNING:'#b3a996', DROPPED:'#e8452c', PAUSED:'#6f6758'};
+const order = ['COMPLETED','CURRENT','PLANNING','PAUSED','DROPPED'];
+st.sort((a,b)=>order.indexOf(a.status)-order.indexOf(b.status));
+const nums = `
+<div class="sect-h"><h2>By the numbers</h2><span class="jp">統計</span><span class="fill"></span></div>
+<div class="nums">
+  <div>
+    <div class="dist">${sd.map(s=>`<div style="height:${s.amount/smax*100}%" title="${s.amount.toLocaleString()}"></div>`).join('')}</div>
+    <div class="dist-l">${sd.map(s=>`<span>${s.score}</span>`).join('')}</div>
+    <div class="cap">How ${k(sd.reduce((a,s)=>a+s.amount,0))} people scored it, out of 100.</div>
+  </div>
+  <div>
+    <div class="stack">${st.map(s=>`<i style="width:${s.amount/stot*100}%;background:${scol[s.status]}"></i>`).join('')}</div>
+    <div class="legend">${st.map(s=>`<div><span class="sw" style="background:${scol[s.status]}"></span><span>${s.status==='CURRENT'?'Watching':cap(s.status)}</span><span class="mono">${s.amount.toLocaleString()}</span><span class="mono pct">${(s.amount/stot*100).toFixed(1)}%</span></div>`).join('')}</div>
+  </div>
+</div>`;
+
+const recs = `
+<div class="sect-h"><h2>If you liked this</h2><span class="jp">おすすめ</span><span class="fill"></span><a class="more" href="#">More →</a></div>
+<div class="recs">${M.recommendations.nodes.map(n=>{const r=n.mediaRecommendation;return `
+  <a href="#" style="--c:${r.coverImage.color||'#c8b89a'}"><img src="${r.coverImage.large}" alt="" loading="lazy">
+  <b>${esc(r.title.english||r.title.romaji)}</b><small>${fmt(r.format)} · ${r.seasonYear??''} · +${n.rating}</small></a>`}).join('')}</div>`;
+
+document.getElementById('page').innerHTML = head + overview + timeline + cast + nums + recs +
+  `<footer><span>miruyo · data from AniList</span><span>Mockup — not wired to the app</span></footer>`;
+</script>
+</body>
+</html>

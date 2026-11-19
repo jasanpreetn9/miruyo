@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..500,0..1,0&display=block">
+<script src="../miruyo-data.js"></script>
+<script src="../miruyo-gestures.js"></script>
+<style>
+body{margin:0;background:#05060A;color:#EEF0F6;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#FF8A78;text-decoration:none}a:hover{color:#FFB3A6}
+@keyframes mspin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+<div style="padding:64px;display:flex;flex-direction:column;gap:56px;width:max-content">
+
+<div style="display:flex;flex-direction:column;gap:14px;max-width:1440px">
+  <div style="font:500 11px 'Geist Mono';color:#FF8A78;letter-spacing:.08em">SCREEN 11 · GESTURES · ROWS</div>
+  <h1 style="margin:0;font:700 44px/1.05 'Bricolage Grotesque';letter-spacing:-.03em">Row gestures</h1>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:14px;line-height:1.55;color:#A6ADC2;max-width:1200px">
+    <p style="margin:0"><b style="color:#EEF0F6">One row, four gestures.</b> The same row is used in Home › Continue and My List. Swipe right to +1. A short swipe left is −1, and a long one opens More. Hold to open quick actions. Pull down at the top of the list to sync with AniList.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Axis lock at 8px.</b> Vertical movement scrolls; horizontal movement belongs to the row. Mode never switches by swiping content, only on the top-bar toggle (see <a href="miruyo Gestures Navigation.dc.html">Navigation</a>).</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Taught once.</b> On first visit the top row demonstrates the gestures and a coach mark explains them. "Got it" saves that it's been seen. Buttons stay as fallbacks, so gestures are never the only way in. Try it on <a href="#11a">11a</a>.</p>
+  </div>
+</div>
+
+<div style="display:flex;gap:64px;align-items:flex-start">
+
+<div id="11a" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">11a</span>Live · drag with mouse or touch<div style="flex:1"></div><button onClick="{{ replay }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#EEF0F6;font:600 12px 'Geist';display:flex;align-items:center;gap:6px;cursor:pointer"><span class="material-symbols-rounded" style="font-size:16px">replay</span>Replay coach mark</button></div>
+  <div data-screen-label="Gestures rows live" style="width:390px;height:844px;border-radius:44px;overflow:hidden;background:#090B11;border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 0 0 8px #11131a;user-select:none;-webkit-user-select:none">
+    <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font:600 15px 'Geist'"><span>9:41</span><span style="display:flex;gap:4px"><span class="material-symbols-rounded" style="font-size:18px">signal_cellular_alt</span><span class="material-symbols-rounded" style="font-size:18px">wifi</span><span class="material-symbols-rounded" style="font-size:18px">battery_full</span></span></div>
+    <dc-import name="../shared/TopBar" device="mobile" mode="{{ mode }}" on-mode="{{ setMode }}" hint-size="100%,56px"></dc-import>
+    <div style="position:absolute;top:100px;left:0;right:0;bottom:84px;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;height:{{ pullH }}">
+        <div style="height:56px;display:flex;align-items:center;gap:8px;font:500 12px 'Geist Mono';color:{{ pullC }}">{{ pullIcon }}{{ pullLbl }}</div>
+      </div>
+      <div ref="{{ scRef }}" onPointerDown="{{ pullDown }}" style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;touch-action:pan-y;transform:{{ pullTf }};transition:{{ pullTr }}">
+        <div style="padding:16px 16px 24px;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:baseline;gap:8px;padding:0 2px 6px"><div style="font:650 20px/1.2 'Bricolage Grotesque'">{{ listTitle }}</div><span style="font:500 12px 'Geist Mono';color:#7C849C">{{ listCount }}</span></div>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+            <div style="position:relative;height:76px;border-radius:14px;overflow:hidden;transition:transform .2s;transform:{{ r.lift }};box-shadow:{{ r.liftSh }};background:{{ r.bg }}">
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 18px">
+                <div style="display:flex;align-items:center;gap:6px;font:600 14px 'Geist Mono';transition:transform .15s;opacity:{{ r.lo }};color:{{ r.lC }};transform:{{ r.lS }}"><span class="material-symbols-rounded" style="font-size:22px">{{ r.lI }}</span>{{ r.lLbl }}</div>
+                <div style="display:flex;align-items:center;gap:6px;font:600 14px 'Geist Mono';transition:transform .15s;opacity:{{ r.ro }};color:{{ r.rC }};transform:{{ r.rS }}">{{ r.rLbl }}<span class="material-symbols-rounded" style="font-size:22px">{{ r.rI }}</span></div>
+              </div>
+              <div onPointerDown="{{ r.down }}" style="position:absolute;inset:0;display:flex;align-items:center;gap:12px;padding:0 10px 0 12px;background:#10131C;border-radius:14px;touch-action:pan-y;cursor:grab;transform:{{ r.tf }};transition:{{ r.tr }}">
+                <div style="width:40px;aspect-ratio:2/3;border-radius:6px;flex:none;background:{{ r.t.cover }}"></div>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">
+                  <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.t.title }}</div>
+                  <div style="display:flex;align-items:center;gap:8px;font:500 11px 'Geist Mono'"><span style="color:{{ r.sC }}">{{ r.s }}</span><span style="color:#7C849C">{{ r.prog }}</span></div>
+                  <div style="height:3px;border-radius:2px;background:rgba(255,255,255,.08)"><div style="height:100%;border-radius:2px;transition:width .24s;background:{{ r.t.accent }};width:{{ r.pct }}"></div></div>
+                </div>
+                <button onClick="{{ r.incBtn }}" aria-label="Add one" style="width:44px;height:44px;border-radius:12px;border:0;display:grid;place-items:center;flex:none;cursor:pointer;background:{{ r.btnBg }};color:{{ r.btnC }}"><span class="material-symbols-rounded" style="font-size:22px">{{ r.btnI }}</span></button>
+                <sc-if value="{{ r.hand }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;left:46%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18);transition:transform .2s;pointer-events:none;transform:{{ r.handS }}"></div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <sc-if value="{{ coach }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:16px;right:16px;top:150px;padding:16px;border-radius:16px;background:#1E2331;border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 48px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:12px">
+          <div style="position:absolute;top:-7px;left:40px;width:14px;height:14px;background:#1E2331;border-left:1px solid rgba(255,255,255,.12);border-top:1px solid rgba(255,255,255,.12);transform:rotate(45deg)"></div>
+          <div style="font:650 16px 'Bricolage Grotesque'">Rows move</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#C4C9D6">
+            <div style="display:flex;align-items:center;gap:10px"><span class="material-symbols-rounded" style="font-size:20px;color:{{ accT }}">swipe_right</span>Swipe right to add one {{ unitW }}</div>
+            <div style="display:flex;align-items:center;gap:10px"><span class="material-symbols-rounded" style="font-size:20px;color:#A6ADC2">swipe_left</span>Swipe left to undo one, keep going for more</div>
+            <div style="display:flex;align-items:center;gap:10px"><span class="material-symbols-rounded" style="font-size:20px;color:#8CC8FF">touch_long</span>Hold for quick actions</div>
+          </div>
+          <button onClick="{{ endCoach }}" style="height:44px;border:0;border-radius:12px;font:600 14px 'Geist';cursor:pointer;background:{{ acc }};color:{{ ink }}">Got it</button>
+        </div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ hasHap }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:108px;left:50%;transform:translateX(-50%);height:26px;padding:0 10px 0 8px;border-radius:999px;background:rgba(9,11,17,.9);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;gap:6px;font:600 11px 'Geist Mono';z-index:30;color:{{ hapC }}"><span class="material-symbols-rounded" style="font-size:15px">vibration</span>{{ hapLbl }}</div>
+    </sc-if>
+    <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:16px;right:16px;bottom:100px;height:48px;padding:0 6px 0 14px;border-radius:12px;background:#1F2433;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;font-size:14px;z-index:20"><span class="material-symbols-rounded" style="font-size:20px;color:#4ED98A">check_circle</span><span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ toastMsg }}</span><button onClick="{{ toastUndo }}" style="height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;font:600 14px 'Geist';cursor:pointer;color:{{ accT }}">Undo</button></div>
+    </sc-if>
+    <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;z-index:40;background:rgba(5,6,10,.55);backdrop-filter:blur(4px)"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;z-index:41;border-radius:24px 24px 0 0;background:#10131C;border-top:1px solid rgba(255,255,255,.1);padding:0 16px 34px;display:flex;flex-direction:column;gap:14px;transform:{{ sheetTf }};transition:{{ sheetTr }}">
+        <div onPointerDown="{{ sheetDown }}" style="padding:10px 0 4px;display:flex;flex-direction:column;gap:12px;touch-action:none;cursor:grab">
+          <div style="align-self:center;width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.22)"></div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:44px;aspect-ratio:2/3;border-radius:6px;flex:none;background:{{ sh.t.cover }}"></div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px"><div style="font:650 17px/1.2 'Bricolage Grotesque';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sh.t.title }}</div><div style="font:500 12px 'Geist Mono';color:#A6ADC2">{{ sh.prog }} · <span style="color:{{ sh.sC }}">{{ sh.s }}</span></div></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <button onClick="{{ sh.dec }}" style="height:56px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:#161A26;color:#EEF0F6;font:600 13px 'Geist';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer"><span class="material-symbols-rounded" style="font-size:20px">remove</span>−1</button>
+          <button onClick="{{ sh.inc }}" style="height:56px;border-radius:12px;border:0;font:600 13px 'Geist';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;background:{{ acc }};color:{{ ink }}"><span class="material-symbols-rounded" style="font-size:20px">add</span>+1</button>
+          <button onClick="{{ sh.edit }}" style="height:56px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:#161A26;color:#EEF0F6;font:600 13px 'Geist';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer"><span class="material-symbols-rounded" style="font-size:20px">edit</span>Edit</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font:600 11px 'Geist Mono';letter-spacing:.06em;color:#7C849C">STATUS</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ sh.statuses }}" as="o" hint-placeholder-count="5">
+              <button onClick="{{ o.pick }}" style="height:40px;padding:0 12px;border-radius:999px;font:500 13px 'Geist';display:flex;align-items:center;gap:6px;cursor:pointer;background:{{ o.bg }};color:{{ o.c }};border:1px solid {{ o.bd }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ o.dot }}"></span>{{ o.l }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;border-radius:12px;background:#161A26;overflow:hidden">
+          <button onClick="{{ sh.detail }}" style="height:48px;padding:0 14px;border:0;background:transparent;color:#EEF0F6;font:500 14px 'Geist';display:flex;align-items:center;gap:10px;cursor:pointer"><span class="material-symbols-rounded" style="font-size:20px;color:#A6ADC2">info</span>Open details<span style="flex:1"></span><span class="material-symbols-rounded" style="font-size:20px;color:#7C849C">chevron_right</span></button>
+          <button onClick="{{ sh.remove }}" style="height:48px;padding:0 14px;border:0;border-top:1px solid rgba(255,255,255,.06);background:transparent;color:#FF6B8B;font:500 14px 'Geist';display:flex;align-items:center;gap:10px;cursor:pointer"><span class="material-symbols-rounded" style="font-size:20px">delete</span>Remove from list</button>
+        </div>
+      </div>
+    </sc-if>
+    <div style="position:absolute;left:0;right:0;bottom:0;z-index:10"><dc-import name="../shared/TabBar" active="list" mode="{{ mode }}" hint-size="100%,84px"></dc-import></div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:40px">
+<div id="11b" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">11b</span>Storyboard · start → commit</div>
+  <div style="display:grid;grid-template-columns:repeat(4,300px);gap:20px">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="8">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="height:200px;border-radius:18px;background:#090B11;border:1px solid rgba(255,255,255,.08);padding:16px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px;position:relative;overflow:hidden">
+          <sc-if value="{{ f.isPull }}" hint-placeholder-val="{{ false }}">
+            <div style="height:44px;display:flex;align-items:center;justify-content:center;gap:8px;font:500 12px 'Geist Mono';color:#8CC8FF"><span class="material-symbols-rounded" style="font-size:20px">sync</span>Release to sync</div>
+          </sc-if>
+          <div style="position:relative;height:76px;border-radius:14px;overflow:hidden;flex:none;transform:{{ f.r.lift }};box-shadow:{{ f.r.liftSh }};background:{{ f.r.bg }}">
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px">
+              <div style="display:flex;align-items:center;gap:6px;font:600 13px 'Geist Mono';opacity:{{ f.r.lo }};color:{{ f.r.lC }};transform:{{ f.r.lS }}"><span class="material-symbols-rounded" style="font-size:20px">{{ f.r.lI }}</span>{{ f.r.lLbl }}</div>
+              <div style="display:flex;align-items:center;gap:6px;font:600 13px 'Geist Mono';opacity:{{ f.r.ro }};color:{{ f.r.rC }};transform:{{ f.r.rS }}">{{ f.r.rLbl }}<span class="material-symbols-rounded" style="font-size:20px">{{ f.r.rI }}</span></div>
+            </div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;gap:10px;padding:0 10px;background:#10131C;border-radius:14px;transform:{{ f.r.tf }}">
+              <div style="width:36px;aspect-ratio:2/3;border-radius:5px;flex:none;background:{{ f.r.t.cover }}"></div>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">
+                <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ f.r.t.title }}</div>
+                <div style="display:flex;gap:8px;font:500 11px 'Geist Mono'"><span style="color:{{ f.r.sC }}">{{ f.r.s }}</span><span style="color:#7C849C">{{ f.r.prog }}</span></div>
+                <div style="height:3px;border-radius:2px;background:rgba(255,255,255,.08)"><div style="height:100%;border-radius:2px;background:{{ f.r.t.accent }};width:{{ f.r.pct }}"></div></div>
+              </div>
+              <div style="width:40px;height:40px;border-radius:11px;flex:none;display:grid;place-items:center;background:#EEF0F6;color:#090B11"><span class="material-symbols-rounded" style="font-size:20px">add</span></div>
+              <sc-if value="{{ f.finger }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:46%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:rgba(238,240,246,.85);box-shadow:0 0 0 6px rgba(238,240,246,.18)"></div>
+              </sc-if>
+            </div>
+          </div>
+          <sc-if value="{{ f.isToast }}" hint-placeholder-val="{{ false }}">
+            <div style="height:40px;padding:0 4px 0 12px;border-radius:10px;background:#1F2433;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:8px;font-size:12px"><span class="material-symbols-rounded" style="font-size:18px;color:#4ED98A">check_circle</span><span style="flex:1">{{ f.toast }}</span><span style="padding:0 8px;font-weight:600;color:{{ accT }}">Undo</span></div>
+          </sc-if>
+          <sc-if value="{{ f.isHold }}" hint-placeholder-val="{{ false }}">
+            <div style="height:40px;border-radius:12px 12px 0 0;background:#161A26;border:1px solid rgba(255,255,255,.08);border-bottom:0;display:flex;align-items:center;justify-content:center;gap:6px;font:500 12px 'Geist Mono';color:#A6ADC2;margin:0 -14px -16px"><span style="width:32px;height:4px;border-radius:2px;background:rgba(255,255,255,.22)"></span></div>
+          </sc-if>
+          <div style="position:absolute;top:10px;right:12px;font:500 11px 'Geist Mono';color:#7C849C">{{ f.dxLbl }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="font:600 11px 'Geist Mono';color:#7C849C">{{ f.n }}</span><span style="font:650 16px 'Bricolage Grotesque'">{{ f.h }}</span><div style="flex:1"></div><span style="height:22px;padding:0 8px;border-radius:999px;display:flex;align-items:center;gap:4px;font:600 11px 'Geist Mono';white-space:nowrap;color:{{ f.hapC }};background:{{ f.hapBg }}"><span class="material-symbols-rounded" style="font-size:13px">vibration</span>{{ f.hap }}</span></div>
+        <div style="font-size:13px;line-height:1.5;color:#A6ADC2;text-wrap:pretty">{{ f.d }}</div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div id="11c" style="display:flex;flex-direction:column;gap:12px;max-width:1260px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">11c</span>Spec · thresholds, haptics, fallbacks</div>
+  <div style="border-radius:16px;background:#10131C;border:1px solid rgba(255,255,255,.06);overflow:hidden;font-size:13px">
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 200px 1fr;gap:16px;padding:12px 18px;font:600 11px 'Geist Mono';letter-spacing:.06em;color:#7C849C;border-bottom:1px solid rgba(255,255,255,.06)"><span>GESTURE</span><span>RESULT</span><span>COMMIT AT</span><span>HAPTIC</span><span>NON-GESTURE PATH</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 200px 1fr;gap:16px;padding:14px 18px;align-items:baseline"><b style="font-weight:600">Swipe right</b><span style="color:#C4C9D6">+1 episode/chapter. Planning or Paused moves to Watching; the final +1 moves to Completed.</span><span style="font-family:'Geist Mono';color:#C4C9D6">72px, or flick &gt;0.6px/ms after 32px</span><span style="color:#C4C9D6">Light at arm · Success on release</span><span style="color:#A6ADC2">+1 button on the row</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 200px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Swipe left, short</b><span style="color:#C4C9D6">−1. Neutral grey track: it's a correction, so it never uses the accent.</span><span style="font-family:'Geist Mono';color:#C4C9D6">72–159px</span><span style="color:#C4C9D6">Light at arm · Light on release</span><span style="color:#A6ADC2">Undo in toast · −1 in sheet</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 200px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Swipe left, long</b><span style="color:#C4C9D6">Opens quick actions sheet. Track turns blue and the label swaps to More.</span><span style="font-family:'Geist Mono';color:#C4C9D6">≥160px</span><span style="color:#C4C9D6">Medium at arm</span><span style="color:#A6ADC2">Long-press · Detail › Edit</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 200px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Long-press</b><span style="color:#C4C9D6">Row lifts (97%, shadow) then the same quick actions sheet opens.</span><span style="font-family:'Geist Mono';color:#C4C9D6">450ms, &lt;8px movement</span><span style="color:#C4C9D6">Medium on open</span><span style="color:#A6ADC2">Long swipe left · Detail › Edit</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 200px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Pull to refresh</b><span style="color:#C4C9D6">Syncs the list with AniList. Only when the list is scrolled to the top.</span><span style="font-family:'Geist Mono';color:#C4C9D6">64px pull · 0.5× resistance · 120px cap</span><span style="color:#C4C9D6">Light at arm · Success when synced</span><span style="color:#A6ADC2">Auto-sync on app open</span></div>
+    <div style="display:grid;grid-template-columns:180px 1fr 200px 200px 1fr;gap:16px;padding:14px 18px;align-items:baseline;border-top:1px solid rgba(255,255,255,.06)"><b style="font-weight:600">Swipe down on sheet</b><span style="color:#C4C9D6">Dismisses the quick actions sheet. Dragging up is rubber-banded at 0.2×.</span><span style="font-family:'Geist Mono';color:#C4C9D6">120px, or flick &gt;0.5px/ms</span><span style="color:#C4C9D6">none</span><span style="color:#A6ADC2">Tap backdrop</span></div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13px;color:#A6ADC2">
+    <span style="font:600 11px 'Geist Mono';letter-spacing:.06em;color:#7C849C;margin-right:4px">HAPTIC SCALE</span>
+    <span style="height:26px;padding:0 10px;border-radius:999px;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);color:#D7DBE6;font:600 12px 'Geist Mono'">Selection<span style="font:400 12px 'Geist';color:#A6ADC2">score steps</span></span>
+    <span style="height:26px;padding:0 10px;border-radius:999px;display:flex;align-items:center;gap:6px;background:rgba(90,176,255,.14);color:#8CC8FF;font:600 12px 'Geist Mono'">Light<span style="font:400 12px 'Geist';color:#A6ADC2">threshold crossed</span></span>
+    <span style="height:26px;padding:0 10px;border-radius:999px;display:flex;align-items:center;gap:6px;background:rgba(160,140,255,.16);color:#B9A9FF;font:600 12px 'Geist Mono'">Medium<span style="font:400 12px 'Geist';color:#A6ADC2">menu opens</span></span>
+    <span style="height:26px;padding:0 10px;border-radius:999px;display:flex;align-items:center;gap:6px;background:rgba(78,217,138,.14);color:#4ED98A;font:600 12px 'Geist Mono'">Success<span style="font:400 12px 'Geist';color:#A6ADC2">change saved</span></span>
+    <span style="height:26px;padding:0 10px;border-radius:999px;display:flex;align-items:center;gap:6px;background:rgba(245,184,61,.14);color:#F5B83D;font:600 12px 'Geist Mono'">Warning<span style="font:400 12px 'Geist';color:#A6ADC2">remove</span></span>
+    <span style="flex-basis:100%;height:0"></span>
+    <span>Each haptic fires once per crossing. Dragging back under a threshold disarms the gesture silently. Reduced motion: no springs, rows return with a 120ms fade.</span>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { mode:'anime', prog:{}, status:{}, hidden:{}, drag:null, pressing:null, sheet:null, sheetDy:0, sheetDrag:false, toast:null, hap:null, pull:0, pulling:false, refreshing:false, coach:false, coachDx:0, coachHold:false };
+  scRef = React.createRef();
+  componentDidMount(){
+    if(!window.KD||!window.MG){ this._p=setInterval(()=>{ if(window.KD&&window.MG){ clearInterval(this._p); this.forceUpdate(); } },80); }
+    let seen=false; try{ seen=localStorage.getItem('miruyo.gestureCoach.v1')==='done'; }catch(_){}
+    if(!seen) this.startCoach();
+  }
+  componentWillUnmount(){ clearInterval(this._p); [this._ct,this._tt,this._ht,this._rt].forEach(clearTimeout); }
+  startCoach(){ clearTimeout(this._ct); this.setState({coach:true}); const seq=[[0,700],[96,1000],[0,500],[-110,1000],[0,500],['hold',1000],[0,700]]; let i=0;
+    const step=()=>{ if(!this.state.coach) return; const [v,ms]=seq[i%seq.length]; this.setState(v==='hold'?{coachDx:0,coachHold:true}:{coachDx:v,coachHold:false}); i++; this._ct=setTimeout(step,ms); }; step(); }
+  endCoach(){ clearTimeout(this._ct); this.setState({coach:false,coachDx:0,coachHold:false}); try{ localStorage.setItem('miruyo.gestureCoach.v1','done'); }catch(_){} }
+  hap(kind){ window.MG&&MG.buzz(kind); clearTimeout(this._ht); this.setState({hap:kind}); this._ht=setTimeout(()=>this.setState({hap:null}),750); }
+  say(msg,undo){ clearTimeout(this._tt); this.setState({toast:{msg,undo}}); this._tt=setTimeout(()=>this.setState({toast:null}),4000); }
+  P(id){ const t=KD.byId[id]; return this.state.prog[id] ?? (t.me?t.me.p:0); }
+  S(id){ const t=KD.byId[id]; return this.state.status[id] ?? (t.me?t.me.s:'Planning'); }
+  snap(){ return {prog:{...this.state.prog},status:{...this.state.status},hidden:{...this.state.hidden}}; }
+  undoTo(s){ return ()=>{ clearTimeout(this._tt); this.setState({...s,toast:null}); this.hap('Light'); }; }
+  inc(id){ const t=KD.byId[id], p=this.P(id), tot=t.total; if(tot&&p>=tot) return; const s=this.snap(), np=p+1; let st=this.S(id);
+    if(st==='Planning'||st==='Paused') st=t.isAnime?'Watching':'Reading'; if(tot&&np>=tot) st='Completed';
+    this.setState(x=>({prog:{...x.prog,[id]:np},status:{...x.status,[id]:st}})); this.hap('Success');
+    this.say(st==='Completed'?'Completed · moved to Completed':`${t.unit} ${np} ${t.isAnime?'watched':'read'} · ${t.title}`, this.undoTo(s)); }
+  dec(id){ const t=KD.byId[id], p=this.P(id); if(p<=0) return; const s=this.snap(); this.setState(x=>({prog:{...x.prog,[id]:p-1}})); this.hap('Light'); this.say(`Back to ${t.unit} ${p-1} · ${t.title}`, this.undoTo(s)); }
+  setStatus(id,st){ const s=this.snap(); this.setState(x=>({status:{...x.status,[id]:st},sheet:null,sheetDy:0})); this.hap('Success'); this.say(`Moved to ${st}`, this.undoTo(s)); }
+  rowDown(id,i){ return e=>{
+    if(this.state.sheet) return; if(this.state.coach) this.endCoach();
+    this.setState({pressing:id}); let armed=null;
+    MG.drag(e,{axis:'x',
+      onLong:()=>{ this.hap('Medium'); this.setState({pressing:id}); this._rt=setTimeout(()=>this.setState({pressing:null,sheet:id,sheetDy:0}),160); },
+      onMove:dx=>{ const v=MG.rubber(dx,dx>0?110:200); const can=this.canInc(id);
+        const z = v>=72&&can?'plus' : v<=-160?'more' : v<=-72?'minus' : null;
+        if(z!==armed){ if(z) this.hap(z==='more'?'Medium':'Light'); armed=z; }
+        this.setState({drag:{id,dx:v},pressing:null}); },
+      onEnd:(dx,dy,vx)=>{ let z=armed; if(!z&&vx>0.6&&dx>32&&this.canInc(id)) z='plus';
+        this.setState({drag:null});
+        if(z==='plus') this.inc(id); else if(z==='minus') this.dec(id); else if(z==='more') this.setState({sheet:id,sheetDy:0}); },
+      onCancel:l=>{ if(l!=='long') this.setState({pressing:null}); }
+    }); }; }
+  canInc(id){ const t=KD.byId[id]; return !(t.total&&this.P(id)>=t.total); }
+  rv(t,p,s,dx,acc,ink){
+    const tot=t.total, can=!(tot&&p>=tot);
+    const plus=dx>=72&&can, more=dx<=-160, minus=dx<=-72&&!more;
+    const sc={Watching:'#5AB0FF',Reading:'#5AB0FF',Planning:'#A6ADC2',Completed:'#4ED98A',Paused:'#F5B83D',Dropped:'#FF6B8B'};
+    return { t, s, sC:sc[s]||'#A6ADC2', prog:`${t.unit} ${p} / ${tot||'?'}`, pct:Math.round(p/(tot||p+30)*100)+'%',
+      bg: dx>0 ? (plus?acc:'#1E2331') : (more?'#5AB0FF':minus?'#2A3042':'#1E2331'),
+      lo: dx>0?String(Math.min(1,dx/44)):'0', ro: dx<0?String(Math.min(1,-dx/44)):'0',
+      lI: can?'add':'done_all', lLbl: can?`+1 · ${t.unit} ${p+1}`:'Completed', lC: plus?ink:'#D7DBE6', lS: plus?'scale(1.1)':'scale(.92)',
+      rI: more?'more_horiz':'remove', rLbl: more?'More':'−1', rC: more?'#06121F':'#EEF0F6', rS: (minus||more)?'scale(1.1)':'scale(.92)',
+      tf:`translateX(${dx}px)`, btnBg: can?'#EEF0F6':'#1E2331', btnC: can?'#090B11':'#4ED98A', btnI: can?'add':'check' };
+  }
+  renderVals(){
+    const D=window.KD; if(!D||!window.MG) return {rows:[],frames:[],sh:{t:{},statuses:[]}};
+    const st=this.state, isA=st.mode==='anime';
+    const acc=isA?'#FF6A55':'#A08CFF', ink=isA?'#1A0B08':'#140E2B', accT=isA?'#FF8A78':'#B9A9FF';
+    const ids=(isA?[1,2,9,5,4,6]:[23,24,21,26,22]).filter(id=>!st.hidden[id]);
+    const rows=ids.map((id,i)=>{ const t=D.byId[id]; const dragging=st.drag&&st.drag.id===id;
+      const dx=dragging?st.drag.dx:(st.coach&&i===0?st.coachDx:0);
+      const r=this.rv(t,this.P(id),this.S(id),dx,acc,ink);
+      const lifted=st.pressing===id&&!dragging || (st.coach&&i===0&&st.coachHold);
+      return {...r, down:this.rowDown(id,i), incBtn:()=>this.inc(id),
+        tr: dragging?'none':'transform .34s cubic-bezier(.2,.9,.25,1.12)',
+        lift: lifted?'scale(.97)':'none', liftSh: lifted?'0 16px 32px rgba(0,0,0,.5)':'none',
+        hand: st.coach&&i===0, handS: st.coachHold?'scale(1.25)':'scale(1)'};
+    });
+    const B=D.byId, ft=isA?B[1]:B[23], fp=isA?7:1121, fs=isA?'Watching':'Reading', U=ft.unit;
+    const hc={'—':['#7C849C','rgba(255,255,255,.05)'],Light:['#8CC8FF','rgba(90,176,255,.14)'],Medium:['#B9A9FF','rgba(160,140,255,.16)'],Success:['#4ED98A','rgba(78,217,138,.14)'],'Light → Success':['#4ED98A','rgba(78,217,138,.14)']};
+    const F=[
+      {n:'01',h:'Rest',d:'The row sits flush. The +1 button stays as the fallback for anyone who never swipes.',hap:'—',dx:0},
+      {n:'02',h:'Drag right',d:'The row follows the finger 1:1. Under 72px the label stays grey; releasing springs back with no change.',hap:'—',dx:44,finger:true},
+      {n:'03',h:'+1 armed',d:'Crossing 72px fills the track with the mode accent and the label pops. A fast flick arms it early.',hap:'Light',dx:96,finger:true},
+      {n:'04',h:'Release → +1',d:`The row springs home, progress ticks to ${U} ${fp+1}, and the toast offers Undo for 4s.`,hap:'Success',dx:0,p:fp+1,isToast:true,toast:`${U} ${fp+1} ${isA?'watched':'read'}`},
+      {n:'05',h:'Short left → −1',d:'72–159px arms −1 on a neutral track. Release goes back one, with Undo.',hap:'Light',dx:-112,finger:true},
+      {n:'06',h:'Long left → More',d:'Past 160px the track turns blue and the label swaps to More. Release opens quick actions.',hap:'Medium',dx:-188,finger:true},
+      {n:'07',h:'Hold 450ms',d:'Holding still lifts the row, then the same quick actions sheet rises. Same menu, two ways in.',hap:'Medium',dx:0,hold:true,isHold:true,finger:true},
+      {n:'08',h:'Pull to sync',d:'At the top of the list, pull 64px and release to sync with AniList. Resistance 0.5×, cap 120px.',hap:'Light → Success',dx:0,isPull:true},
+    ];
+    const frames=F.map(f=>{ const r=this.rv(ft,f.p??fp,fs,f.dx,acc,ink); if(f.hold){ r.lift='scale(.97)'; r.liftSh='0 16px 32px rgba(0,0,0,.5)'; } else { r.lift='none'; r.liftSh='none'; }
+      const [hC,hB]=hc[f.hap]||hc['—']; return {...f, r, hapC:hC, hapBg:hB, isToast:!!f.isToast, isHold:!!f.isHold, isPull:!!f.isPull, finger:!!f.finger, dxLbl:f.hold?'450ms':f.isPull?'pull 64px':`dx ${f.dx>0?'+':''}${f.dx}`}; });
+    // pull
+    const armed=st.pull>=64;
+    const pullIcon = st.refreshing ? React.createElement('span',{className:'material-symbols-rounded',style:{fontSize:20,animation:'mspin .9s linear infinite'}},'progress_activity')
+      : React.createElement('span',{className:'material-symbols-rounded',style:{fontSize:20,transition:'transform .15s',transform:`rotate(${armed?180:0}deg)`}},'arrow_downward');
+    // sheet
+    const sid=st.sheet, sT=sid?B[sid]:null;
+    const statuses=isA?['Watching','Planning','Completed','Paused','Dropped']:['Reading','Planning','Completed','Paused','Dropped'];
+    const sc={Watching:'#5AB0FF',Reading:'#5AB0FF',Planning:'#A6ADC2',Completed:'#4ED98A',Paused:'#F5B83D',Dropped:'#FF6B8B'};
+    const sh = sT ? { t:sT, prog:`${sT.unit} ${this.P(sid)} / ${sT.total||'?'}`, s:this.S(sid), sC:sc[this.S(sid)],
+      dec:()=>{ this.dec(sid); }, inc:()=>{ this.inc(sid); }, edit:()=>{ this.setState({sheet:null}); this.say('Opens the List Editor'); },
+      detail:()=>{ this.setState({sheet:null}); this.say(`Opens ${sT.title}`); },
+      remove:()=>{ const s=this.snap(); this.setState(x=>({hidden:{...x.hidden,[sid]:true},sheet:null})); this.hap('Warning'); this.say('Removed from list', this.undoTo(s)); },
+      statuses:statuses.map(l=>{ const on=this.S(sid)===l; return {l,dot:sc[l],bg:on?'#2A3042':'transparent',c:on?'#EEF0F6':'#A6ADC2',bd:on?'rgba(255,255,255,.2)':'rgba(255,255,255,.1)',pick:()=>on?null:this.setStatus(sid,l)}; }) } : {t:{},statuses:[]};
+    const hk=st.hap, hapMap={Light:'#8CC8FF',Medium:'#B9A9FF',Success:'#4ED98A',Warning:'#FF8FA8',Selection:'#D7DBE6'};
+    return {
+      mode:st.mode, setMode:m=>this.setState({mode:m}), acc, ink, accT, unitW:isA?'episode':'chapter',
+      listTitle:isA?'Watching & more':'Reading & more', listCount:String(rows.length),
+      rows, frames, coach:st.coach, endCoach:()=>this.endCoach(), replay:()=>this.startCoach(),
+      scRef:this.scRef,
+      pullDown:e=>{ const sc=this.scRef.current; if(!sc||sc.scrollTop>0||st.refreshing||st.sheet) return; let arm=false;
+        MG.drag(e,{axis:'y', onMove:(dx,dy)=>{ const p=Math.max(0,Math.min(120,dy*.5)); if((p>=64)!==arm){ arm=p>=64; if(arm) this.hap('Light'); } this.setState({pull:p,pulling:true}); },
+          onEnd:()=>{ if(arm){ this.setState({pull:56,pulling:false,refreshing:true}); this._rt=setTimeout(()=>{ this.setState({pull:0,refreshing:false}); this.hap('Success'); this.say('Synced with AniList · 2 changes pulled'); },1400); } else this.setState({pull:0,pulling:false}); } }); },
+      pullH:`${st.pull}px`, pullTf:`translateY(${st.pull}px)`, pullTr:st.pulling?'none':'transform .3s cubic-bezier(.2,.9,.25,1)',
+      pullIcon, pullLbl: st.refreshing?'Syncing with AniList…':armed?'Release to sync':'Pull to sync', pullC: armed||st.refreshing?'#8CC8FF':'#7C849C',
+      hasHap:!!hk, hapLbl:hk||'', hapC:hapMap[hk]||'#D7DBE6',
+      hasToast:!!st.toast, toastMsg:st.toast?st.toast.msg:'', toastUndo:()=>st.toast&&st.toast.undo&&st.toast.undo(),
+      sheetOpen:!!sT, sh, closeSheet:()=>this.setState({sheet:null,sheetDy:0}),
+      sheetTf:`translateY(${st.sheetDy}px)`, sheetTr: st.sheetDrag?'none':'transform .3s cubic-bezier(.2,.9,.25,1)',
+      sheetDown:e=>MG.drag(e,{axis:'y', slop:4,
+        onMove:(dx,dy)=>this.setState({sheetDy:dy>0?dy:dy*.2,sheetDrag:true}),
+        onEnd:(dx,dy,vx,vy)=>{ if(dy>120||(vy>0.5&&dy>24)){ this.setState({sheetDy:600,sheetDrag:false}); this._rt=setTimeout(()=>this.setState({sheet:null,sheetDy:0}),220); } else this.setState({sheetDy:0,sheetDrag:false}); } }),
+    };
+  }
+}
+</script>
+</body>
+</html>

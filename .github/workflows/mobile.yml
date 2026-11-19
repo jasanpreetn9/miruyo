@@ -1,0 +1,54 @@
+name: Mobile
+
+# The Flutter app in apps/mobile. Starts on every push and pull request, so
+# its required check always reports, and skips its steps unless the Flutter
+# code (or this workflow) changed. Docs and the native ios/ and android/
+# projects don't count: analyze and the tests never read them.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# what counts as a Flutter change (see .github/scripts/changed.sh)
+env:
+  FLUTTER_FILES: '^(apps/mobile/|\.github/(workflows/mobile\.yml|scripts/changed\.sh)$)'
+  NOT_FLUTTER_FILES: '^apps/mobile/(.*\.md|ios/.*|android/.*)$'
+
+# checks only read the code
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: apps/mobile
+
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - id: changes
+        run: bash "$GITHUB_WORKSPACE/.github/scripts/changed.sh" "$FLUTTER_FILES" "$NOT_FLUTTER_FILES"
+        env:
+          BEFORE: ${{ github.event.before }}
+      - uses: subosito/flutter-action@v2
+        if: steps.changes.outputs.changed == 'true'
+        with:
+          flutter-version: 3.47.6
+          channel: stable
+          cache: true
+      - run: flutter pub get
+        if: steps.changes.outputs.changed == 'true'
+      # generated code is committed; fail if it's out of date
+      - run: dart run build_runner build --delete-conflicting-outputs
+        if: steps.changes.outputs.changed == 'true'
+      - run: git diff --exit-code -- lib
+        if: steps.changes.outputs.changed == 'true'
+      - run: tool/format.sh --output=none --set-exit-if-changed
+        if: steps.changes.outputs.changed == 'true'
+      - run: flutter analyze
+        if: steps.changes.outputs.changed == 'true'
+      - run: flutter test
+        if: steps.changes.outputs.changed == 'true'

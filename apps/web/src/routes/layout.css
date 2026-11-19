@@ -1,0 +1,399 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+
+@theme {
+	/* editorial: warm paper-black and cream ink, not blue-black (design/mockups) */
+	--color-canvas: #13110f;
+	--color-surface: #171512;
+	--color-raised: #1d1a16;
+	--color-raised-hover: #25211c;
+	--color-ink: #efe7da;
+	--color-muted: #b3a996;
+	--color-dim: #857b6b;
+	--color-line: rgb(239 231 218 / 0.12);
+
+	/* the mode cue: vermilion (shu) for anime, a dusk violet for manga */
+	--color-anime: #e8452c;
+	--color-anime-ink: #13110f;
+	--color-anime-soft: #f07a63;
+	--color-manga: #a08cff;
+	--color-manga-ink: #140e2b;
+	--color-manga-soft: #b9a9ff;
+
+	--color-gold: #f5b83d;
+	--color-blue: #5ab0ff;
+	--color-green: #4ed98a;
+	--color-pink: #ff6b8b;
+	--color-teal: #3dd6d0;
+
+	--font-display: 'Fraunces', Georgia, serif;
+	--font-sans: 'Schibsted Grotesk', system-ui, sans-serif;
+	--font-mono: 'JetBrains Mono', ui-monospace, monospace;
+	--font-jp: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+
+	/* motion — quick and quiet; mirrored for Svelte transitions in lib/motion.ts */
+	--ease-enter: cubic-bezier(0.2, 0.8, 0.2, 1);
+	--ease-exit: cubic-bezier(0.4, 0, 1, 1);
+}
+
+:root {
+	--duration-press: 90ms;
+	--duration-overlay: 160ms;
+	--duration-lift: 180ms;
+	--duration-panel: 240ms;
+	--duration-sheet: 320ms;
+	--duration-shimmer: 1.4s;
+}
+
+@layer base {
+	body {
+		margin: 0;
+		background: var(--color-canvas);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+	}
+
+	/* utility classes (e.g. text-ink on a <a>) should win over this default */
+	a {
+		color: var(--color-anime-soft);
+		text-decoration: none;
+	}
+	a:hover {
+		color: color-mix(in oklch, var(--color-anime-soft) 80%, white);
+	}
+
+	/* Focus is always a 2px light ring with a 2px offset, on every interactive
+	   element. Text inputs drop their own outline and their wrapper shows the
+	   ring instead (focus-within). */
+	:focus-visible {
+		outline: 2px solid var(--color-ink);
+		outline-offset: 2px;
+	}
+
+	/* Tailwind's preflight resets button cursor to default; restore pointer everywhere */
+	button:not(:disabled) {
+		cursor: pointer;
+	}
+
+	/* @tailwindcss/forms gives inputs a default focus box-shadow ring that `outline-none`
+	   doesn't touch (it isn't the native outline); focus affordance is handled per-component
+	   instead (e.g. focus-within rings on the wrapping element). */
+	input:focus,
+	textarea:focus,
+	select:focus {
+		box-shadow: none;
+	}
+
+	.material-symbols-rounded {
+		font-family: 'Material Symbols Rounded';
+		font-weight: normal;
+		font-style: normal;
+		font-size: 24px;
+		line-height: 1;
+		letter-spacing: normal;
+		text-transform: none;
+		display: inline-block;
+		white-space: nowrap;
+		word-wrap: normal;
+		direction: ltr;
+		font-feature-settings: 'liga';
+		-webkit-font-smoothing: antialiased;
+	}
+
+	/*
+	 * Until the icon font arrives, an icon would show as its name ("play_arrow").
+	 * Keep it hidden, at its final width so nothing jumps, until the root
+	 * layout marks the font ready. display=block alone only covers ~3s.
+	 */
+	html:not(.icons-ready) .material-symbols-rounded {
+		visibility: hidden;
+		max-width: 1em;
+		overflow: hidden;
+	}
+}
+
+@keyframes kshimmer {
+	from {
+		background-position: 150% 0;
+	}
+	to {
+		background-position: -150% 0;
+	}
+}
+
+.skeleton-shimmer {
+	background: linear-gradient(
+		90deg,
+		var(--color-raised) 30%,
+		var(--color-raised-hover) 50%,
+		var(--color-raised) 70%
+	);
+	background-size: 300% 100%;
+	animation: kshimmer var(--duration-shimmer) linear infinite;
+}
+
+@keyframes kpulse {
+	50% {
+		opacity: 0.55;
+	}
+}
+
+/* Touch targets are at least 44px even when the visual is smaller. The
+   element needs a positioning context (relative/absolute). */
+@utility touch-target {
+	@media (pointer: coarse) {
+		&::after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: max(100%, 44px);
+			height: max(100%, 44px);
+			transform: translate(-50%, -50%);
+		}
+	}
+}
+
+/*
+ * The editorial vocabulary (design/mockups): square buttons, underlined
+ * fields. In-flow cards become ruled blocks; floating layers (menus, the
+ * editor, toasts) keep an opaque fill and a border, only squarer.
+ */
+
+/* The +1 and other repeated row actions: an outline, quiet beside the
+   page's one ink button, so a list of them doesn't outshine the titles */
+@utility btn-quiet {
+	border: 1px solid var(--color-line);
+	border-radius: 2px;
+	background: transparent;
+	color: var(--color-ink);
+	transition: border-color var(--duration-press) var(--ease-enter);
+	&:hover:not(:disabled) {
+		border-color: var(--color-ink);
+	}
+}
+
+/* The page's main action: filled in ink */
+@utility btn-ink {
+	border-radius: 2px;
+	background: var(--color-ink);
+	color: var(--color-canvas);
+	font-weight: 600;
+	transition: background-color var(--duration-press) var(--ease-enter);
+	&:hover:not(:disabled) {
+		background: var(--color-muted);
+	}
+}
+
+/* A text field as a rule under the words; the rule darkens on focus */
+@utility field-line {
+	border: 0;
+	border-bottom: 1px solid var(--color-line);
+	border-radius: 0;
+	background: transparent;
+	&:focus-within {
+		border-bottom-color: var(--color-ink);
+	}
+}
+
+/* A floating layer (menu, popover, sheet): opaque, bordered, nearly square */
+@utility layer {
+	border: 1px solid var(--color-line);
+	border-radius: 3px;
+	background: var(--color-surface);
+	box-shadow: 0 18px 40px -12px rgb(0 0 0 / 0.6);
+}
+
+/* Press feedback for buttons, steppers and chips */
+@utility press {
+	transition: transform var(--duration-press) var(--ease-enter);
+	&:active:not(:disabled) {
+		transform: scale(0.97);
+	}
+}
+
+/*
+ * Editorial motion: quick and quiet, and only where it says what changed.
+ * Each becomes nothing (or a fade) under reduced motion, below.
+ */
+
+/* a page's masthead settles in on load; --d staggers its lines */
+@keyframes rise {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+}
+@utility rise {
+	animation: rise 560ms var(--ease-enter) both;
+	animation-delay: var(--d, 0ms);
+}
+
+/* a section's hairline draws out from its title once it scrolls into view
+   (motion.ts reveal marks it); before hydration it's simply there */
+@keyframes draw {
+	from {
+		transform: scaleX(0);
+	}
+}
+.draw {
+	transform-origin: left center;
+}
+html[data-hydrated] .draw:not([data-shown]) {
+	transform: scaleX(0);
+}
+.draw[data-shown] {
+	animation: draw 720ms var(--ease-enter) both;
+}
+
+/* chart bars grow up from their baseline; --d staggers them */
+@keyframes grow-y {
+	from {
+		transform: scaleY(0);
+	}
+}
+@utility grow-y {
+	transform-origin: bottom center;
+	animation: grow-y 600ms var(--ease-enter) both;
+	animation-delay: var(--d, 0ms);
+}
+
+/* a counter's new number comes up from below (Tick.svelte) */
+@keyframes tick {
+	from {
+		opacity: 0;
+		transform: translateY(55%);
+	}
+}
+.tick {
+	display: inline-block;
+	animation: tick var(--duration-lift) var(--ease-enter);
+}
+
+/* a dropdown layer opens from its trigger */
+@keyframes pop {
+	from {
+		opacity: 0;
+		transform: translateY(-4px) scale(0.98);
+	}
+}
+@utility pop-in {
+	transform-origin: top right;
+	animation: pop var(--duration-overlay) var(--ease-enter);
+}
+
+/* the list editor: up from the bottom on phones, in from the right on desktop */
+@keyframes sheet-up {
+	from {
+		transform: translateY(32px);
+		opacity: 0;
+	}
+}
+@keyframes sheet-left {
+	from {
+		transform: translateX(40px);
+		opacity: 0;
+	}
+}
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+}
+@utility sheet-in {
+	animation: sheet-up var(--duration-sheet) var(--ease-enter);
+	@media (min-width: 1024px) {
+		animation-name: sheet-left;
+	}
+}
+dialog[open]::backdrop {
+	animation: fade-in var(--duration-panel) var(--ease-enter);
+}
+
+/* Reduced motion: lifts, presses and shimmer become opacity changes */
+@media (prefers-reduced-motion: reduce) {
+	.skeleton-shimmer {
+		background: var(--color-raised-hover);
+		animation: kpulse 2s ease-in-out infinite;
+	}
+	.press {
+		transition: opacity var(--duration-press) var(--ease-enter);
+	}
+	.press:active:not(:disabled) {
+		transform: none;
+		opacity: 0.8;
+	}
+	/* entrances keep only their fade; drawn lines and bars are simply there */
+	.rise,
+	.tick,
+	.pop-in,
+	.sheet-in {
+		animation-name: fade-in;
+	}
+	.grow-y,
+	.draw[data-shown] {
+		animation: none;
+	}
+	html[data-hydrated] .draw:not([data-shown]) {
+		transform: none;
+	}
+}
+
+/* hide scrollbars on horizontally-scrolling rows, same look as the design canvas */
+.scrollbar-none {
+	scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+	display: none;
+}
+
+/* Two range inputs stacked on one track (the Browse score filter): the tracks
+   ignore the pointer so either thumb can be grabbed. */
+.range-dual {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	margin: 0;
+	appearance: none;
+	background: transparent;
+	pointer-events: none;
+}
+.range-dual::-webkit-slider-runnable-track {
+	height: 20px;
+	background: transparent;
+}
+.range-dual::-moz-range-track {
+	background: transparent;
+}
+.range-dual::-webkit-slider-thumb {
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border-radius: 9999px;
+	background: var(--color-ink);
+	box-shadow: 0 2px 6px rgb(0 0 0 / 0.4);
+	pointer-events: auto;
+	cursor: grab;
+}
+.range-dual::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	border: 0;
+	border-radius: 9999px;
+	background: var(--color-ink);
+	box-shadow: 0 2px 6px rgb(0 0 0 / 0.4);
+	pointer-events: auto;
+	cursor: grab;
+}
+.range-dual:focus-visible {
+	outline: none;
+}
+.range-dual:focus-visible::-webkit-slider-thumb {
+	outline: 2px solid var(--color-ink);
+	outline-offset: 2px;
+}
+.range-dual:focus-visible::-moz-range-thumb {
+	outline: 2px solid var(--color-ink);
+	outline-offset: 2px;
+}

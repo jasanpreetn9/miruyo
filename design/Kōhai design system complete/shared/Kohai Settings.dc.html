@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..500,0..1,0&display=block">
+<style>
+body{margin:0;background:#05060A;color:#EEF0F6;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#FF8A78;text-decoration:none}a:hover{color:#FFB3A6}
+</style>
+</helmet>
+<div style="padding:64px;display:flex;flex-direction:column;gap:56px;width:max-content">
+<div style="display:flex;flex-direction:column;gap:14px;max-width:1440px">
+  <div style="font:500 11px 'Geist Mono';color:#FF8A78;letter-spacing:.08em">SCREEN 10 · SETTINGS</div>
+  <h1 style="margin:0;font:700 44px/1.05 'Bricolage Grotesque';letter-spacing:-.03em">Settings</h1>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:14px;line-height:1.55;color:#A6ADC2;max-width:1200px">
+    <p style="margin:0"><b style="color:#EEF0F6">Only what the API can write.</b> Title language, adult content, score format and airing notifications are saved to AniList with no save button. A toast confirms each change.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">Preview, don't describe.</b> Title language shows a real title in that language, and score format shows how 8.5 will read. The editor, My List and Stats all follow the format you pick.</p>
+    <p style="margin:0"><b style="color:#EEF0F6">AniList for the rest.</b> The API can't revoke access, so Revoke opens AniList's apps page. Sign out only forgets the token in this browser. Everything is clickable on <a href="#10a">10a</a>.</p>
+  </div>
+</div>
+<div style="display:flex;gap:64px;align-items:flex-start">
+<div id="10a" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">10a</span>Desktop 1440 · live controls</div>
+  <div data-screen-label="Settings desktop" style="width:1440px;border-radius:14px;overflow:hidden;background:#090B11;border:1px solid rgba(255,255,255,.08);position:relative">
+    <dc-import name="TopBar" mode="{{ mode }}" active="none" on-mode="{{ setMode }}" hint-size="100%,64px"></dc-import>
+    <div style="max-width:800px;margin:0 auto;padding:44px 0 96px;display:flex;flex-direction:column;gap:32px">
+      <h2 style="margin:0;font:700 44px/1 'Bricolage Grotesque';letter-spacing:-.03em">Settings</h2>
+      <sc-for list="{{ all }}" as="s" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px;font:650 20px 'Bricolage Grotesque'"><span class="material-symbols-rounded" style="font-size:22px;color:{{ accT }}">{{ s.i }}</span>{{ s.l }}</div>
+          <div style="border-radius:16px;background:#10131C;border:1px solid rgba(255,255,255,.06);padding:0 22px">
+            <sc-if value="{{ s.isAccount }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:20px 0;display:flex;align-items:center;gap:14px">
+                <div style="width:48px;height:48px;border-radius:50%;flex:none;background:linear-gradient(135deg,#5AB0FF,#A08CFF)"></div>
+                <div style="display:flex;flex-direction:column;gap:3px"><div style="font-size:13px;color:#A6ADC2">Signed in as</div><div style="font:650 18px 'Bricolage Grotesque'">{{ name }}</div></div>
+              </div>
+            </sc-if>
+            <sc-for list="{{ s.rows }}" as="r" hint-placeholder-count="2">
+              <div style="padding:18px 0;display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;border-top:{{ r.bt }}">
+                <div style="flex:1 1 280px;display:flex;flex-direction:column;gap:4px">
+                  <div style="font-size:15px;font-weight:550;color:#EEF0F6">{{ r.l }}</div>
+                  <div style="font-size:13px;line-height:1.5;color:#A6ADC2;text-wrap:pretty">{{ r.d }}</div>
+                </div>
+                <sc-if value="{{ r.isT }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ r.flip }}" aria-pressed="{{ r.on }}" style="width:52px;height:44px;border:0;padding:0;background:transparent;display:grid;place-items:center;cursor:pointer"><span style="position:relative;width:46px;height:28px;border-radius:999px;transition:background .15s;background:{{ r.tb }}"><span style="position:absolute;top:4px;width:20px;height:20px;border-radius:50%;transition:left .18s cubic-bezier(.2,.8,.2,1);left:{{ r.kx }};background:{{ r.kc }}"></span></span></button>
+                </sc-if>
+                <sc-if value="{{ r.isS }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:inline-flex;padding:3px;gap:2px;border-radius:11px;background:#090B11;border:1px solid rgba(255,255,255,.08)">
+                    <sc-for list="{{ r.opts }}" as="o" hint-placeholder-count="3">
+                      <button onClick="{{ o.pick }}" style="height:36px;padding:0 14px;border:0;border-radius:8px;font:500 13px 'Geist';cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.c }}">{{ o.lab }}</button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ r.isB }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ r.act }}" style="height:40px;padding:0 14px;border-radius:10px;background:transparent;font:600 14px 'Geist';display:flex;align-items:center;gap:8px;cursor:pointer;color:{{ r.bc }};border:1px solid {{ r.bb }}" style-hover="background:rgba(255,255,255,.05)">{{ r.bl }}<span class="material-symbols-rounded" style="font-size:18px">{{ r.bi }}</span></button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+      <div style="font:500 12px 'Geist Mono';color:#7C849C">Kōhai 0.1.0 · Not affiliated with AniList</div>
+    </div>
+    <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:50%;bottom:32px;transform:translateX(-50%);height:48px;padding:0 18px 0 14px;border-radius:12px;background:#1F2433;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;font-size:14px;white-space:nowrap"><span class="material-symbols-rounded" style="font-size:20px;color:#4ED98A">check_circle</span>{{ toast }}</div>
+    </sc-if>
+  </div>
+</div>
+
+<div id="10b" style="display:flex;flex-direction:column;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#A6ADC2"><span style="font:600 11px 'Geist Mono';padding:3px 7px;border-radius:5px;background:#EEF0F6;color:#090B11">10b</span>Mobile · same state as <a href="#10a">10a</a></div>
+  <div data-screen-label="Settings mobile" style="width:390px;height:844px;border-radius:44px;overflow:hidden;background:#090B11;border:1px solid rgba(255,255,255,.1);position:relative;box-shadow:0 0 0 8px #11131a">
+    <div style="position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding-bottom:110px">
+      <div style="height:44px"></div>
+      <dc-import name="TopBar" device="mobile" title="Settings" mode="{{ mode }}" on-mode="{{ setMode }}" hint-size="100%,56px"></dc-import>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:22px">
+        <sc-for list="{{ all }}" as="s" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="padding:0 4px;font:600 12px 'Geist Mono';letter-spacing:.06em;color:#7C849C">{{ s.cap }}</div>
+            <div style="border-radius:14px;background:#10131C;padding:0 14px">
+              <sc-if value="{{ s.isAccount }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:14px 0;display:flex;align-items:center;gap:12px">
+                  <div style="width:44px;height:44px;border-radius:50%;flex:none;background:linear-gradient(135deg,#5AB0FF,#A08CFF)"></div>
+                  <div style="display:flex;flex-direction:column;gap:2px"><div style="font-size:12px;color:#A6ADC2">Signed in as</div><div style="font:650 16px 'Bricolage Grotesque'">{{ name }}</div></div>
+                </div>
+              </sc-if>
+              <sc-for list="{{ s.rows }}" as="r" hint-placeholder-count="2">
+                <div style="padding:12px 0;min-height:56px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;border-top:{{ r.bt }}">
+                  <div style="flex:1 1 180px;display:flex;flex-direction:column;gap:3px">
+                    <div style="font-size:15px;font-weight:550;color:#EEF0F6">{{ r.l }}</div>
+                    <div style="font-size:12px;line-height:1.45;color:#A6ADC2">{{ r.dm }}</div>
+                  </div>
+                  <sc-if value="{{ r.isT }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ r.flip }}" style="width:52px;height:44px;border:0;padding:0;background:transparent;display:grid;place-items:center"><span style="position:relative;width:46px;height:28px;border-radius:999px;transition:background .15s;background:{{ r.tb }}"><span style="position:absolute;top:4px;width:20px;height:20px;border-radius:50%;transition:left .18s cubic-bezier(.2,.8,.2,1);left:{{ r.kx }};background:{{ r.kc }}"></span></span></button>
+                  </sc-if>
+                  <sc-if value="{{ r.isS }}" hint-placeholder-val="{{ false }}">
+                    <div style="width:100%;display:flex;padding:3px;gap:2px;border-radius:11px;background:#090B11;border:1px solid rgba(255,255,255,.08)">
+                      <sc-for list="{{ r.opts }}" as="o" hint-placeholder-count="3">
+                        <button onClick="{{ o.pick }}" style="flex:1;height:38px;padding:0 4px;border:0;border-radius:8px;font:500 13px 'Geist';white-space:nowrap;background:{{ o.bg }};color:{{ o.c }}">{{ o.lab }}</button>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ r.isB }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ r.act }}" aria-label="{{ r.bl }}" style="width:44px;height:44px;border:0;background:transparent;display:grid;place-items:center;color:{{ r.bc }}"><span class="material-symbols-rounded" style="font-size:22px">{{ r.bi }}</span></button>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+        <div style="text-align:center;font:500 11px 'Geist Mono';color:#7C849C">Kōhai 0.1.0 · Not affiliated with AniList</div>
+      </div>
+    </div>
+    <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:16px;right:16px;bottom:100px;height:48px;padding:0 14px;border-radius:12px;background:#1F2433;border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;font-size:14px"><span class="material-symbols-rounded" style="font-size:20px;color:#4ED98A">check_circle</span>{{ toast }}</div>
+    </sc-if>
+    <div style="position:absolute;left:0;right:0;bottom:0"><dc-import name="TabBar" active="profile" mode="{{ mode }}" hint-size="100%,84px"></dc-import></div>
+  </div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;name&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;yuki_reads&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { mode:'anime', toast:null, v:{ lang:'romaji', adult:false, score:'10.0', airing:true } };
+  componentWillUnmount(){ clearTimeout(this._t); }
+  say(msg){ clearTimeout(this._t); this.setState({toast:msg}); this._t=setTimeout(()=>this.setState({toast:null}),2200); }
+  set(k,val){ this.setState(s=>({v:{...s.v,[k]:val}})); this.say('Saved to AniList'); }
+  renderVals(){
+    const st=this.state, V=st.v, isA=st.mode==='anime';
+    const acc=isA?'#FF6A55':'#A08CFF', ink=isA?'#1A0B08':'#140E2B';
+    const scoreTxt={'10':'9','10.0':'8.5','100':'85','5':'4 ★','3':'a smiling face'}[V.score];
+    const scoreMax={'10':' / 10','10.0':' / 10','100':' / 100','5':' / 5','3':''}[V.score];
+    const langEx={romaji:'Sousou no Frieren',english:"Frieren: Beyond Journey's End",native:'葬送のフリーレン'}[V.lang];
+    const S=[
+      {k:'display',l:'Display',i:'translate',rows:[
+        {k:'lang',kind:'s',l:'Title language',d:'Titles appear as “'+langEx+'”. Romaji is used when a translation is missing.',dm:langEx,opts:[['romaji','Romaji'],['english','English'],['native','Native']]},
+        {k:'adult',kind:'t',l:'Show adult content',d:'Include 18+ titles in search, browse and recommendations.'}]},
+      {k:'scoring',l:'Scoring',i:'star',rows:[
+        {k:'score',kind:'s',l:'Score format',d:'A score of 8.5 shows as '+scoreTxt+scoreMax+' in the editor, My List and Stats. Existing scores convert automatically.',dm:'8.5 shows as '+scoreTxt+scoreMax,opts:[['10','10'],['10.0','10.0'],['100','100'],['5','5 ★'],['3','Faces']]}]},
+      {k:'notifications',l:'Notifications',i:'notifications',rows:[
+        {k:'airing',kind:'t',l:'Airing notifications',d:'When a new episode of something you’re Watching airs, it appears in the bell. “Remind me” on Detail uses the same setting.'}]},
+      {k:'account',l:'Account',i:'person',rows:[
+        {k:'out',kind:'b',l:'Sign out',d:'Removes the AniList token from this browser. Your list stays on AniList.',bl:'Sign out',bi:'logout',msg:'Signed out of this browser'},
+        {k:'revoke',kind:'b',l:'Revoke access',d:'Remove Kōhai from your AniList account. Opens AniList’s apps page.',bl:'AniList apps',bi:'open_in_new',msg:'Opening anilist.co/settings/apps'},
+        {k:'more',kind:'b',l:'More settings on AniList',d:'Profile, list options, privacy and the rest.',bl:'Open AniList',bi:'open_in_new',msg:'Opening anilist.co/settings'}]},
+    ];
+    const mk=(r,i)=>{
+      const o={...r, dm:r.dm||r.d, bt:i?'1px solid rgba(255,255,255,.06)':'0', isT:r.kind==='t', isS:r.kind==='s', isB:r.kind==='b'};
+      if(o.isT){const on=!!V[r.k]; Object.assign(o,{on,tb:on?acc:'#2A3042',kx:on?'22px':'4px',kc:on?ink:'#A6ADC2',flip:()=>this.set(r.k,!on)});}
+      if(o.isS) o.opts=r.opts.map(([val,lab])=>({lab,bg:V[r.k]===val?'#2A3042':'transparent',c:V[r.k]===val?'#EEF0F6':'#A6ADC2',pick:()=>V[r.k]!==val&&this.set(r.k,val)}));
+      if(o.isB){o.bc='#EEF0F6'; o.bb='rgba(255,255,255,.12)'; o.act=()=>this.say(r.msg);}
+      return o;
+    };
+    return {
+      mode:st.mode, setMode:m=>this.setState({mode:m}), accT:isA?'#FF8A78':'#B9A9FF',
+      name:this.props.name ?? 'yuki_reads',
+      all:S.map(s=>({l:s.l,i:s.i,cap:s.l.toUpperCase(),isAccount:s.k==='account',rows:s.rows.map((r,i)=>mk(r,s.k==='account'?i+1:i))})),
+      hasToast:!!st.toast, toast:st.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>
