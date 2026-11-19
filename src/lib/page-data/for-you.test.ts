@@ -5,7 +5,9 @@ import {
 	buildPicks,
 	DEFAULT_TUNE,
 	favouriteStudios,
+	genreLift,
 	localDay,
+	lovedFrom,
 	MAX_SEEDS,
 	pickGenres,
 	pickSeeds,
@@ -166,11 +168,91 @@ describe('buildPicks', () => {
 		expect(picks.map((p) => p.title.id)).toEqual([24]);
 	});
 
-	it('nudges up titles in genres you rate highly', () => {
-		const fantasy = titled(30, 'Fantasy pick', { genres: ['Fantasy'] });
-		const other = titled(31, 'Other pick', { genres: ['Sports'] });
-		const recs = new Map([[2, [rec(other, 5), rec(fantasy, 5)]]]);
-		expect(buildPicks(seeds, recs, opts).map((p) => p.title.id)).toEqual([30, 31]);
+	it('moves titles up for genres you rate above your usual, and down for those below', () => {
+		const genred = (id: number, genres: string[], score: number) =>
+			makeCollectionEntry(titled(id, `G${id}`, { genres }), { status: 'COMPLETED', score });
+		const list = [
+			genred(1, ['Fantasy'], 9.5),
+			genred(2, ['Fantasy'], 9),
+			genred(3, ['Sports'], 5),
+			genred(4, ['Sports'], 5.5)
+		];
+		const recs = new Map([
+			[
+				1,
+				[
+					rec(titled(30, 'Sports pick', { genres: ['Sports'] }), 5),
+					rec(titled(31, 'Other pick', { genres: ['Drama'] }), 5),
+					rec(titled(32, 'Fantasy pick', { genres: ['Fantasy'] }), 5)
+				]
+			]
+		]);
+		const picks = buildPicks(pickSeeds(list, 'POINT_10_DECIMAL'), recs, { ...opts, entries: list });
+		expect(picks.map((p) => p.title.id)).toEqual([32, 31, 30]);
+	});
+
+	it('leaves out recommendations voted down to nothing', () => {
+		const recs = new Map([
+			[1, [rec(titled(40, 'Zero'), 0), rec(titled(41, 'Negative'), -3), rec(titled(42, 'Kept'), 1)]]
+		]);
+		expect(buildPicks(seeds, recs, opts).map((p) => p.title.id)).toEqual([42]);
+	});
+});
+
+describe('lovedFrom', () => {
+	const list = (scores: number[]) =>
+		scores.map((score, i) =>
+			makeCollectionEntry(titled(500 + i, `L${i}`), { status: 'COMPLETED', score })
+		);
+
+	it('is 7.5 on a short list', () => {
+		expect(lovedFrom(list([6, 6, 6, 8]), 'POINT_10_DECIMAL')).toBe(7.5);
+	});
+
+	it("follows a longer list's own scores, within 7 and 9", () => {
+		// a harsh rater: a 7 is a high mark
+		expect(lovedFrom(list([4, 5, 5, 5, 6, 6, 6, 6, 7, 7]), 'POINT_10_DECIMAL')).toBe(7);
+		// a generous one: 8.5 is ordinary
+		const generous = list([8, 8.5, 9, 9, 9, 9, 9.5, 9.5, 10, 10]);
+		expect(lovedFrom(generous, 'POINT_10_DECIMAL')).toBe(9);
+		expect(pickSeeds(generous, 'POINT_10_DECIMAL').map((s) => s.score)).toEqual([
+			10, 10, 9.5, 9.5, 9, 9, 9, 9
+		]);
+		// in between: half a deviation above the mean
+		const middling = list([5, 6, 6, 7, 7, 7, 8, 8, 9, 10]);
+		expect(lovedFrom(middling, 'POINT_10_DECIMAL')).toBeCloseTo(7.3 + Math.sqrt(2.01) / 2);
+	});
+
+	it('seeds a harsh rater from their 7s', () => {
+		const harsh = list([4, 5, 5, 5, 6, 6, 6, 6, 7, 7]);
+		expect(pickSeeds(harsh, 'POINT_10_DECIMAL').map((s) => s.score)).toEqual([7, 7]);
+	});
+});
+
+describe('genreLift', () => {
+	it("measures a genre against the list's mean, not by how often it comes up", () => {
+		const e = (id: number, genres: string[], score: number) =>
+			makeCollectionEntry(titled(id, `E${id}`, { genres }), { status: 'COMPLETED', score });
+		const lift = genreLift(
+			[
+				e(1, ['Action'], 7),
+				e(2, ['Action'], 7),
+				e(3, ['Action'], 7),
+				e(4, ['Action', 'Mystery'], 9),
+				e(5, ['Action', 'Mystery'], 9),
+				e(6, ['Action', 'Mystery'], 9),
+				e(7, ['Romance'], 5),
+				e(8, ['Romance'], 5),
+				e(9, ['Romance'], 5),
+				e(10, [], 0) // unscored: left out
+			],
+			'POINT_10_DECIMAL'
+		);
+		// mean 7: Mystery +2 each, three of them, shrunk by three: +1
+		expect(lift.get('Mystery')).toBeCloseTo(1);
+		expect(lift.get('Romance')).toBeCloseTo(-1);
+		// on most of the list, so about the mean
+		expect(lift.get('Action')).toBeCloseTo(6 / 9);
 	});
 });
 
