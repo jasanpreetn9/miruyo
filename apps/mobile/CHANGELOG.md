@@ -4,6 +4,10 @@ What changed in the Flutter app, newest first. The website (`apps/web`) is the r
 
 ## Next
 
+### For You measures your taste against your own scores
+
+Web and app together. `lovedFrom` (half a deviation above your mean, 7 to 9; 7.5 under 10 scores) decides seeds and favourite studios; `genreLift` replaces the five most frequent genres, so a pick's genres move it by how far you rate them above your usual (−30% to +40%), and Why this pick's "Shares …" lists only genres clearly above it. Recommendations voted to nothing are left out; `forYouQuery` asks for 20 a seed instead of 8 (checked against the live API). The data tests are ported from the web's.
+
 ### In progress: `perf/list-cache`
 
 - **Your list shows at once, and refreshes behind the screen** ([#66](https://github.com/jasanpreetn9/miruyo/pull/66), web and app together). The list collection is served from the copy in memory even past its minute or after an edit, while AniList's newer one loads behind it (`cachedQuery`'s `staleWhileRevalidate`, also saved on the device); My List and someone's list rebuild when it lands, keeping their rows. Each response carries the list store's stamp from when it was requested (`Fetched.stamp`), so an older copy never undoes an edit. Pull to refresh still waits for a new copy. The device copy is written once per response, not on every read.

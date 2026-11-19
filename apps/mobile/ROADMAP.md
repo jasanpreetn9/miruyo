@@ -108,12 +108,12 @@ Built, with slot swipes (+1 on yours once aired, a reminder on upcoming ones, Pl
 
 ## Phase 10 — For You (08, 17)
 
-- [x] Picks from AniList's recommendations for your highest-rated titles, nudged toward the genres you rate well (the web's buildPicks, with its tests); a cold start under 5 ratings.
-- [x] Every pick swipes: right Planning, left Not this (hidden for good on the device). Hold for Why this pick: your rating of the seed, shared genres, AniList's recommendation count; Not this, Planning, Details.
+- [x] Picks from AniList's top 20 recommendations for each title you loved, scored as on the web (the web's buildPicks, with its tests; how it scores is in the web's [roadmap](../web/ROADMAP.md#phase-8--for-you-08-3-days)): loved is measured against your own scores, genres weigh by how far you rate them above your usual, recommendations voted to nothing are left out. A cold start under 5 ratings.
+- [x] Every pick swipes: right Planning, left Not this (hidden for good on the device). Hold for Why this pick: your rating of the seed, its genres you rate clearly above your usual, AniList's recommendation count; Not this, Planning, Details.
 - [x] The seed rail: tap to filter, swipe up to stop using a seed (its picks leave with it). Every action has Undo.
 - [x] Home's For You row, with the reason under each pick.
 - [x] Studios, across modes and Tune ([#61](https://github.com/jasanpreetn9/miruyo/pull/61), as on the web): favourite studios weigh more (the hold sheet says which, opening its page); the other list's top titles suggest their manga or anime, their seeds on the rail; Tune (app bar) leaves out titles not out yet, the other list's picks, or genres, and Home follows it.
-- [x] The seeds rotate each day, as on the web (the same hash, so both draw the same titles): up to 8 of the titles you rated 7.5 or more, weighted so a 10 comes round about six times as often as a 7.5, ranked by your exact score. Home's "Because you loved…" rows change with them at midnight; a seed you stopped using doesn't take a slot.
+- [x] The seeds rotate each day, as on the web (the same hash, so both draw the same titles): up to 8 of the titles you loved (7.5 or more on a short list, measured against your own scores on a longer one), weighted by how far past that each is (with a 7.5 cutoff, a 10 comes round about six times as often as a 7.5), ranked by your exact score. Home's "Because you loved…" rows change with them at midnight; a seed you stopped using doesn't take a slot.
 
 ## Phase 11 — Notifications and polish
 

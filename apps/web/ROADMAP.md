@@ -267,12 +267,17 @@ Everything after this phase depends on it.
 
 ## Phase 8 — For You (08) (3 days)
 
-- [x] **Picks with reasons:** candidates come from AniList's recommendations for your highest-rated titles (7.5/10 and up, the top 8). Each scores by the seed's rating × AniList's votes, summed across seeds, with a nudge for your favourite genres and 15% more from a favourite studio (two titles rated 7.5+; "From MADHOUSE", [#61](https://github.com/jasanpreetn9/miruyo/pull/61)). Titles already on your list are left out. Every pick says "Because you rated X 9/10".
+- [x] **Picks with reasons:** candidates come from AniList's top 20 recommendations for each of up to 8 titles you loved (the seeds). Every pick says "Because you rated X 9/10". How a pick is scored (`page-data/for-you.ts`, Nov 2026):
+  - **Loved** is measured against your own scores (`lovedFrom`): half a standard deviation above your mean, kept between 7 and 9. A harsh rater who averages 6 loves from 7, a generous one who averages 9 from 9. A list with fewer than 10 scores uses 7.5.
+  - **Each seed adds** its rating ÷ 10 × log₂(2 + AniList's votes) to every title it recommends, summed across seeds, so a title several seeds recommend rises. Recommendations voted to 0 or below are left out.
+  - **Genres** move a pick by how you rate them, not how often they come up (`genreLift`): a genre's mean score minus your overall mean, shrunk by three titles' worth so one score isn't a taste. Each point of lift across a pick's genres is ±10%, kept between −30% and +40%. Action on half your list counts for about nothing; a genre you score below your usual weighs a pick down.
+  - **A favourite studio** (two loved titles; "From MADHOUSE", [#61](https://github.com/jasanpreetn9/miruyo/pull/61)) adds 15%.
+  - **Left out:** titles on your list, "Not this" picks, the other type, and 18+ unless it's on. Tune picks filters what's left.
 - [x] **Seed rail:** the titles driving your picks; tap one to filter to "because of X". Since [#61](https://github.com/jasanpreetn9/miruyo/pull/61) it also holds the day's top four titles from your other list (marked "· anime" / "· manga"), whose source manga or novel, or two most popular anime, join the picks; a list with too few ratings shows those instead of the cold start.
 - [x] **Say "not this":** dismissed picks don't come back (stored locally), with Undo. **Tune picks** ([#61](https://github.com/jasanpreetn9/miruyo/pull/61)): only titles that are out, the other mode's picks on or off, and genres to leave out, kept on the device and applied on Home too. _Still to do: the "Refreshed this morning" timestamp._
 - [x] **Cold start (8c):** when logged out or with fewer than 5 ratings, show "Picks get good after 5 ratings" with "Log in with AniList" or "Rate a few titles instead."
 - [x] Mobile layout (8b). Entry point: a Home row with "See all" (decision 6).
-- **Not yet checked against the live API:** the query asks for each seed's recommendations in one request (the shape the title page already uses); the page shows AniList's error if it fails.
+- **Checked against the live API** (Nov 2026): the query asks for each seed's recommendations in one request (the shape the title page already uses), and 8 seeds × 20 recommendations is within AniList's limits; the page shows AniList's error if it fails.
 
 ## Phase 9 — Polish and launch (2–3 days)
 
