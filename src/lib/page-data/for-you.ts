@@ -14,8 +14,29 @@ import { toTenPoint } from './stats.ts';
 export const MIN_RATINGS = 5;
 /** How many highly rated titles seed the picks each day. */
 export const MAX_SEEDS = 8;
-/** A seed must be rated at least this (out of 10). */
+/**
+ * What "loved" means (out of 10) until a list has enough scores to judge by
+ * its own: below LOVED_FROM_RATINGS scored titles, a seed is rated 7.5 or more.
+ */
 const SEED_MIN_SCORE = 7.5;
+/** With this many scored titles, "loved" is measured against your own scores. */
+const LOVED_FROM_RATINGS = 10;
+/**
+ * Loved is half a deviation above your mean, kept within these: a harsh
+ * rater's 7 is a high mark, but a 6.5 isn't; a generous rater's 9 is
+ * ordinary, but every 9.5 still counts.
+ */
+const LOVED_FLOOR = 7;
+const LOVED_CEILING = 9;
+/**
+ * A genre's lift (its mean score above your overall mean, in points) is
+ * shrunk toward nothing by this many titles' worth, so one 10 in a genre
+ * isn't a taste.
+ */
+const GENRE_SHRINK = 3;
+/** Each point of genre lift moves a pick this much, within GENRE_LIMITS. */
+const GENRE_WEIGHT = 0.1;
+const GENRE_LIMITS = [0.7, 1.4] as const;
 /** How many titles from the other list look for their manga or anime. */
 export const MAX_CROSS_SEEDS = 4;
 /** A cross seed suggests at most this many of its adaptations (Berserk has seven). */
@@ -103,26 +124,46 @@ function unitHash(text: string): number {
 }
 
 /**
- * The titles driving the picks: up to MAX_SEEDS you rated 7.5 or more, best
+ * The score (out of 10) from which you loved a title. Under LOVED_FROM_RATINGS
+ * scores it's 7.5; past that it's your own: half a deviation above your mean,
+ * from LOVED_FLOOR to LOVED_CEILING. A harsh rater who averages 6 loves from
+ * 7, a generous one who averages 9 from 9.
+ */
+export function lovedFrom(entries: CollectionEntry[], scoreFormat?: ScoreFormat): number {
+	const scores = entries.filter((e) => e.score > 0).map((e) => toTenPoint(e.score, scoreFormat));
+	if (scores.length < LOVED_FROM_RATINGS) return SEED_MIN_SCORE;
+	const mean = scores.reduce((a, s) => a + s, 0) / scores.length;
+	const deviation = Math.sqrt(scores.reduce((a, s) => a + (s - mean) ** 2, 0) / scores.length);
+	return Math.min(LOVED_CEILING, Math.max(LOVED_FLOOR, mean + deviation / 2));
+}
+
+/**
+ * The titles driving the picks: up to MAX_SEEDS you loved (lovedFrom), best
  * first (by your exact score, then most recently updated). With more than
  * that to choose from, `day` draws a different set each day: the same all
  * day, and weighted so the higher you rated a title, the more often it comes
- * round (a 10 about six times as often as a 7.5). Without `day`, the top ones.
+ * round (with the 7.5 cutoff, a 10 about six times as often as a 7.5).
+ * Without `day`, the top ones.
  */
 export function pickSeeds(
 	entries: CollectionEntry[],
 	scoreFormat?: ScoreFormat,
 	day?: string
 ): Seed[] {
+	const loved = lovedFrom(entries, scoreFormat);
 	const pool = entries
 		.filter((e) => e.score > 0 && RATED_STATUSES.has(e.status))
 		.map((e) => ({ entry: e, exact: toTenPoint(e.score, scoreFormat) }))
-		.filter((s) => s.exact >= SEED_MIN_SCORE);
-	// a weighted draw without replacement (Efraimidis–Spirakis), keyed on the day
+		.filter((s) => s.exact >= loved);
+	// a weighted draw without replacement (Efraimidis–Spirakis), keyed on the
+	// day; the weight is how far past the cutoff a title is, plus half a point
 	const drawn =
 		day && pool.length > MAX_SEEDS
 			? pool
-					.map((s) => ({ s, key: unitHash(`${day}:${s.entry.media.id}`) ** (1 / (s.exact - 7)) }))
+					.map((s) => ({
+						s,
+						key: unitHash(`${day}:${s.entry.media.id}`) ** (1 / (s.exact - loved + 0.5))
+					}))
 					.sort((a, b) => b.key - a.key)
 					.slice(0, MAX_SEEDS)
 					.map(({ s }) => s)
@@ -143,32 +184,53 @@ export function pickSeeds(
 		});
 }
 
-/** The genres you rate highest, most frequent first. */
-function favouriteGenres(entries: CollectionEntry[], scoreFormat?: ScoreFormat): Set<string> {
-	const counts = new Map<string, number>();
-	for (const e of entries) {
-		if (toTenPoint(e.score, scoreFormat) < SEED_MIN_SCORE) continue;
-		for (const g of e.media.genres ?? []) counts.set(g, (counts.get(g) ?? 0) + 1);
+/**
+ * How much more (or less) you like each genre than your list as a whole: its
+ * mean score minus your overall mean, in points, shrunk toward 0 by
+ * GENRE_SHRINK titles so a genre needs a few scores to count. Action, on
+ * half the list, has a lift near 0 however many you've seen; a genre you
+ * score well above your usual has a high one, and one you score below it a
+ * negative one.
+ */
+export function genreLift(
+	entries: CollectionEntry[],
+	scoreFormat?: ScoreFormat
+): Map<string, number> {
+	const scored = entries
+		.filter((e) => e.score > 0)
+		.map((e) => ({ genres: e.media.genres ?? [], score: toTenPoint(e.score, scoreFormat) }));
+	if (!scored.length) return new Map();
+	const mean = scored.reduce((a, s) => a + s.score, 0) / scored.length;
+	const sums = new Map<string, { above: number; n: number }>();
+	for (const s of scored) {
+		for (const g of s.genres) {
+			const sum = sums.get(g) ?? { above: 0, n: 0 };
+			sum.above += s.score - mean;
+			sum.n++;
+			sums.set(g, sum);
+		}
 	}
-	return new Set(
-		[...counts.entries()]
-			.sort((a, b) => b[1] - a[1])
-			.slice(0, 5)
-			.map(([g]) => g)
-	);
+	return new Map([...sums].map(([g, { above, n }]) => [g, above / (n + GENRE_SHRINK)]));
+}
+
+/** How a pick's genres move it: GENRE_WEIGHT a point of lift, within GENRE_LIMITS. */
+function genreFactor(genres: string[], lift: Map<string, number>): number {
+	const points = genres.reduce((a, g) => a + (lift.get(g) ?? 0), 0);
+	return Math.min(GENRE_LIMITS[1], Math.max(GENRE_LIMITS[0], 1 + GENRE_WEIGHT * points));
 }
 
 /**
- * The studios behind the titles you rate highest: a studio counts once two
- * of its titles are rated 7.5 or more. The top five, most titles first.
+ * The studios behind the titles you love (lovedFrom): a studio counts once
+ * two of its titles are loved. The top five, most titles first.
  */
 export function favouriteStudios(
 	entries: CollectionEntry[],
 	scoreFormat?: ScoreFormat
 ): Map<number, string> {
+	const loved = lovedFrom(entries, scoreFormat);
 	const counts = new Map<number, { name: string; n: number }>();
 	for (const e of entries) {
-		if (toTenPoint(e.score, scoreFormat) < SEED_MIN_SCORE) continue;
+		if (!e.score || toTenPoint(e.score, scoreFormat) < loved) continue;
 		const studio = e.media.studios?.nodes[0];
 		if (!studio) continue;
 		const c = counts.get(studio.id) ?? { name: studio.name, n: 0 };
@@ -200,8 +262,9 @@ function adaptationsOf(relations: Relation[], seed: Seed): AniListMedia[] {
 /**
  * Ranks every recommended title not already on the list. A title earns
  * weight from each seed that recommends it (the seed's score × AniList's
- * vote count, dampened), plus a little for each favourite genre it shares
- * and more if a favourite studio made it. `crossSeeds` are titles you loved
+ * vote count, dampened; recommendations with no votes left over don't
+ * count), moves up or down with how you rate its genres (genreLift), and
+ * weighs more if a favourite studio made it. `crossSeeds` are titles you loved
  * on your other list; their manga or anime (`relations`) join the picks.
  */
 export function buildPicks(
@@ -226,7 +289,7 @@ export function buildPicks(
 	}
 ): Pick[] {
 	const onList = new Set(entries.map((e) => e.media.id));
-	const genres = favouriteGenres(entries, scoreFormat);
+	const lift = genreLift(entries, scoreFormat);
 	const studios = favouriteStudios(entries, scoreFormat);
 	const byId = new Map<
 		number,
@@ -266,7 +329,9 @@ export function buildPicks(
 
 	for (const seed of seeds) {
 		for (const { rating, media } of recommendations.get(seed.id) ?? []) {
-			add(media, seed, (seed.score / 10) * Math.log2(2 + Math.max(0, rating)), 'recommended');
+			// a recommendation AniList's users voted to nothing (or below) isn't one
+			if (rating <= 0) continue;
+			add(media, seed, (seed.score / 10) * Math.log2(2 + rating), 'recommended');
 		}
 	}
 	for (const seed of crossSeeds) {
@@ -277,7 +342,6 @@ export function buildPicks(
 
 	return [...byId.values()]
 		.map((p) => {
-			const shared = (p.media.genres ?? []).filter((g) => genres.has(g)).length;
 			const main = p.media.studios?.nodes[0];
 			const studio = main && studios.has(main.id) ? { id: main.id, name: main.name } : null;
 			return {
@@ -286,7 +350,7 @@ export function buildPicks(
 				seedIds: p.seedIds,
 				kind: p.kind,
 				studio,
-				score: p.score * (1 + 0.1 * shared) * (studio ? 1 + STUDIO_BOOST : 1)
+				score: p.score * genreFactor(p.media.genres ?? [], lift) * (studio ? 1 + STUDIO_BOOST : 1)
 			};
 		})
 		.sort((a, b) => b.score - a.score || a.title.id - b.title.id);
