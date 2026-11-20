@@ -1,6 +1,8 @@
 // Who runs the site, for the Privacy Policy, Terms and Cookies pages. Every
 // legal page reads from here, so a change of name, address or contact is one
-// edit.
+// edit. Running your own copy? Put your own details here.
+
+import { SITE_URL } from '#lib/seo.ts';
 
 export const LEGAL = {
 	/** The app's name as the documents use it. */
@@ -9,8 +11,8 @@ export const LEGAL = {
 	operator: 'jnagra.com',
 	/** Where people send privacy requests, questions and notices. */
 	email: 'help@jnagra.com',
-	/** The site's public address. */
-	site: 'miruyo.jnagra.com',
+	/** The site's public address (from PUBLIC_SITE_URL). */
+	site: new URL(SITE_URL).host,
 	/** Whose law governs the Terms ("the laws of …"). */
 	governingLaw: 'the State of Texas',
 	/** Where disputes are heard ("the courts in …"); a county can narrow it. */

@@ -30,6 +30,13 @@ npm run dev
 
 You need your own AniList API client, from [anilist.co/settings/developer](https://anilist.co/settings/developer), with the redirect URL `http://localhost:5173/api/callback`. [CONTRIBUTING.md](CONTRIBUTING.md) has the details and the checks to run, and [docs/architecture.md](docs/architecture.md) is a tour of the code.
 
+To publish your own copy, deploy it to Vercel with these environment variables:
+
+- `PUBLIC_ANILIST_CLIENT_ID`: a second AniList client whose redirect URL is `https://<your domain>/api/callback`.
+- `PUBLIC_SITE_URL`: your site's address, such as `https://example.com`, used for canonical links, share cards, the sitemap and robots.txt. On Vercel it defaults to the project's production domain.
+
+Then put your own name and contact details in `src/lib/legal.ts`, which the Privacy Policy and Terms read from.
+
 ## Contributing
 
 Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first; everyone taking part follows the [code of conduct](CODE_OF_CONDUCT.md). Report security problems privately, as [SECURITY.md](SECURITY.md) describes. What's planned is in [ROADMAP.md](ROADMAP.md), and what changed in [CHANGELOG.md](CHANGELOG.md).

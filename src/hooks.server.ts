@@ -8,8 +8,8 @@ const SECURITY_HEADERS = {
 	'X-Content-Type-Options': 'nosniff',
 	'Referrer-Policy': 'strict-origin-when-cross-origin',
 	'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
-	// two years; no `preload`, which would commit all of jnagra.com to the
-	// browsers' HTTPS-only list (PageSpeed asks for it, but it's a domain call)
+	// two years; no `preload`, which would commit the whole parent domain to
+	// the browsers' HTTPS-only list (PageSpeed asks for it, but it's a domain call)
 	'Strict-Transport-Security': 'max-age=63072000; includeSubDomains',
 	// a page another site opens can't reach back into this one through
 	// window.opener (sign-in is a redirect to AniList, not a popup, so nothing

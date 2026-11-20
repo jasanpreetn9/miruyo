@@ -3,17 +3,15 @@ import { cleanUrl } from './analytics.ts';
 
 describe('cleanUrl', () => {
 	it('drops the query and fragment', () => {
-		expect(cleanUrl('https://miruyo.jnagra.com/browse?q=frieren&genre=Drama#top')).toBe(
-			'https://miruyo.jnagra.com/browse'
+		expect(cleanUrl('https://example.com/browse?q=frieren&genre=Drama#top')).toBe(
+			'https://example.com/browse'
 		);
-		expect(cleanUrl('https://miruyo.jnagra.com/title/154587')).toBe(
-			'https://miruyo.jnagra.com/title/154587'
-		);
+		expect(cleanUrl('https://example.com/title/154587')).toBe('https://example.com/title/154587');
 	});
 
 	it('never reports the sign-in callback, whose fragment is the access token', () => {
 		expect(
-			cleanUrl('https://miruyo.jnagra.com/api/callback#access_token=secret&token_type=Bearer')
+			cleanUrl('https://example.com/api/callback#access_token=secret&token_type=Bearer')
 		).toBeNull();
 		expect(cleanUrl('/api/callback?state=x')).toBeNull();
 	});
@@ -23,9 +21,7 @@ describe('cleanUrl', () => {
 	});
 
 	it("doesn't confuse a similar path with the callback", () => {
-		expect(cleanUrl('https://miruyo.jnagra.com/api/callbacks')).toBe(
-			'https://miruyo.jnagra.com/api/callbacks'
-		);
+		expect(cleanUrl('https://example.com/api/callbacks')).toBe('https://example.com/api/callbacks');
 	});
 });
 

@@ -3,6 +3,7 @@ import { makeCharacter, makeDetail, makePersonMedia, makeStaff } from '#lib/anil
 import {
 	characterMeta,
 	routeMeta,
+	SITE_URL,
 	SITEMAP_PATHS,
 	staffMeta,
 	studioMeta,
@@ -16,7 +17,7 @@ describe('routeMeta', () => {
 		expect(meta.title).toBe('Seasonal anime chart · miruyo');
 		expect(meta.description).toMatch(/^Every anime airing this season/);
 		expect(meta.noindex).toBe(false);
-		expect(meta.image.url).toBe('https://miruyo.jnagra.com/og.png');
+		expect(meta.image.url).toBe(`${SITE_URL}/og.png`);
 	});
 
 	it('keeps personal pages and unknown routes out of the index', () => {
@@ -84,7 +85,7 @@ describe('titleMeta', () => {
 			image: 'https://example.com/cover.jpg',
 			datePublished: '2026-10-02',
 			numberOfEpisodes: 24,
-			url: 'https://miruyo.jnagra.com/title/154587',
+			url: `${SITE_URL}/title/154587`,
 			sameAs: 'https://anilist.co/anime/154587'
 		});
 	});
@@ -198,7 +199,7 @@ describe('studioMeta', () => {
 		);
 		expect(meta.jsonLd).toMatchObject({
 			'@type': 'Organization',
-			url: 'https://miruyo.jnagra.com/studio/11',
+			url: `${SITE_URL}/studio/11`,
 			sameAs: 'https://anilist.co/studio/11'
 		});
 	});

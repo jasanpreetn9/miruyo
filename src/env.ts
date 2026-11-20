@@ -15,6 +15,28 @@ export const variables = defineEnvVars({
 		}
 	},
 	/**
+	 * The site's public origin, e.g. `https://miruyo.jnagra.com`: canonical
+	 * links, share cards, the sitemap and robots.txt use it. On Vercel it
+	 * defaults to the project's production domain; elsewhere, to localhost.
+	 */
+	PUBLIC_SITE_URL: {
+		public: true,
+		static: true,
+		schema: (value) => {
+			// Vercel's own system variable, read at build time
+			const { process } = globalThis as { process?: { env: Record<string, string | undefined> } };
+			const vercel = process?.env.VERCEL_PROJECT_PRODUCTION_URL;
+			const raw = value?.trim() || (vercel ? `https://${vercel}` : 'http://localhost:5173');
+			let url: URL;
+			try {
+				url = new URL(raw);
+			} catch {
+				throw new Error(`Set it to the site's origin, like https://example.com (got ${raw})`);
+			}
+			return url.origin;
+		}
+	},
+	/**
 	 * Dev only: an AniList token to start signed in with, for when the
 	 * sign-in page won't load (Cloudflare's check in an embedded browser).
 	 * Copy `anilist_token` from a signed-in browser's localStorage. Never set
