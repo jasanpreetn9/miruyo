@@ -27,7 +27,6 @@ From PageSpeed's mobile report:
 ## Maintenance
 
 - [ ] **Move Vercel analytics to stable releases.** `@vercel/analytics` and `@vercel/speed-insights` are pinned to pre-releases (`2.1.0-canary.5`, `2.1.0-canary`), the first to declare SvelteKit 3 support. When a stable release lists `^3` (`npm view @vercel/analytics peerDependencies`), switch both to it. Keep using the plain `inject()` / `injectSpeedInsights()`: the `/sveltekit` entry points use `$app/stores`, which throws in SvelteKit 3. `src/lib/analytics.test.ts` fails if either comes back.
-- [ ] **Cloudflare:** switch miruyo.vercel.app to DNS only, or turn off Cloudflare's Web Analytics. Its injected beacon is blocked by the CSP, which adds a hop and console errors.
 
 ## Later
 

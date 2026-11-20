@@ -4,6 +4,8 @@ What changed on the website, newest first. Add a line under **Unreleased** with 
 
 ## Unreleased
 
+- The site's address is now [miruyo.vercel.app](https://miruyo.vercel.app).
+
 ## Nov 19, 2026: first public release
 
 The source is now open, under the MIT licence. What the site does at this point:
