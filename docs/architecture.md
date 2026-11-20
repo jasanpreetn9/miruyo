@@ -1,14 +1,6 @@
-# miruyo — web
+# How miruyo works
 
-A fast front end for your [AniList](https://anilist.co) anime and manga list: one-tap progress, what's airing next, and what's trending this season.
-
-Built with SvelteKit (Svelte 5 runes), Tailwind CSS v4, and deployed to Vercel.
-
-![Home, signed out](../../docs/screenshots/web-home.jpg)
-
-| A title page                                                                                                                       | The season chart                                                                                              |
-| ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| ![Frieren's title page, tinted green by its cover, with its score, streaming links and tabs](../../docs/screenshots/web-title.jpg) | ![Fall 2026's season chart: the season's kanji, then ranked entries](../../docs/screenshots/web-seasonal.jpg) |
+A tour of the code for contributors. Setup and checks are in [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## How it works
 
@@ -53,35 +45,3 @@ Unit tests sit next to the code they test (`foo.ts` and `foo.test.ts`).
 | `/settings`                      | Account settings, saved to AniList                                                                                       |
 | `/login`, `/welcome`             | Sign-in and first-run setup                                                                                              |
 | `/privacy`, `/terms`, `/cookies` | Privacy Policy, Terms of Use, Cookies & Storage; operator details live in `src/lib/legal.ts`                             |
-
-What's planned is in [ROADMAP.md](ROADMAP.md); what changed, in [CHANGELOG.md](CHANGELOG.md).
-
-## Developing
-
-Run these from `apps/web`.
-
-```sh
-npm install
-cp .env.example .env   # then set PUBLIC_ANILIST_CLIENT_ID
-npm run dev
-```
-
-`PUBLIC_ANILIST_CLIENT_ID` is the AniList API client to sign in with ([anilist.co/settings/developer](https://anilist.co/settings/developer)). A client has one redirect URL, `<origin>/api/callback`, so use one client for `localhost` and another for production (set it in Vercel's environment variables). The build fails if it's missing.
-
-## Checks
-
-```sh
-npm run check     # svelte-check / TypeScript
-npm run lint      # prettier
-npm run test:e2e  # Playwright (AniList API is mocked)
-npm run build && npm run test:prod  # the production build starts (smoke test, e2e-prod/)
-```
-
-The smoke test is the one that runs production-only code (analytics) in a browser; the dev server never does. CI runs it after the e2e tests, on Node 24 (Vercel's adapter needs 22 or 24; on newer Node its last step fails, but the build the smoke test serves is already written).
-
-## Building
-
-```sh
-npm run build
-npm run preview
-```

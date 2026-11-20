@@ -4,10 +4,9 @@
 
 ## How it was checked
 
-<!-- Tests added or updated, and where you tried it (browser, simulator, phone). Screenshots help for anything visual. -->
+<!-- Tests added or updated, and where you tried it (which browsers, desktop or phone). Screenshots help for anything visual. -->
 
 ## Checklist
 
-- [ ] The checks pass for the app I changed (`npm run check`, `npm run lint`, `npm test` · `tool/format.sh`, `flutter analyze`, `flutter test`)
-- [ ] Anything a user would notice has a line in that app's `CHANGELOG.md`
-- [ ] If it changes behaviour, the other app follows (or there's an issue for it)
+- [ ] The checks pass (`npm run check`, `npm run lint`, `npm test`)
+- [ ] Anything a user would notice has a line under **Unreleased** in `CHANGELOG.md`

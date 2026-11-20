@@ -4,41 +4,35 @@ A fast front end for your [AniList](https://anilist.co) anime and manga list: on
 
 **Live at [miruyo.jnagra.com](https://miruyo.jnagra.com).** Sign in with your AniList account; everything you change is saved straight to AniList.
 
-![miruyo on the web: Home, signed out](docs/screenshots/web-home.jpg)
+![Home, signed out](docs/screenshots/web-home.jpg)
 
-<p align="center">
-  <img src="docs/screenshots/app-home.jpg" width="24%" alt="The app's Home: a masthead, then Continue watching led by the title you're furthest behind on">
-  <img src="docs/screenshots/app-title.jpg" width="24%" alt="A title page in the app, tinted by its cover, with progress and +1">
-  <img src="docs/screenshots/app-seasonal.jpg" width="24%" alt="The app's season chart, under the season's kanji">
-  <img src="docs/screenshots/app-list.jpg" width="24%" alt="My List in the app, showing what you're watching and how far behind you are">
-</p>
+| A title page                                                                                                                 | The season chart                                                                                        |
+| ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| ![Frieren's title page, tinted green by its cover, with its score, streaming links and tabs](docs/screenshots/web-title.jpg) | ![Fall 2026's season chart: the season's kanji, then ranked entries](docs/screenshots/web-seasonal.jpg) |
 
 ## What it does
 
-- **Track in one tap.** Home leads with what you're behind on, and +1 logs an episode or chapter from anywhere. Edits show at once and sync to AniList, and the app queues them while you're offline.
-- **Know what's airing.** The season chart, the week's schedule in your own time zone, countdowns to the next episode, and (in the app) a reminder when it's out.
+- **Track in one tap.** Home leads with what you're behind on, and +1 logs an episode or chapter from anywhere. Edits show at once and sync to AniList.
+- **Know what's airing.** The season chart, the week's schedule in your own time zone, and countdowns to the next episode.
 - **Find what's next.** For You picks from the titles you rated highest, each saying why; trending and popular rows; search with AniList's filters.
-- **Anime and manga.** One switch changes the whole app between them.
+- **Anime and manga.** One switch changes the whole site between them.
 - **Your stats and profile**, people's lists, staff, characters and studios.
 
-## Layout
-
-| Folder        | What it is                                                                                                                                                  |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `apps/web`    | The website: SvelteKit, deployed to Vercel at [miruyo.jnagra.com](https://miruyo.jnagra.com). [README](apps/web/README.md) · [Roadmap](apps/web/ROADMAP.md) |
-| `apps/mobile` | The iOS and Android app, in Flutter. [README](apps/mobile/README.md) · [Roadmap](apps/mobile/ROADMAP.md)                                                    |
-
-Each app has its own tooling and is run from its own folder: npm in `apps/web`, Flutter in `apps/mobile`. CI runs each app's checks only when that app changes.
-
-**Built with** SvelteKit (Svelte 5), Tailwind CSS v4 and Vercel for the web; Flutter, Riverpod and drift for the app. Both call AniList's public GraphQL API directly: there's no miruyo server or database.
+**Built with** SvelteKit (Svelte 5), Tailwind CSS v4 and Vercel. It calls AniList's public GraphQL API straight from the browser: there's no miruyo server or database.
 
 ## Running it yourself
 
-You need your own AniList API client, from [anilist.co/settings/developer](https://anilist.co/settings/developer). Setup for each app is in [CONTRIBUTING.md](CONTRIBUTING.md#setting-up) and the app's README.
+```sh
+npm install
+cp .env.example .env   # then set PUBLIC_ANILIST_CLIENT_ID
+npm run dev
+```
+
+You need your own AniList API client, from [anilist.co/settings/developer](https://anilist.co/settings/developer), with the redirect URL `http://localhost:5173/api/callback`. [CONTRIBUTING.md](CONTRIBUTING.md) has the details and the checks to run, and [docs/architecture.md](docs/architecture.md) is a tour of the code.
 
 ## Contributing
 
-Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first; everyone taking part follows the [code of conduct](CODE_OF_CONDUCT.md). Report security problems privately, as [SECURITY.md](SECURITY.md) describes.
+Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first; everyone taking part follows the [code of conduct](CODE_OF_CONDUCT.md). Report security problems privately, as [SECURITY.md](SECURITY.md) describes. What's planned is in [ROADMAP.md](ROADMAP.md), and what changed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Credits
 
