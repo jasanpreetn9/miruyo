@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockBrowse, mockLoggedIn } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import { mockBrowse, mockLoggedIn } from './helpers/mock-auth.ts';
 
 const desktop = async (page: Page) => page.setViewportSize({ width: 1440, height: 900 });
 const results = (page: Page) => page.getByTestId('browse-results');

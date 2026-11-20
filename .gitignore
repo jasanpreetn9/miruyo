@@ -12,9 +12,3 @@ Thumbs.db
 
 # Vercel CLI link
 .vercel
-
-# design export archive — its contents are extracted alongside it
-/design/*.zip
-
-# graphify knowledge-graph output
-graphify-out/

@@ -1,12 +1,12 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
 import {
 	mockDetail,
 	mockListCollection,
 	mockLoggedIn,
 	type AniListCall,
 	type MockListEntry
-} from './mock-auth.ts';
+} from './helpers/mock-auth.ts';
 
 const ENTRIES: MockListEntry[] = [
 	{

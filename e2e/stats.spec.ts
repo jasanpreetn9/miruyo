@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockListCollection, mockLoggedIn, type MockListEntry } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import { mockListCollection, mockLoggedIn, type MockListEntry } from './helpers/mock-auth.ts';
 
 // Your profile is your own user page (/user/haruka_k): favourites and Stats,
 // as anyone's, but with Settings in place of Follow and no list tabs (your

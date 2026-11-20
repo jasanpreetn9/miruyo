@@ -1,0 +1,31 @@
+# Dependency updates, once a month and grouped, so they arrive as one PR per
+# ecosystem rather than one per package.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /apps/web
+    schedule:
+      interval: monthly
+    groups:
+      web:
+        patterns: ['*']
+    # pinned pre-releases for SvelteKit 3 support (see apps/web/ROADMAP.md)
+    ignore:
+      - dependency-name: '@vercel/analytics'
+      - dependency-name: '@vercel/speed-insights'
+
+  - package-ecosystem: pub
+    directory: /apps/mobile
+    schedule:
+      interval: monthly
+    groups:
+      mobile:
+        patterns: ['*']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']

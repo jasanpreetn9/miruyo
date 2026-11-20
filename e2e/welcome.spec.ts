@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockLoggedIn } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import { mockLoggedIn } from './helpers/mock-auth.ts';
 
 /** Lands on the callback as AniList's redirect would, for a sign-in this tab started. */
 async function returnFromAniList(page: Page) {

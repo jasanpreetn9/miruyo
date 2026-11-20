@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockDetail, mockLoggedIn } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import { mockDetail, mockLoggedIn } from './helpers/mock-auth.ts';
 
 const desktop = (page: Page) => page.setViewportSize({ width: 1440, height: 900 });
 

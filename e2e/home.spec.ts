@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
 import {
 	mockExpiredToken,
 	mockForYou,
@@ -8,7 +8,7 @@ import {
 	mockLoggedInEmpty,
 	mockPublicTrending,
 	mockRateLimitedHome
-} from './mock-auth.ts';
+} from './helpers/mock-auth.ts';
 
 test('home renders — desktop', async ({ page }) => {
 	await mockPublicTrending(page);
