@@ -17,7 +17,7 @@ import { bioText, createCharacterContent, createStaffContent } from '#lib/page-d
 import { createStudioContent } from '#lib/page-data/studio.ts';
 
 /** The site's public origin; share cards and the sitemap need absolute URLs. */
-export const SITE_URL = 'https://miruyo.vercel.app';
+export const SITE_URL = 'https://miruyo.jnagra.com';
 
 export const SITE_NAME = 'miruyo';
 

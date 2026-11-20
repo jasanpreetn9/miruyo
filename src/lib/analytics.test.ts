@@ -3,17 +3,17 @@ import { cleanUrl } from './analytics.ts';
 
 describe('cleanUrl', () => {
 	it('drops the query and fragment', () => {
-		expect(cleanUrl('https://miruyo.vercel.app/browse?q=frieren&genre=Drama#top')).toBe(
-			'https://miruyo.vercel.app/browse'
+		expect(cleanUrl('https://miruyo.jnagra.com/browse?q=frieren&genre=Drama#top')).toBe(
+			'https://miruyo.jnagra.com/browse'
 		);
-		expect(cleanUrl('https://miruyo.vercel.app/title/154587')).toBe(
-			'https://miruyo.vercel.app/title/154587'
+		expect(cleanUrl('https://miruyo.jnagra.com/title/154587')).toBe(
+			'https://miruyo.jnagra.com/title/154587'
 		);
 	});
 
 	it('never reports the sign-in callback, whose fragment is the access token', () => {
 		expect(
-			cleanUrl('https://miruyo.vercel.app/api/callback#access_token=secret&token_type=Bearer')
+			cleanUrl('https://miruyo.jnagra.com/api/callback#access_token=secret&token_type=Bearer')
 		).toBeNull();
 		expect(cleanUrl('/api/callback?state=x')).toBeNull();
 	});
@@ -23,8 +23,8 @@ describe('cleanUrl', () => {
 	});
 
 	it("doesn't confuse a similar path with the callback", () => {
-		expect(cleanUrl('https://miruyo.vercel.app/api/callbacks')).toBe(
-			'https://miruyo.vercel.app/api/callbacks'
+		expect(cleanUrl('https://miruyo.jnagra.com/api/callbacks')).toBe(
+			'https://miruyo.jnagra.com/api/callbacks'
 		);
 	});
 });

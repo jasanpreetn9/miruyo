@@ -16,7 +16,7 @@ describe('routeMeta', () => {
 		expect(meta.title).toBe('Seasonal anime chart · miruyo');
 		expect(meta.description).toMatch(/^Every anime airing this season/);
 		expect(meta.noindex).toBe(false);
-		expect(meta.image.url).toBe('https://miruyo.vercel.app/og.png');
+		expect(meta.image.url).toBe('https://miruyo.jnagra.com/og.png');
 	});
 
 	it('keeps personal pages and unknown routes out of the index', () => {
@@ -84,7 +84,7 @@ describe('titleMeta', () => {
 			image: 'https://example.com/cover.jpg',
 			datePublished: '2026-10-02',
 			numberOfEpisodes: 24,
-			url: 'https://miruyo.vercel.app/title/154587',
+			url: 'https://miruyo.jnagra.com/title/154587',
 			sameAs: 'https://anilist.co/anime/154587'
 		});
 	});
@@ -198,7 +198,7 @@ describe('studioMeta', () => {
 		);
 		expect(meta.jsonLd).toMatchObject({
 			'@type': 'Organization',
-			url: 'https://miruyo.vercel.app/studio/11',
+			url: 'https://miruyo.jnagra.com/studio/11',
 			sameAs: 'https://anilist.co/studio/11'
 		});
 	});

@@ -63,14 +63,14 @@ describe('xml', () => {
 	it('writes absolute urls, with lastmod when known', () => {
 		const xml = urlsetXml([{ path: '/title/1', updatedAt: 1700000000 }, { path: '/seasonal' }]);
 		expect(xml).toContain(
-			'<url><loc>https://miruyo.vercel.app/title/1</loc><lastmod>2023-11-14T22:13:20.000Z</lastmod></url>'
+			'<url><loc>https://miruyo.jnagra.com/title/1</loc><lastmod>2023-11-14T22:13:20.000Z</lastmod></url>'
 		);
-		expect(xml).toContain('<url><loc>https://miruyo.vercel.app/seasonal</loc></url>');
+		expect(xml).toContain('<url><loc>https://miruyo.jnagra.com/seasonal</loc></url>');
 	});
 
 	it('indexes each sitemap under /sitemaps', () => {
 		expect(indexXml(['pages', 'anime-1'])).toContain(
-			'<sitemap><loc>https://miruyo.vercel.app/sitemaps/anime-1.xml</loc></sitemap>'
+			'<sitemap><loc>https://miruyo.jnagra.com/sitemaps/anime-1.xml</loc></sitemap>'
 		);
 	});
 });
