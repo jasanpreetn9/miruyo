@@ -4,6 +4,15 @@ A fast front end for your [AniList](https://anilist.co) anime and manga list: on
 
 **Live at [miruyo.jnagra.com](https://miruyo.jnagra.com).** Sign in with your AniList account; everything you change is saved straight to AniList.
 
+![miruyo on the web: Home, signed out](docs/screenshots/web-home.jpg)
+
+<p align="center">
+  <img src="docs/screenshots/app-home.jpg" width="24%" alt="The app's Home: a masthead, then Continue watching led by the title you're furthest behind on">
+  <img src="docs/screenshots/app-title.jpg" width="24%" alt="A title page in the app, tinted by its cover, with progress and +1">
+  <img src="docs/screenshots/app-seasonal.jpg" width="24%" alt="The app's season chart, under the season's kanji">
+  <img src="docs/screenshots/app-list.jpg" width="24%" alt="My List in the app, showing what you're watching and how far behind you are">
+</p>
+
 ## What it does
 
 - **Track in one tap.** Home leads with what you're behind on, and +1 logs an episode or chapter from anywhere. Edits show at once and sync to AniList, and the app queues them while you're offline.
