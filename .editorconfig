@@ -1,0 +1,23 @@
+# Editor defaults for both apps. Formatters have the last word:
+# Prettier in apps/web (tabs), dart format in apps/mobile (2 spaces).
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[apps/web/**]
+indent_style = tab
+
+[apps/mobile/**]
+indent_style = space
+indent_size = 2
+
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false

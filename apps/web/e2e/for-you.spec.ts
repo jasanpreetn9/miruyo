@@ -1,6 +1,11 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockForYou, mockListCollection, mockLoggedIn, type MockListEntry } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import {
+	mockForYou,
+	mockListCollection,
+	mockLoggedIn,
+	type MockListEntry
+} from './helpers/mock-auth.ts';
 
 // five scored titles (10-point decimal, the mock account's format)
 const RATED: MockListEntry[] = [

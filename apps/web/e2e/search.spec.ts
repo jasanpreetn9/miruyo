@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockBrowse } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import { mockBrowse } from './helpers/mock-auth.ts';
 
 // Browse's AniList requests are mocked in every test here
 test.beforeEach(async ({ page }) => {

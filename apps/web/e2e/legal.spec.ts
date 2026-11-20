@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockPublicTrending } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import { mockPublicTrending } from './helpers/mock-auth.ts';
 
 const PAGES = [
 	{ path: '/privacy', heading: 'Privacy Policy' },

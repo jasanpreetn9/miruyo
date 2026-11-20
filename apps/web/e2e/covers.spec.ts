@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockListCollection, mockLoggedIn } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import { mockListCollection, mockLoggedIn } from './helpers/mock-auth.ts';
 
 const HOST = 'https://img.miruyo.test';
 // a 1×1 PNG
