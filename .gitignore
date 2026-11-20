@@ -10,5 +10,22 @@ Thumbs.db
 !.env.example
 !.env.test
 
-# Vercel CLI link
+# Output
+.output
 .vercel
+.netlify
+.wrangler
+/.svelte-kit
+/.svelte-kit-e2e
+/build
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Playwright
+/test-results
+/playwright-report
+/blob-report
+/playwright/.cache
+/e2e/screenshots

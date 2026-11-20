@@ -1,6 +1,6 @@
 # Roadmap
 
-What's planned for the website. What has already shipped is in [CHANGELOG.md](CHANGELOG.md); the app has its own [roadmap](../mobile/ROADMAP.md). Want to take something on? Open an issue first so we can talk it through ([CONTRIBUTING.md](../../CONTRIBUTING.md)).
+What's planned for the website. What has already shipped is in [CHANGELOG.md](CHANGELOG.md). Want to take something on? Open an issue first so we can talk it through ([CONTRIBUTING.md](CONTRIBUTING.md)).
 
 ## Next up
 

@@ -2,16 +2,6 @@ name: Bug report
 description: Something in miruyo doesn't work as it should
 labels: [bug]
 body:
-  - type: dropdown
-    id: where
-    attributes:
-      label: Where
-      options:
-        - Website
-        - iPhone app
-        - Android app
-    validations:
-      required: true
   - type: textarea
     id: what
     attributes:
