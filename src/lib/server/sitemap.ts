@@ -1,6 +1,7 @@
 // sitemap.xml is an index of smaller sitemaps: the site's own pages, then the
-// title, staff, character and studio pages people search for by name. Those
-// come from AniList, most popular first, 500 to a sitemap: one request that
+// title pages people search for by name. Staff, character and studio pages are
+// left out, and robots.txt keeps crawlers off them: they'd lead a crawler
+// through most of AniList for little search traffic. Titles come from AniList, most popular first, 500 to a sitemap: one request that
 // asks for ten pages of 50 at once (each its own aliased Page).
 
 import { anilistQuery } from '#lib/anilist/client.ts';
@@ -46,24 +47,6 @@ const SOURCES = {
 		select: 'id updatedAt',
 		path: (id) => `/title/${id}`,
 		sitemaps: 4
-	},
-	staff: {
-		field: 'staff(sort: FAVOURITES_DESC)',
-		select: 'id',
-		path: (id) => `/staff/${id}`,
-		sitemaps: 2
-	},
-	characters: {
-		field: 'characters(sort: FAVOURITES_DESC)',
-		select: 'id',
-		path: (id) => `/character/${id}`,
-		sitemaps: 2
-	},
-	studios: {
-		field: 'studios(sort: FAVOURITES_DESC)',
-		select: 'id',
-		path: (id) => `/studio/${id}`,
-		sitemaps: 1
 	}
 } satisfies Record<string, Source>;
 

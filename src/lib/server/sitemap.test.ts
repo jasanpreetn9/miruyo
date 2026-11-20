@@ -15,7 +15,8 @@ describe('sitemap names', () => {
 		expect(SITEMAP_NAMES[0]).toBe('pages');
 		expect(SITEMAP_NAMES).toContain('anime-1');
 		expect(SITEMAP_NAMES).toContain('airing-1');
-		expect(SITEMAP_NAMES).toContain('studios-1');
+		// crawlers stay off staff, character and studio pages (robots.txt)
+		expect(SITEMAP_NAMES.some((name) => /^(staff|characters|studios)-/.test(name))).toBe(false);
 		expect(new Set(SITEMAP_NAMES).size).toBe(SITEMAP_NAMES.length);
 	});
 
