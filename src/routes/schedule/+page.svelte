@@ -39,7 +39,7 @@
 
 	let { data }: PageProps = $props();
 
-	// Seasonal & schedule (design 06). Anime: a week, not a timetable — seven
+	// Seasonal & schedule. Anime: a week, not a timetable — seven
 	// columns of slots by local air time. Manga: new releases.
 
 	const isAnime = $derived(session.mode === 'anime');
@@ -267,7 +267,7 @@
 	</div>
 {/snippet}
 
-<!-- manga row (design 6a, manga): your series get +1, others Plan -->
+<!-- manga row: your series get +1, others Plan -->
 {#snippet mangaRow(t: Title)}
 	{@const entry = session.authState === 'out' ? null : list.entryFor(t)}
 	{@const reading = !!entry && (entry.status === 'CURRENT' || entry.status === 'REPEATING')}
@@ -491,7 +491,7 @@
 			{/if}
 		</div>
 	{:else}
-		<!-- manga: new releases (design 6a, manga) -->
+		<!-- manga: new releases -->
 		<div
 			class="grid gap-10 px-4 pt-5 pb-16 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-12 lg:px-10 lg:pt-9 lg:pb-20 xl:px-20"
 		>

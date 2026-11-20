@@ -11,14 +11,14 @@
 	import SectionHeading from '#lib/components/shared/SectionHeading.svelte';
 	import Tick from '#lib/components/shared/Tick.svelte';
 
-	// Continue (design 01): everything you're tracking. Ready titles first
+	// Continue: everything you're tracking. Ready titles first
 	// (their +1 brighter), then Up next, then those waiting for their next
 	// episode (with a countdown); Paused fold into one line at the end. With
 	// nothing ready, it leads with "You're caught up".
 	//
 	// Touch follows the app: a heading and summary over a plain list of rows
 	// (two columns on tablets); it comes first on Home there.
-	// Desktop is editorial (design/mockups/home-editorial): the title you're
+	// Desktop is editorial: the title you're
 	// furthest behind on leads, large, with a +1 that says where it takes you;
 	// the rest follow as ruled rows, and a column beside them lists when the
 	// next episodes on your list air. Caught up, a ruled line says so and when

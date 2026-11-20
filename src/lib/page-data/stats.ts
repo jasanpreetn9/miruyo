@@ -10,7 +10,7 @@ import type {
 import { statusLabel } from '#lib/catalog/status.ts';
 import { seasonOf } from './seasonal.ts';
 
-// Stats (design 07). Computed from the viewer's list collection rather than
+// Stats. Computed from the viewer's list collection rather than
 // AniList's User.statistics, whose breakdowns (formats, statuses, genres,
 // scores) are often stale or empty — and a list can be filtered by time.
 

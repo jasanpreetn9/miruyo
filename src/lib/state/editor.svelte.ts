@@ -11,7 +11,7 @@ export interface EditorTarget {
 }
 
 /**
- * The list editor (design 04) is one app-wide panel/sheet, rendered by the
+ * The list editor is one app-wide panel/sheet, rendered by the
  * root layout. Any card, row or page opens it with editor.open(title).
  */
 class EditorState {

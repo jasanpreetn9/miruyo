@@ -8,7 +8,7 @@
 	import { list } from '#lib/state/list.svelte.ts';
 	import { session } from '#lib/state/session.svelte.ts';
 
-	// A season-chart entry, editorial (design/mockups/seasonal-editorial): its
+	// A season-chart entry, editorial: its
 	// popularity rank set large, the cover, then title and studio, when it
 	// airs, origin, synopsis, genres and score, ruled off from the next. The
 	// cover's colour tints the rank and studio; a title on your list gets an

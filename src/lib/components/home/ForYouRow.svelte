@@ -2,7 +2,7 @@
 	import PosterRow from '#lib/components/shared/PosterRow.svelte';
 	import type { Pick } from '#lib/page-data/for-you.ts';
 
-	// For You on Home (design 08): picks grouped by the title they come from,
+	// For You on Home: picks grouped by the title they come from,
 	// a row for each of the top two ("Because you loved Cowboy Bebop"),
 	// rather than the same reason under every poster. Only full rows: a row of
 	// four left most of the screen empty.

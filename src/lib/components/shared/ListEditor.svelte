@@ -23,7 +23,7 @@
 	import { confirmSaved, removeFromList } from '#lib/state/list-actions.ts';
 	import { session } from '#lib/state/session.svelte.ts';
 
-	// The list editor (design 04): a side panel on desktop, a bottom sheet on
+	// The list editor: a side panel on desktop, a bottom sheet on
 	// mobile. Edits are a draft until Save; closing with unsaved edits asks once.
 
 	let dialog = $state<HTMLDialogElement>();

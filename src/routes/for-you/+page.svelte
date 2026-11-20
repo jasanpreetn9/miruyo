@@ -19,7 +19,7 @@
 	import { mediaTypeFor, session } from '#lib/state/session.svelte.ts';
 	import { toast } from '#lib/state/toast.svelte.ts';
 
-	// For You (design 08): picks from AniList's recommendations for the
+	// For You: picks from AniList's recommendations for the
 	// titles you rated highest, and the other mode's version of titles you
 	// loved, each with its reason; a seed rail filters to "because of X";
 	// "Not this" hides a pick for good; "Tune picks" leaves some out.
@@ -107,7 +107,7 @@
 		</div>
 
 		{#if session.authState === 'out' || (data?.coldStart ?? false)}
-			<!-- cold start (design 8c) -->
+			<!-- cold start -->
 			<div
 				class="flex flex-col items-start gap-3 border-y-[3px] border-double border-line py-6 lg:max-w-xl lg:py-8"
 				data-testid="for-you-cold-start"

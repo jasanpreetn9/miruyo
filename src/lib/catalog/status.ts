@@ -1,6 +1,6 @@
 import type { MediaListStatus } from '#lib/anilist/types.ts';
 
-/** Menu order, matching the design system's status dropdown. */
+/** Menu order, in the status dropdown. */
 export const LIST_STATUSES: MediaListStatus[] = [
 	'CURRENT',
 	'COMPLETED',

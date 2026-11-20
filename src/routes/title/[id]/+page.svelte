@@ -27,7 +27,7 @@
 	import { session } from '#lib/state/session.svelte.ts';
 	import type { PageProps } from './$types';
 
-	// The title page (design 03, made editorial in design/mockups/title-editorial).
+	// The title page.
 	// The cover colour owns the page — the banner's duotone, the cover's offset
 	// shadow, the score, the progress fill — while the chrome stays constant.
 
