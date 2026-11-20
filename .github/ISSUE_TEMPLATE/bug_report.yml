@@ -1,0 +1,41 @@
+name: Bug report
+description: Something in miruyo doesn't work as it should
+labels: [bug]
+body:
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      options:
+        - Website
+        - iPhone app
+        - Android app
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open …
+        2. Tap …
+        3. See …
+  - type: input
+    id: device
+    attributes:
+      label: Browser or device
+      placeholder: Safari on iPhone 15, iOS 26 · Chrome 140 on Windows
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you send it
+      options:
+        - label: It isn't a problem with AniList itself (the same thing happens on anilist.co).
+        - label: I left out my AniList token and anything else private.

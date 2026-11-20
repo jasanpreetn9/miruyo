@@ -18,7 +18,7 @@ Already done: release builds compile and run on a phone (`flutter build ios --re
 
 ## 3. Code and project changes
 
-- [x] **iPhone only for 1.0**, portrait only (landscape was never designed or tested). The target is iPhone + iPad (`TARGETED_DEVICE_FAMILY = "1,2"`); iPad would require iPad screenshots and review on iPad, and tablet layouts aren't done (roadmap Phase 11). Set it to `1`, drop `UISupportedInterfaceOrientations~ipad`.
+- [x] **iPhone only for 1.0**, portrait only (landscape was never designed or tested). The target is iPhone + iPad (`TARGETED_DEVICE_FAMILY = "1,2"`); iPad would require iPad screenshots and review on iPad, and tablet layouts aren't done (see the roadmap). Set it to `1`, drop `UISupportedInterfaceOrientations~ipad`.
 - [x] **Privacy manifest** (`ios/Runner/PrivacyInfo.xcprivacy`, in the Runner target; the plugins and Flutter ship their own). Add `ios/Runner/PrivacyInfo.xcprivacy` (created through Xcode so it's in the Runner target) declaring: no tracking, no data collected, and the required-reason APIs the app uses (UserDefaults via shared_preferences: `CA92.1`; check the plugins' own manifests cover file timestamp and disk-space use). Verify the merged report: Xcode → Product → Archive → Generate Privacy Report.
 - [x] **Export compliance**. Add `ITSAppUsesNonExemptEncryption = false` to Info.plist (the app only uses HTTPS, which is exempt), so each upload doesn't stop for the question.
 - [x] **Version and build** (`tool/release.sh [build-number]`). `version: 1.0.0+1` in pubspec.yaml; every upload needs a new build number (`flutter build ipa --build-number=N`).
