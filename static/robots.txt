@@ -2,4 +2,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://miruyo.vercel.app/sitemap.xml
+Sitemap: https://miruyo.jnagra.com/sitemap.xml

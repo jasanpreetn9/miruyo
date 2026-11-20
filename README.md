@@ -2,7 +2,7 @@
 
 A fast front end for your [AniList](https://anilist.co) anime and manga list: one-tap progress, what's airing next, and what's trending this season.
 
-**Live at [miruyo.vercel.app](https://miruyo.vercel.app).** Sign in with your AniList account; everything you change is saved straight to AniList.
+**Live at [miruyo.jnagra.com](https://miruyo.jnagra.com).** Sign in with your AniList account; everything you change is saved straight to AniList.
 
 ![Home, signed out](docs/screenshots/web-home.jpg)
 

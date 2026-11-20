@@ -8,7 +8,7 @@ You'll get a reply within a week. Once a fix is out, the advisory is published, 
 
 ## What's in scope
 
-- **The website** at [miruyo.vercel.app](https://miruyo.vercel.app) and the code in this repository.
+- **The website** at [miruyo.jnagra.com](https://miruyo.jnagra.com) and the code in this repository.
 
 Problems in AniList itself (its API, accounts or sign-in) belong to AniList; report those to them.
 

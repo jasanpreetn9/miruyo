@@ -10,7 +10,7 @@ export const LEGAL = {
 	/** Where people send privacy requests, questions and notices. */
 	email: 'help@jnagra.com',
 	/** The site's public address. */
-	site: 'miruyo.vercel.app',
+	site: 'miruyo.jnagra.com',
 	/** Whose law governs the Terms ("the laws of …"). */
 	governingLaw: 'the State of Texas',
 	/** Where disputes are heard ("the courts in …"); a county can narrow it. */
