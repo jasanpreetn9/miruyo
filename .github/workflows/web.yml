@@ -27,14 +27,14 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 2
       - id: changes
         run: bash "$GITHUB_WORKSPACE/.github/scripts/changed.sh" "$WEB_FILES"
         env:
           BEFORE: ${{ github.event.before }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: steps.changes.outputs.changed == 'true'
         with:
           node-version: 26
@@ -52,14 +52,14 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 2
       - id: changes
         run: bash "$GITHUB_WORKSPACE/.github/scripts/changed.sh" "$WEB_FILES"
         env:
           BEFORE: ${{ github.event.before }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: steps.changes.outputs.changed == 'true'
         with:
           node-version: 26
@@ -75,7 +75,7 @@ jobs:
       # 22 or 24), served by SvelteKit's preview: code that only runs in
       # production (analytics) is checked here, which the dev server above
       # never runs
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: steps.changes.outputs.changed == 'true'
         with:
           node-version: 24
@@ -83,7 +83,7 @@ jobs:
         if: steps.changes.outputs.changed == 'true'
       - run: npm run test:prod
         if: steps.changes.outputs.changed == 'true'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
