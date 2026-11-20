@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockLoggedIn, type AniListCall } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import { mockLoggedIn, type AniListCall } from './helpers/mock-auth.ts';
 
 const settingsSaves = (calls: AniListCall[]) =>
 	calls.filter((c) => c.query.includes('mutation UpdateSettings')).map((c) => c.variables);

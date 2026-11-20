@@ -1,5 +1,5 @@
 import { test, expect, type Locator } from '@playwright/test';
-import { mockLoggedIn } from './mock-auth.ts';
+import { mockLoggedIn } from './helpers/mock-auth.ts';
 
 /**
  * Hover a card to reveal its overlay. Under reduced motion the lift and slide

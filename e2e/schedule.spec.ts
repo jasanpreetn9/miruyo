@@ -1,6 +1,11 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockListCollection, mockLoggedIn, mockSeasonal, type MockAiring } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import {
+	mockListCollection,
+	mockLoggedIn,
+	mockSeasonal,
+	type MockAiring
+} from './helpers/mock-auth.ts';
 
 // A fixed "now" — Wednesday 7 Oct 2026, 18:20 in Tokyo — so the week, today,
 // the NOW line and countdowns are the same on every run.

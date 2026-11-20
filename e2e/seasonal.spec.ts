@@ -1,11 +1,11 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
 import {
 	mockLoggedIn,
 	mockSeasonChart,
 	type AniListCall,
 	type MockSeasonTitle
-} from './mock-auth.ts';
+} from './helpers/mock-auth.ts';
 
 // A fixed "now" — Wednesday 7 Oct 2026 — so the season is Fall 2026.
 const NOW = new Date('2026-10-07T12:00:00+09:00');

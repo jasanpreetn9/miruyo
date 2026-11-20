@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { mockBrowse, mockPublicTrending } from './mock-auth.ts';
+import { mockBrowse, mockPublicTrending } from './helpers/mock-auth.ts';
 
 // the poster wall (public trending) and Browse are mocked in every test here
 test.beforeEach(async ({ page }) => {

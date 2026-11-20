@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockDetail, mockLoggedIn, type AniListCall } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import { mockDetail, mockLoggedIn, type AniListCall } from './helpers/mock-auth.ts';
 
 const NOW = Math.floor(Date.now() / 1000);
 

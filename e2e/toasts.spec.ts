@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { gotoHydrated } from './hydrated.ts';
-import { mockDetail, mockLoggedIn } from './mock-auth.ts';
+import { gotoHydrated } from './helpers/hydrated.ts';
+import { mockDetail, mockLoggedIn } from './helpers/mock-auth.ts';
 
 test('adding a title says so, and Undo takes it off again', async ({ page }) => {
 	const calls = await mockLoggedIn(page);
