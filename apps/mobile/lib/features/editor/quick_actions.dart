@@ -16,7 +16,7 @@ import '../../core/theme/tokens.dart';
 import '../../widgets/cover_image.dart';
 import 'list_editor.dart';
 
-/// Quick actions for one title (Gestures · Rows 11): −1, +1 and Edit, then
+/// Quick actions for one title: −1, +1 and Edit, then
 /// the statuses, Open details and Remove. Opened by a long swipe left or a
 /// hold on any row.
 Future<void> showQuickActions(BuildContext context, WidgetRef ref, Title title) async {

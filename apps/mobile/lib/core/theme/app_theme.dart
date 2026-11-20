@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../catalog/mode.dart';
 import 'tokens.dart';
 
-/// The editorial type scale (design/mockups): Fraunces, a serif, for display
+/// The editorial type scale: Fraunces, a serif, for display
 /// and headings; Schibsted Grotesk for the UI; JetBrains Mono wherever digits
 /// change (countdowns, progress) so they don't jitter.
 abstract final class AppType {

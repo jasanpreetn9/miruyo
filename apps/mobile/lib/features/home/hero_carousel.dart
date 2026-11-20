@@ -20,7 +20,7 @@ import '../../widgets/halftone.dart';
 import '../editor/list_editor.dart';
 import 'home_list.dart';
 
-/// Picked for you (01, Gestures · Home 14): what to watch next, each with
+/// Picked for you: what to watch next, each with
 /// its reason ("Because you rated Cowboy Bebop 9.5/10"), as landscape cards
 /// with Plan and Not this. It never moves on its own, so a title doesn't
 /// slide away while you reach for Plan. Swipe to page, or tap a dot.
@@ -220,7 +220,7 @@ class _HeroCard extends ConsumerWidget {
             label: Text(statusLabel(entry.status, isAnime: isAnime), maxLines: 1, overflow: TextOverflow.ellipsis),
           );
 
-    // editorial (design/mockups): ruled top and bottom, a halftone in the
+    // editorial: ruled top and bottom, a halftone in the
     // cover's colour behind, the cover with an offset shadow in that colour
     return GestureDetector(
       onTap: () => context.push('/title/${title.id}'),

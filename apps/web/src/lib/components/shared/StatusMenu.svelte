@@ -9,7 +9,7 @@
 		status: MediaListStatus | null;
 		isAnime: boolean;
 		onSelect: (status: MediaListStatus) => void;
-		/** Shows "Open full editor" when set (the list editor arrives in Phase 4). */
+		/** Shows "Open full editor" when set. */
 		onOpenEditor?: () => void;
 		/**
 		 * 'button' = labelled dropdown; 'icon' = compact chevron for cards;

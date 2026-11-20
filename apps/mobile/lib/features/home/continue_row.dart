@@ -98,7 +98,7 @@ class _CaughtUpCard extends ConsumerWidget {
   }
 }
 
-/// Continue's lead (design/mockups/home-editorial): the title you're furthest
+/// Continue's lead: the title you're furthest
 /// behind on, its cover large with an offset shadow in its colour, and a +1
 /// that says where it lands ("4 / 26 · +1 → 5"); the numbers tick on a +1.
 class _LeadCard extends ConsumerWidget {
@@ -269,7 +269,7 @@ String countdown(int seconds) {
   return d > 0 ? '${d}d ${h}h' : (h > 0 ? '${h}h ${m.toString().padLeft(2, '0')}m' : '${m}m');
 }
 
-/// Continue (01): everything you're tracking, first on Home. A heading and
+/// Continue: everything you're tracking, first on Home. A heading and
 /// summary, then one list: ready titles first (their +1 green), then those
 /// waiting for their next episode (with a countdown), then Up next; Paused
 /// fold into one line at the end. With nothing ready it opens on "You're

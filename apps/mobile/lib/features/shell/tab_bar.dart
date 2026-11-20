@@ -27,7 +27,7 @@ List<TabSpec> tabsFor({required bool isAnime}) => [
   const TabSpec('Profile', Symbols.person_rounded),
 ];
 
-/// The phone tab bar (TabBar.dc.html), editorial: 52px tabs over a blurred
+/// The phone tab bar, editorial: 52px tabs over a blurred
 /// bar; the active one in ink with a filled icon, under a rule in the mode
 /// accent (no pill).
 class AppTabBar extends ConsumerWidget {

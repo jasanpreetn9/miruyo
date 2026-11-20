@@ -1,4 +1,4 @@
-// My List (05, 21), ported from apps/web/src/lib/page-data/list.ts
+// My List, ported from apps/web/src/lib/page-data/list.ts
 // (buildListView), plus Up next: Planning in the order you set, saved to
 // AniList as entry priority.
 

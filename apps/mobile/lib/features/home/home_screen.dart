@@ -33,7 +33,7 @@ import 'home_masthead.dart';
 import 'logged_out_hero.dart';
 import 'upcoming_list.dart';
 
-/// Home (01), editorial (design/mockups/home-editorial): finding what to
+/// Home, editorial: finding what to
 /// watch and tracking it. Signed out: the pitch, then the public rows.
 /// Signed in: the masthead and Continue first (logging an episode is what
 /// you open it for), then Picked for you, the For You rows, Trending,
@@ -232,7 +232,7 @@ class _OfflineBanner extends ConsumerWidget {
   }
 }
 
-/// Continue from one plan (01), re-planned as progress changes: a title
+/// Continue from one plan, re-planned as progress changes: a title
 /// that's caught up moves to the waiting ones, an Up next you start joins
 /// the rest.
 class _Planned extends ConsumerWidget {
@@ -294,7 +294,7 @@ List<HeroPick>? _heroes(WidgetRef ref, Mode mode) {
   );
 }
 
-/// The hero (01): what to watch next, and why. A placeholder the hero's
+/// The hero: what to watch next, and why. A placeholder the hero's
 /// size while For You answers, so the page doesn't jump when it lands.
 class _PickedForYou extends ConsumerWidget {
   const _PickedForYou({required this.mode});
@@ -418,7 +418,7 @@ class _EmptyListPickState extends ConsumerState<_EmptyListPick> {
   }
 }
 
-/// For You (08) on Home: picks grouped by the title they come from, a row
+/// For You on Home: picks grouped by the title they come from, a row
 /// for each of the top two ("Because you loved Cowboy Bebop"), rather than
 /// the same reason under every poster. Only full rows (six or more), and
 /// without what the hero already shows. Nothing while it loads, fails, or

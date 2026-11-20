@@ -1,4 +1,4 @@
-// Profile and Stats (07, 18), ported from apps/web/src/lib/page-data/
+// Profile and Stats, ported from apps/web/src/lib/page-data/
 // profile.ts (buildProfile) and stats.ts (buildStats, buildHeatmap). Stats
 // are computed from the list collection rather than AniList's
 // User.statistics, whose breakdowns are often stale or empty, and a list can

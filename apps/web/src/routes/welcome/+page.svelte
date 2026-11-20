@@ -10,7 +10,7 @@
 	import { session, type Mode } from '#lib/state/session.svelte.ts';
 	import { ONBOARDED_STORAGE_KEY } from '#lib/storage-keys.ts';
 
-	// First-run setup (design 9c): default mode, title language and adult
+	// First-run setup: default mode, title language and adult
 	// content, then go. Title language and adult content live on the AniList
 	// account — miruyo follows them — so they're saved there.
 

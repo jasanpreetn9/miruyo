@@ -412,7 +412,7 @@ class _RatePrompt extends StatelessWidget {
   }
 }
 
-/// The stat cards swipe between Anime and Manga (18): left for Manga, right
+/// The stat cards swipe between Anime and Manga: left for Manga, right
 /// for Anime. They follow the finger; past 30% of the width, or a flick
 /// after 24px, the mode switches (the top bar's too) and the new set slides
 /// in from the side it was pulled from. Past either end only stretches.

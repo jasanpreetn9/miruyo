@@ -58,7 +58,7 @@ export function continueHeading(mode: Mode): string {
 	return mode === 'anime' ? 'Continue watching' : 'Continue reading';
 }
 
-/** Continue, planned (design 01). */
+/** Continue, planned. */
 export interface ContinuePlan<T> {
 	/** Something to watch now, the most new episodes first. */
 	ready: T[];
@@ -134,7 +134,7 @@ function continueSub(item: Omit<ContinueItem, 'sub' | 'subColor'>): {
 }
 
 /**
- * Builds Continue from one plan (design 01): everything in progress, what's
+ * Builds Continue from one plan: everything in progress, what's
  * ready first (the most new first). `localEntry` overlays edits made this
  * visit (the shared list store); `now` is unix seconds.
  */

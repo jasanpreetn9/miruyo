@@ -1,4 +1,4 @@
-// The Stats charts (07, Gestures · Profile 18). Drag sideways across the
+// The Stats charts. Drag sideways across the
 // bars or the activity grid, or tap one: the exact value reads out in the
 // card header, so your finger never covers it, and stays 1.5s after you let
 // go. Vertical drags scroll the page.

@@ -15,7 +15,7 @@ import '../../core/ui/toast.dart';
 import 'browse_controller.dart';
 import 'browse_params.dart';
 
-/// Opens the filters as a draft (Gestures · Browse): nothing changes until
+/// Opens the filters as a draft: nothing changes until
 /// Apply, which says how many titles match. Dragging the sheet away
 /// discards the draft, and the toast offers Restore.
 Future<void> showFilterSheet(BuildContext context, WidgetRef ref) async {

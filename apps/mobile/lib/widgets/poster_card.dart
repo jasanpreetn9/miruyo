@@ -29,7 +29,7 @@ enum PosterMeta {
   genres,
 }
 
-/// The core component (07): a 2:3 cover with the art kept clean (no format
+/// The core component: a 2:3 cover with the art kept clean (no format
 /// or score badges, as on the web) and the metadata below. Titles on your
 /// list carry a status pill, +1 and a cover-coloured progress line. Tap opens the title; hold (450ms) dips the poster to 96%
 /// and opens the peek.

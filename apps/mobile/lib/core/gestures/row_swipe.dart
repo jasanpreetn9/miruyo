@@ -15,7 +15,7 @@ import 'haptics.dart';
 /// What a swipe would do if released now.
 enum SwipeAction { none, positive, negative, more }
 
-/// The row grammar (Gestures · Rows 11, Overview 22a). Right is the
+/// The row grammar. Right is the
 /// positive action (+1, Planning, a reminder); a short left (72–159px) is the
 /// negative one (−1); a long left (≥160px) opens quick actions. The track
 /// colour previews the result. A swipe arms at 72px, or as a flick faster

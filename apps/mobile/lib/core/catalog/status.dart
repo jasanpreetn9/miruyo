@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import '../anilist/types.dart';
 
-/// Menu order, matching the design system's status dropdown.
+/// Menu order, in the status dropdown.
 const listStatuses = [
   MediaListStatus.current,
   MediaListStatus.completed,

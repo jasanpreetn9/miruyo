@@ -7,7 +7,7 @@ import '../core/theme/tokens.dart';
 import 'poster_card.dart';
 import 'skeleton.dart';
 
-/// A section heading, editorial (design/mockups): a serif title (with an
+/// A section heading, editorial: a serif title (with an
 /// optional italic part, "Because you loved *Frieren*"), a Japanese gloss and
 /// a note, then a hairline out to "See all →" or a [trailing] control.
 class SectionHeading extends StatelessWidget {

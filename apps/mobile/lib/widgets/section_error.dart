@@ -9,7 +9,7 @@ import '../core/theme/app_theme.dart';
 import '../core/theme/tokens.dart';
 import '../core/ui/clock.dart';
 
-/// A section that couldn't load (Home 1e). It stays in place with a retry
+/// A section that couldn't load. It stays in place with a retry
 /// while the rest of the page keeps working. AniList's rate limit counts
 /// down and retries on its own; other failures retry on a tap.
 class SectionError extends StatefulWidget {

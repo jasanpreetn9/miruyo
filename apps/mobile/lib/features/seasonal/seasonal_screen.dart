@@ -36,7 +36,7 @@ import '../shell/tab_scroll.dart';
 import 'season_card.dart';
 import 'seasonal_data.dart';
 
-/// Seasonal (06, 16). In anime mode, one tab, two views: the season chart
+/// Seasonal. In anime mode, one tab, two views: the season chart
 /// (everything premiering, after AniChart) and Airing, the week's schedule.
 /// Manga has no schedule on AniList, so its tab is New releases.
 class SeasonalScreen extends ConsumerStatefulWidget {
@@ -330,7 +330,7 @@ class _SeasonChart extends ConsumerWidget {
 /// Each section's Japanese gloss (テレビ), as on the web.
 const _gloss = {'tv': 'テレビ', 'short': 'ショート', 'leftovers': '継続', 'movie': '劇場', 'other': 'OVA・配信'};
 
-/// The season's masthead (design/mockups/seasonal-editorial): its kanji in
+/// The season's masthead: its kanji in
 /// vermilion beside the season set large, and what's premiering.
 class _Masthead extends StatelessWidget {
   const _Masthead({required this.season, required this.premiering, required this.leftovers});
@@ -437,7 +437,7 @@ class _Schedule extends ConsumerStatefulWidget {
   ConsumerState<_Schedule> createState() => _ScheduleState();
 }
 
-/// The week's schedule (16): a week bar that swipes between weeks, a day
+/// The week's schedule: a week bar that swipes between weeks, a day
 /// strip that jumps or scrubs, the days stacked below, and a pill back to
 /// now when it's out of sight.
 class _ScheduleState extends ConsumerState<_Schedule> with SingleTickerProviderStateMixin {
@@ -1097,7 +1097,7 @@ class _SlotRow extends ConsumerWidget {
       );
     }
 
-    // Slots swipe by what they can do (Gestures · Schedule 16): yours and
+    // Slots swipe by what they can do: yours and
     // aired, +1; upcoming, a reminder on or off; aired and not on your list,
     // Planning; left is −1 on yours with progress. Caught up, nothing arms.
     final (VoidCallback? positive, String label, IconData icon) = switch (slot) {

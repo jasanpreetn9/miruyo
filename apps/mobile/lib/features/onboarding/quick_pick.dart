@@ -1,4 +1,4 @@
-// The quick-pick (Home 1d, Gestures · Onboarding 19): a grid of popular
+// The quick-pick: a grid of popular
 // titles to mark as seen, for an empty list. Tap one, or drag across the
 // posters to pick several: the first poster you touch decides whether the
 // drag adds or removes. Hold one to read about it. Picks go on the list as

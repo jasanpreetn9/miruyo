@@ -1,4 +1,4 @@
-// For You (08, Gestures · For You 17), ported from apps/web/src/lib/
+// For You, ported from apps/web/src/lib/
 // page-data/for-you.ts and state/for-you.svelte.ts: picks scored from
 // AniList's recommendations for the titles you rated highest, plus a nudge
 // toward the genres and studios you favour, and the other mode's take on

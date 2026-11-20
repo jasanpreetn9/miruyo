@@ -32,7 +32,7 @@ import 'browse_params.dart';
 import 'filter_sheet.dart';
 import 'search_people.dart';
 
-/// Search & browse (02, 15). The search bar slides away as you scroll down
+/// Search & browse. The search bar slides away as you scroll down
 /// and comes back on any scroll up; the filter chips stay pinned. Pinch to
 /// switch between the 3-across grid and the list, or use the density button.
 class BrowseScreen extends ConsumerStatefulWidget {
@@ -516,7 +516,7 @@ class _ChipsHeader extends SliverPersistentHeaderDelegate {
 }
 
 /// The compact list: a thumbnail, the facts, and a quick Plan button.
-/// A row in the compact list (15). It follows the row grammar: right adds
+/// A row in the compact list. It follows the row grammar: right adds
 /// to Planning (a title already on the list doesn't arm), left is Not
 /// interested, hiding it from Browse and For You with Undo. Hold to peek.
 class _ResultRow extends ConsumerWidget {

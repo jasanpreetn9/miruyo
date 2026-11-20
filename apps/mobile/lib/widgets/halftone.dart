@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A halftone screen (design/mockups): a grid of fine dots in [color],
+/// A halftone screen: a grid of fine dots in [color],
 /// fading out toward the right, behind a feature (the pick, a title's
 /// banner). [spacing] is the grid; [fade] is how much of the width the dots
 /// fade across, from full at the left.

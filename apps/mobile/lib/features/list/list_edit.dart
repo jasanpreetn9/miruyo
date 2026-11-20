@@ -1,4 +1,4 @@
-// My List's Edit mode (Gestures · My List, 21): select several entries,
+// My List's Edit mode: select several entries,
 // then carry them to a status, Move to…, or hold to remove. Row swipes and
 // pull to refresh pause while it's on, so selecting can never change
 // progress.

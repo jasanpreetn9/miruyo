@@ -10,7 +10,7 @@ import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/tokens.dart';
 
-/// The Anime/Manga toggle (Gestures · Navigation, 13), editorial: two words
+/// The Anime/Manga toggle, editorial: two words
 /// with a slash, the current one in ink over a rule in its accent. Mode
 /// changes only here: tap either word, or drag the rule. It follows the
 /// finger, takes the accent of the nearer side as it passes halfway (with a

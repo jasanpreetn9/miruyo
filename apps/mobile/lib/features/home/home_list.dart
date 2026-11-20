@@ -75,7 +75,7 @@ final homeListProvider = FutureProvider.autoDispose.family<HomeList, Mode>((ref,
 /// "Continue watching" / "Continue reading".
 String continueHeading(Mode mode) => mode.isAnime ? 'Continue watching' : 'Continue reading';
 
-/// Continue, planned (01): what's ready first (the most new episodes
+/// Continue, planned: what's ready first (the most new episodes
 /// first), then caught-up titles by which airs soonest, Paused last, and Up
 /// next beside them.
 class ContinuePlan {

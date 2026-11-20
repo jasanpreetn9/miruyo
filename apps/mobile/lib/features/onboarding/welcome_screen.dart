@@ -26,7 +26,7 @@ final viewerCountsProvider = FutureProvider.autoDispose<({int anime, int manga})
   (ref) => ref.watch(anilistClientProvider).fetchViewerCounts(),
 );
 
-/// First-run setup (09, Gestures · Onboarding 19), right after the first
+/// First-run setup, right after the first
 /// sign-in: the mode to open in, title language and adult content, then,
 /// for an empty list, the quick-pick. Only Continue moves forward; Back (or
 /// the edge swipe) returns from the quick-pick to setup with the picks
@@ -216,7 +216,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
       const SizedBox(height: Space.x6),
       Text('Make it yours', style: AppType.heading),
       label('Open the app in'),
-      // tap a side, or drag the thumb (19)
+      // tap a side, or drag the thumb
       ModeSlider(value: mode, onChanged: (m) => setState(() => _mode = m)),
       label('Show titles in'),
       Material(

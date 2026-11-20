@@ -1,4 +1,4 @@
-// Carrying a selection to a status (Gestures · My List, 21): the selection
+// Carrying a selection to a status: the selection
 // lifts into a stack under the finger and the status panel rises from the
 // bottom, in thumb reach. Dropping on a status moves everything there;
 // dropping anywhere else changes nothing and keeps the selection.

@@ -10,7 +10,7 @@ import '../../core/theme/tokens.dart';
 import '../../widgets/cover_image.dart';
 import 'home_data.dart';
 
-/// The signed-out Home's opening (01): a tilted wall of trending covers
+/// The signed-out Home's opening: a tilted wall of trending covers
 /// behind the pitch and the two ways in.
 class LoggedOutHero extends ConsumerWidget {
   const LoggedOutHero({super.key});

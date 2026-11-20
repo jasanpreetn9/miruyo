@@ -17,7 +17,7 @@ import '../core/theme/tokens.dart';
 import '../features/editor/list_editor.dart';
 import 'cover_image.dart';
 
-/// The peek a held poster opens (Gestures · Navigation, 13): the cover, the
+/// The peek a held poster opens: the cover, the
 /// facts and quick actions over a blurred page. Tap outside to close.
 Future<void> showPeek(BuildContext context, Title title) {
   final reduceMotion = MediaQuery.disableAnimationsOf(context);

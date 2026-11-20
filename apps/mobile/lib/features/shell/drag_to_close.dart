@@ -1,4 +1,4 @@
-// Detail is a card (12): scrolled to the top, dragging down anywhere shrinks
+// Detail is a card: scrolled to the top, dragging down anywhere shrinks
 // it with the page behind showing through; letting go past 140px, or a
 // flick after 40px, closes it. The drag is taken from the scroll view's own
 // physics, so it only starts at the top and a drag back up scrolls again.

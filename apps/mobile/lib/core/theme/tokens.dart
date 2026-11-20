@@ -1,5 +1,4 @@
-// Design tokens, matching the web app's layout.css: the editorial redesign
-// (design/mockups) on top of the design system's structure (screen 00).
+// Design tokens, matching the web app's layout.css.
 // Change a value there and here together.
 
 import 'package:flutter/animation.dart';
@@ -132,7 +131,7 @@ abstract final class Motion {
   static const exit = Cubic(0.4, 0, 1, 1);
 }
 
-/// Gesture thresholds shared by every screen (Gestures · Overview, 22a).
+/// Gesture thresholds shared by every screen.
 abstract final class GestureSpec {
   /// The first this-many px of movement decide between scroll and swipe.
   static const axisLock = 8.0;

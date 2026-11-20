@@ -12,7 +12,7 @@
 	} from '#lib/page-data/stats.ts';
 	import { session } from '#lib/state/session.svelte.ts';
 
-	// A profile's Stats (design 07), yours or someone else's, built from their
+	// A profile's Stats, yours or someone else's, built from their
 	// list by the page (buildStats), with the Anime / Manga switch and the time
 	// range in the heading. One accent per chart, neutral greys for the rest;
 	// status colours only where status is the data. Every bar is labelled.

@@ -13,7 +13,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/tokens.dart';
 import '../shell/top_bar.dart';
 
-/// Login (09). AniList OAuth is the only sign-in, so the page is one
+/// Login. AniList OAuth is the only sign-in, so the page is one
 /// decision plus a plain note on what miruyo can and can't see. The
 /// approval page opens in a sheet; pulling it down cancels.
 class LoginScreen extends ConsumerStatefulWidget {

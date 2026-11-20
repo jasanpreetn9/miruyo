@@ -10,7 +10,7 @@ import '../core/providers.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/tokens.dart';
 
-/// The score (Gestures · List editor 20): a row of cells. Drag across them
+/// The score: a row of cells. Drag across them
 /// and the score follows your finger; the left half of a cell gives the half
 /// point. A tap sets the cell; tapping it again takes off the half (where the
 /// format has halves), and tapping the set score again clears it. The row

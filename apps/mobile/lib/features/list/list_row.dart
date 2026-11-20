@@ -28,7 +28,7 @@ const listRowExtent = listRowHeight + Space.x2;
 /// actions hold, which Edit pauses.
 const carryHold = Duration(milliseconds: 300);
 
-/// One My List row (05, 21). Normally: tap for details, the cover for the
+/// One My List row. Normally: tap for details, the cover for the
 /// editor, and swipes (no +1 button): here the row grammar's directions
 /// are swapped (right −1, short left +1), with a long left or a hold for
 /// quick actions. In Edit: a selection circle,

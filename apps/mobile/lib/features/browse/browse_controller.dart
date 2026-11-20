@@ -62,7 +62,7 @@ class BrowseView {
   );
 }
 
-/// Search & browse (02): the filters, and the pages of results they match.
+/// Search & browse: the filters, and the pages of results they match.
 /// Search text is debounced (300ms); filter changes apply at once.
 class BrowseController extends Notifier<BrowseView> {
   Timer? _debounce;

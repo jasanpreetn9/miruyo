@@ -2,7 +2,7 @@
 @plugin '@tailwindcss/forms';
 
 @theme {
-	/* editorial: warm paper-black and cream ink, not blue-black (design/mockups) */
+	/* editorial: warm paper-black and cream ink, not blue-black */
 	--color-canvas: #13110f;
 	--color-surface: #171512;
 	--color-raised: #1d1a16;
@@ -156,7 +156,7 @@
 }
 
 /*
- * The editorial vocabulary (design/mockups): square buttons, underlined
+ * The editorial vocabulary: square buttons, underlined
  * fields. In-flow cards become ruled blocks; floating layers (menus, the
  * editor, toasts) keep an opaque fill and a border, only squarer.
  */

@@ -49,7 +49,7 @@ enum _Tab {
   final String label;
 }
 
-/// The title page (03). The title's cover colour owns the page: banner,
+/// The title page. The title's cover colour owns the page: banner,
 /// glow, progress and the countdown all derive from it while the chrome
 /// stays constant. On phones the facts sit above the tabs, which stick
 /// under the header.

@@ -29,7 +29,7 @@ import 'list_edit.dart';
 import 'list_grid_card.dart';
 import 'list_row.dart';
 
-/// My List (05, 21): status tabs with counts, filter and sort, and the
+/// My List: status tabs with counts, filter and sort, and the
 /// list or a grid (one choice for every tab). Rows edit in place: +1, the
 /// row swipes, quick actions. Edit selects several entries to carry to a
 /// status, move or remove; on Planning it also orders Up next.
@@ -79,7 +79,7 @@ class _MyListScreenState extends ConsumerState<MyListScreen> with SingleTickerPr
   /// The rows on screen, by id, for the gestures to act on.
   var _rows = <ListRow>[];
 
-  // ── The coach mark (Gestures · Rows 11): taught once, on the top row ──
+  // ── The coach mark: taught once, on the top row ──
   late bool _coachSeen = ref.read(prefsProvider).getString(PrefKeys.rowsCoachSeen) != null;
   late final _coachLoop = AnimationController(vsync: this, duration: const Duration(milliseconds: 4800));
 

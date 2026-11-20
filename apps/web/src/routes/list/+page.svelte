@@ -33,7 +33,7 @@
 	import { mediaTypeFor, session } from '#lib/state/session.svelte.ts';
 	import { LIST_VIEW_STORAGE_KEY } from '#lib/storage-keys.ts';
 
-	// My List (design 05): a table for a list you manage, a grid for one you
+	// My List: a table for a list you manage, a grid for one you
 	// admire. Edit in place: +1 on every row, click a score to nudge it. Your
 	// custom lists from AniList follow the statuses as tabs of their own
 	// (?list=Rewatch%20someday), each holding its titles whatever their status.

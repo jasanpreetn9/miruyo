@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-/// The haptic scale (Gestures · Overview, 22b). Each fires once per
+/// The haptic scale. Each fires once per
 /// threshold crossing; dragging back under a threshold disarms silently.
 enum Haptic {
   /// Ticks while something changes under your finger: a page, a step, an

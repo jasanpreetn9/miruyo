@@ -9,7 +9,7 @@ import '../core/providers.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/tokens.dart';
 
-/// Episodes, chapters or volumes (Gestures · List editor 20). The count
+/// Episodes, chapters or volumes. The count
 /// scrubs: drag sideways on it, one step per 14px, with a chip showing the
 /// change. Hold +1 or − to repeat: once on touch, then every 150ms, every
 /// 70ms after 2s. It stops at 0 and at [max]. +1 is the biggest target.

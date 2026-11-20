@@ -10,7 +10,7 @@ import '../../core/ui/clock.dart';
 import '../../widgets/motion.dart';
 import 'home_list.dart';
 
-/// Home's masthead (design/mockups/home-editorial): a dateline, a greeting,
+/// Home's masthead: a dateline, a greeting,
 /// where you stand in one sentence, and three running totals. Its lines
 /// settle in one after another.
 class HomeMasthead extends ConsumerWidget {

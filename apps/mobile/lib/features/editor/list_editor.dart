@@ -26,7 +26,7 @@ import '../../widgets/score_cells.dart';
 import '../list/list_data.dart' show listCollectionProvider;
 import 'draft.dart';
 
-/// Opens the list editor (04, Gestures · List editor 20) for [title]: a
+/// Opens the list editor for [title]: a
 /// sheet that saves to AniList as you change things, so pulling it down just
 /// closes it. Only a half-typed note asks first. Signed out, it leads to
 /// Log In instead.

@@ -23,7 +23,7 @@ import '../../widgets/section_error.dart';
 import '../../widgets/skeleton.dart';
 import 'for_you_data.dart';
 
-/// For You (08, Gestures · For You 17): picks from AniList's
+/// For You: picks from AniList's
 /// recommendations for the titles you rated highest, each with its reason.
 /// Every pick is a yes or no: swipe right for Planning, left for Not this;
 /// hold to see why it was picked. Tap a seed to filter the picks to it,
