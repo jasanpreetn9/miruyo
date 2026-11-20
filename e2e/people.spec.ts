@@ -179,9 +179,12 @@ test('signed in, a studio can be favourited', async ({ page }) => {
 		'aria-pressed',
 		'true'
 	);
-	expect(
-		calls.some((c) => c.query.includes('mutation ToggleFavourite') && c.variables.studioId === 11)
-	).toBe(true);
+	// the button flips before the request goes out
+	await expect
+		.poll(() =>
+			calls.some((c) => c.query.includes('mutation ToggleFavourite') && c.variables.studioId === 11)
+		)
+		.toBe(true);
 });
 
 test("a studio AniList doesn't know says so", async ({ page }) => {
