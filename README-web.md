@@ -4,6 +4,12 @@ A fast front end for your [AniList](https://anilist.co) anime and manga list: on
 
 Built with SvelteKit (Svelte 5 runes), Tailwind CSS v4, and deployed to Vercel.
 
+![Home, signed out](../../docs/screenshots/web-home.jpg)
+
+| A title page                                                                                                                       | The season chart                                                                                              |
+| ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| ![Frieren's title page, tinted green by its cover, with its score, streaming links and tabs](../../docs/screenshots/web-title.jpg) | ![Fall 2026's season chart: the season's kanji, then ranked entries](../../docs/screenshots/web-seasonal.jpg) |
+
 ## How it works
 
 - **Auth** — AniList OAuth implicit grant. `/login` links to AniList, which redirects back to `/api/callback` with the token in the URL hash; the token is stored in `localStorage`.

@@ -12,6 +12,7 @@ Thanks for wanting to help. miruyo is a fast front end for [AniList](https://ani
 
 ```
 .github/            CI workflows, issue and PR templates, Dependabot
+docs/screenshots/   images for the READMEs
 apps/web/           the website (SvelteKit): README, ROADMAP, CHANGELOG
   src/routes/         one folder per page
   src/lib/            AniList client, logic, state, components
