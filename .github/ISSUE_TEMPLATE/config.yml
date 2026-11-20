@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/jasanpreetn9/miruyo/security/advisories/new
+    about: Please report vulnerabilities privately, not in an issue.
+  - name: A problem with AniList itself
+    url: https://anilist.co
+    about: Accounts, sign-in and data come from AniList; report problems with those to AniList.
