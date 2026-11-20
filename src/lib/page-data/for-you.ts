@@ -3,14 +3,14 @@ import type { AniListMedia, CollectionEntry, ScoreFormat } from '#lib/anilist/ty
 import type { Title } from '#lib/catalog/types.ts';
 import { toTenPoint } from './stats.ts';
 
-// For You (design 08): picks scored from AniList's recommendations for
+// For You: picks scored from AniList's recommendations for
 // titles you rated highly, plus a nudge toward the genres and studios you
 // favour, and the other mode's take on titles you loved (the manga of an
 // anime, the anime of a manga). Every pick carries the reason it was picked.
 // The titles behind them rotate each day, so Home's "Because you loved …"
 // rows change from one day to the next. "Tune picks" filters the result.
 
-/** Below this many scored titles, picks aren't worth showing (design 8c). */
+/** Below this many scored titles, picks aren't worth showing. */
 export const MIN_RATINGS = 5;
 /** How many highly rated titles seed the picks each day. */
 export const MAX_SEEDS = 8;

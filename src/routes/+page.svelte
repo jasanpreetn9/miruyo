@@ -35,7 +35,7 @@
 	import { QUICK_PICK_SKIPPED_STORAGE_KEY } from '#lib/storage-keys.ts';
 
 	// Two independent sections: a failure only takes down its own part of the
-	// page, and the other keeps showing (design 1e).
+	// page, and the other keeps showing.
 	const homeList = new Resource<HomeListResponse>();
 	const homeFeed = new Resource<HomeFeedResponse>();
 
@@ -156,7 +156,7 @@
 	);
 
 	// An empty list (not just nothing in progress) gets the quick-pick card
-	// instead of a bare page, until it's skipped (design 1d).
+	// instead of a bare page, until it's skipped.
 	let skippedQuickPick = $state(readPrefSet(QUICK_PICK_SKIPPED_STORAGE_KEY));
 	const quickPickKey = $derived(`${session.user?.id}:${session.mode}`);
 	const listIsEmpty = $derived(
@@ -320,7 +320,7 @@
 			onAdded={retryList}
 		/>
 	{:else}
-		<!-- editorial (design/mockups/home-editorial): the masthead says where you
+		<!-- editorial: the masthead says where you
 		     stand, Continue follows (logging an episode is what you open it for),
 		     then the pick and the rows -->
 		<HomeMasthead

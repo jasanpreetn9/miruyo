@@ -62,7 +62,7 @@
 			return;
 		}
 
-		// first sign-in on this device: three quick settings first (design 9c)
+		// first sign-in on this device: three quick settings first
 		goto(readPref(ONBOARDED_STORAGE_KEY) ? '/' : '/welcome', { replace: true });
 	}
 

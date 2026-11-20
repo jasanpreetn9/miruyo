@@ -3,7 +3,7 @@
 	import type { ContinueContent } from '#lib/page-data/home.ts';
 	import { clock } from '#lib/state/clock.svelte.ts';
 
-	// Home's masthead (design/mockups/home-editorial): a dateline, a greeting,
+	// Home's masthead: a dateline, a greeting,
 	// and where you stand in one sentence, with three running totals beside it.
 	// Signed in only, so it's never server-rendered (the time of day would
 	// differ between server and browser).

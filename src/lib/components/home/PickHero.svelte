@@ -10,7 +10,7 @@
 	// One of the hero's slides: something to watch next and why ("Because you
 	// rated Cowboy Bebop 9.5/10"). Plan adds it; once it's on your list the
 	// button says where and opens the editor. Tracking is Continue's, above.
-	// Editorial (design/mockups): the cover with an offset shadow in its own
+	// Editorial: the cover with an offset shadow in its own
 	// colour, over a halftone (and the banner, washed out) in that colour.
 
 	interface Props {

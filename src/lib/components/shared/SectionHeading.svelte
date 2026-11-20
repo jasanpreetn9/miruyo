@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import { reveal } from '#lib/motion.ts';
 
-	// A section's heading, editorial style (design/mockups): a serif title, an
+	// A section's heading, editorial style: a serif title, an
 	// optional Japanese gloss and note, then a hairline out to "See all".
 
 	interface Props {
