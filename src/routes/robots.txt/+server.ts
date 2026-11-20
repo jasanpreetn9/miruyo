@@ -1,4 +1,10 @@
-# Search engines may crawl titles and the site's own pages. Everything else
+import { SITE_URL } from '#lib/seo.ts';
+import type { RequestHandler } from './$types';
+
+// Built once at deploy time, so the sitemap line follows PUBLIC_SITE_URL.
+export const prerender = true;
+
+const RULES = `# Search engines may crawl titles and the site's own pages. Everything else
 # links onward into most of AniList, which costs a request per page for very
 # little search traffic, so crawlers stay out of it. Personal pages also opt
 # out with a noindex tag.
@@ -40,5 +46,12 @@ User-agent: SemrushBot
 User-agent: MJ12bot
 User-agent: DotBot
 Disallow: /
+`;
 
-Sitemap: https://miruyo.jnagra.com/sitemap.xml
+export const GET: RequestHandler = () =>
+	new Response(
+		`${RULES}
+Sitemap: ${SITE_URL}/sitemap.xml
+`,
+		{ headers: { 'Content-Type': 'text/plain' } }
+	);

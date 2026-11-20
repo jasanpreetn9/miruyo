@@ -15,9 +15,10 @@ import type {
 import { parseDescription } from '#lib/page-data/markdown.ts';
 import { bioText, createCharacterContent, createStaffContent } from '#lib/page-data/person.ts';
 import { createStudioContent } from '#lib/page-data/studio.ts';
+import { PUBLIC_SITE_URL } from '$app/env/public';
 
-/** The site's public origin; share cards and the sitemap need absolute URLs. */
-export const SITE_URL = 'https://miruyo.jnagra.com';
+/** The site's public origin (PUBLIC_SITE_URL); share cards and the sitemap need absolute URLs. */
+export const SITE_URL = PUBLIC_SITE_URL;
 
 export const SITE_NAME = 'miruyo';
 

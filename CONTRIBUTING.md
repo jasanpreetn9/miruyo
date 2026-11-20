@@ -22,7 +22,7 @@ src/lib/state/      shared reactive state: session, list store, toasts
 src/lib/components/ components by page, and shared/ for the rest
 e2e/                Playwright tests, one spec per page (helpers in e2e/helpers)
 e2e-prod/           a smoke test of the production build
-static/             icons, the manifest, robots.txt
+static/             icons and the manifest
 docs/               architecture notes and README screenshots
 .github/            CI, issue and PR templates, Dependabot
 ```
