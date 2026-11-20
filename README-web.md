@@ -13,6 +13,25 @@ Built with SvelteKit (Svelte 5 runes), Tailwind CSS v4, and deployed to Vercel.
 - **Stats** are computed from the viewer's list collection (`src/lib/page-data/stats.ts`) rather than AniList's `User.statistics`, whose breakdowns are often stale.
 - **Layout** — phones and iPads in portrait (under 1024px) get the touch layout with a bottom tab bar; from 1024px, the desktop layout and top bar.
 
+## Code layout
+
+| Where                              | What it is                                                                                                                                                             |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/routes`                       | One folder per page. A page's `+page.svelte` stays thin: it calls `src/lib/page-data` and composes components. `+page.server.ts` files fetch the signed-out first load |
+| `src/routes/layout.css`            | The design tokens (`@theme`: colours, type, spacing) and shared utilities (`btn-ink`, `btn-quiet`, `field-line`, the motion classes)                                   |
+| `src/lib/anilist`                  | The GraphQL client, queries, rate pacing, and adapting AniList's responses                                                                                             |
+| `src/lib/catalog`                  | Pure logic about titles: status verbs, progress and +1 rules, airing, cover colours                                                                                    |
+| `src/lib/page-data`                | Each page's data: what it fetches and how it shapes it, as plain functions with unit tests                                                                             |
+| `src/lib/state`                    | Shared reactive state (`*.svelte.ts`): the session, the list store, toasts, the editor, the clock                                                                      |
+| `src/lib/components`               | Svelte components, by page (`home`, `browse`, `seasonal`, …), and `shared` for those used everywhere                                                                   |
+| `src/lib/server`                   | Server-only code: the signed-out first load                                                                                                                            |
+| `src/lib/browse`, `src/lib/editor` | Browse's URL parameters; the list editor's draft                                                                                                                       |
+| `src/lib/*.ts`                     | App-wide helpers: SEO tags, motion, analytics, storage keys, legal details                                                                                             |
+| `e2e`                              | Playwright tests, one spec per page, with AniList mocked; shared helpers in `e2e/helpers`                                                                              |
+| `e2e-prod`                         | A smoke test of the production build                                                                                                                                   |
+
+Unit tests sit next to the code they test (`foo.ts` and `foo.test.ts`).
+
 ## Pages
 
 | Route                            | What it is                                                                                                               |
@@ -29,7 +48,7 @@ Built with SvelteKit (Svelte 5 runes), Tailwind CSS v4, and deployed to Vercel.
 | `/login`, `/welcome`             | Sign-in and first-run setup                                                                                              |
 | `/privacy`, `/terms`, `/cookies` | Privacy Policy, Terms of Use, Cookies & Storage; operator details live in `src/lib/legal.ts`                             |
 
-What's done and what's left is in [ROADMAP.md](ROADMAP.md).
+What's planned is in [ROADMAP.md](ROADMAP.md); what changed, in [CHANGELOG.md](CHANGELOG.md).
 
 ## Developing
 
