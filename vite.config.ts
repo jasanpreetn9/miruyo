@@ -14,6 +14,10 @@ export default defineConfig(({ mode }) => ({
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 			adapter: adapter(),
+			// one JS and one CSS file rather than a chunk per route: a first visit
+			// is a few requests instead of ~38, and every request counts toward
+			// Vercel's CDN quota (crawlers that run JS cache nothing)
+			output: { bundleStrategy: 'single' },
 			// SvelteKit hashes its own inline scripts. Hashes, not nonces: public
 			// pages are cached by the CDN (src/lib/server/public-load.ts), and a
 			// nonce shared by every visitor protects nothing. Inline styles stay
