@@ -4,7 +4,8 @@ import type { RequestHandler } from './$types';
 // Built once at deploy time, so the sitemap line follows PUBLIC_SITE_URL.
 export const prerender = true;
 
-const RULES = `# Search engines may crawl titles and the site's own pages. Everything else
+const RULES = `# Search engines, and AI search and assistant bots (ChatGPT, Claude,
+# Perplexity), may crawl titles and the site's own pages. Everything else
 # links onward into most of AniList, which costs a request per page for very
 # little search traffic, so crawlers stay out of it. Personal pages also opt
 # out with a noindex tag.
@@ -17,14 +18,10 @@ Disallow: /studio/
 Disallow: /user/
 Disallow: /api/
 
-# AI crawlers and scrapers: they fetch fast, ignore crawl limits and send no
-# visitors.
+# Crawlers that gather AI training data, and SEO scrapers: they fetch a lot
+# and send no visitors.
 User-agent: GPTBot
-User-agent: ChatGPT-User
-User-agent: OAI-SearchBot
 User-agent: ClaudeBot
-User-agent: Claude-User
-User-agent: Claude-SearchBot
 User-agent: anthropic-ai
 User-agent: CCBot
 User-agent: Google-Extended
@@ -33,8 +30,6 @@ User-agent: Bytespider
 User-agent: Amazonbot
 User-agent: meta-externalagent
 User-agent: FacebookBot
-User-agent: PerplexityBot
-User-agent: Perplexity-User
 User-agent: cohere-ai
 User-agent: Diffbot
 User-agent: ImagesiftBot
