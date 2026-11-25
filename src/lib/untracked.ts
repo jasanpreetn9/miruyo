@@ -2,9 +2,9 @@
 // allows everywhere else.
 //
 // The sign-in callback's fragment carries the AniList token
-// (/api/callback#access_token=…). Vercel's analytics skips it (analytics.ts),
-// and Cloudflare's beacon, which Cloudflare's proxy injects into every page,
-// is kept off it by that page's CSP (hooks.server.ts): the page scrubs the
+// (/api/callback#access_token=…). Cloudflare's analytics beacon, which
+// Cloudflare injects into every page, is kept off it by that page's CSP
+// (hooks.server.ts): the page scrubs the
 // token from the address as soon as it runs, but the beacon could read it
 // first.
 

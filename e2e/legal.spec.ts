@@ -49,27 +49,18 @@ test('login links to the Terms and Privacy Policy', async ({ page }) => {
 	await expect(page).toHaveURL('/privacy');
 });
 
-test('analytics load only in production: the dev server sends nothing', async ({ page }) => {
-	const analytics: string[] = [];
-	page.on('request', (r) => {
-		if (/\/_vercel\/|vercel-scripts\.com/.test(r.url())) analytics.push(r.url());
-	});
-	await page.goto('/privacy');
-	await expect(page.getByText('Vercel Web Analytics and Speed Insights')).toBeVisible();
-	await page.waitForLoadState('networkidle');
-	expect(analytics).toEqual([]);
-});
-
-test('the privacy policy names Cloudflare, and the sign-in callback keeps its beacon out', async ({
+test('the privacy policy names Cloudflare as the host, and the sign-in callback keeps its beacon out', async ({
 	page,
 	request
 }) => {
 	await page.goto('/privacy');
-	await expect(
-		page.locator('li', { hasText: 'Cloudflare sits in front of the site' })
-	).toContainText('Web Analytics');
+	await expect(page.locator('li', { hasText: 'Our host, Cloudflare' })).toBeVisible();
+	await expect(page.locator('li', { hasText: 'Cloudflare Web Analytics' })).toContainText(
+		'never runs on the sign-in'
+	);
+	await expect(page.getByText('Vercel')).toHaveCount(0);
 
-	// Cloudflare's proxy injects its beacon into every page; the CSP lets it run
+	// Cloudflare injects its beacon into every page; the CSP lets it run
 	// everywhere but the callback, whose address carries the AniList token
 	const csp = async (path: string) =>
 		(await request.get(path)).headers()['content-security-policy'] ?? '';

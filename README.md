@@ -18,7 +18,7 @@ A fast front end for your [AniList](https://anilist.co) anime and manga list: on
 - **Anime and manga.** One switch changes the whole site between them.
 - **Your stats and profile**, people's lists, staff, characters and studios.
 
-**Built with** SvelteKit (Svelte 5), Tailwind CSS v4 and Vercel. It calls AniList's public GraphQL API straight from the browser: there's no miruyo server or database.
+**Built with** SvelteKit (Svelte 5) and Tailwind CSS v4, on Cloudflare Workers. It calls AniList's public GraphQL API straight from the browser: there's no miruyo server or database.
 
 ## Running it yourself
 
@@ -30,12 +30,15 @@ npm run dev
 
 You need your own AniList API client, from [anilist.co/settings/developer](https://anilist.co/settings/developer), with the redirect URL `http://localhost:5173/api/callback`. [CONTRIBUTING.md](CONTRIBUTING.md) has the details and the checks to run, and [docs/architecture.md](docs/architecture.md) is a tour of the code.
 
-To publish your own copy, deploy it to Vercel with these environment variables:
+To publish your own copy on [Cloudflare Workers](https://developers.cloudflare.com/workers/) (the free plan is enough):
 
-- `PUBLIC_ANILIST_CLIENT_ID`: a second AniList client whose redirect URL is `https://<your domain>/api/callback`.
-- `PUBLIC_SITE_URL`: your site's address, such as `https://example.com`, used for canonical links, share cards, the sitemap and robots.txt. On Vercel it defaults to the project's production domain.
+1. In the Cloudflare dashboard, go to **Workers & Pages → Create → Import a repository**, and pick your fork. The build command is `npm run build` and the deploy command `npx wrangler deploy`.
+2. Under the Worker's **Settings → Build → Variables**, set:
+   - `PUBLIC_ANILIST_CLIENT_ID`: a second AniList client whose redirect URL is `https://<your domain>/api/callback`.
+   - `PUBLIC_SITE_URL`: your site's address, such as `https://example.com`, used for canonical links, share cards, the sitemap and robots.txt. The build fails without it.
+3. Under **Settings → Domains & Routes**, add your domain.
 
-Then put your own name and contact details in `src/lib/legal.ts`, which the Privacy Policy and Terms read from.
+Then put your own name and contact details in `src/lib/legal.ts`, which the Privacy Policy and Terms read from. To deploy from your own machine instead, run `npx wrangler login` once, then `npm run build && npx wrangler deploy` with both variables set.
 
 ## Contributing
 

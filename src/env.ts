@@ -16,24 +16,28 @@ export const variables = defineEnvVars({
 	},
 	/**
 	 * The site's public origin, e.g. `https://miruyo.jnagra.com`: canonical
-	 * links, share cards, the sitemap and robots.txt use it. On Vercel it
-	 * defaults to the project's production domain; elsewhere, to localhost.
+	 * links, share cards, the sitemap and robots.txt use it. Locally it
+	 * defaults to localhost; a Cloudflare build (Workers Builds) refuses to
+	 * go without it, rather than publish localhost links.
 	 */
 	PUBLIC_SITE_URL: {
 		public: true,
 		static: true,
 		schema: (value) => {
-			// Vercel's own system variable, read at build time
-			const { process } = globalThis as { process?: { env: Record<string, string | undefined> } };
-			const vercel = process?.env.VERCEL_PROJECT_PRODUCTION_URL;
-			const raw = value?.trim() || (vercel ? `https://${vercel}` : 'http://localhost:5173');
-			let url: URL;
+			const raw = value?.trim();
+			if (!raw) {
+				// set by Cloudflare's Workers Builds, read at build time
+				const { process } = globalThis as { process?: { env: Record<string, string | undefined> } };
+				if (process?.env.WORKERS_CI) {
+					throw new Error("Set it to the site's origin, like https://example.com");
+				}
+				return 'http://localhost:5173';
+			}
 			try {
-				url = new URL(raw);
+				return new URL(raw).origin;
 			} catch {
 				throw new Error(`Set it to the site's origin, like https://example.com (got ${raw})`);
 			}
-			return url.origin;
 		}
 	},
 	/**

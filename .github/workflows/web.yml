@@ -42,13 +42,9 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
-      # then the production build, as Vercel makes it (its adapter needs Node
-      # 22 or 24), served by SvelteKit's preview: code that only runs in
-      # production (analytics) is checked here, which the dev server above
-      # never runs
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
+      # then the production build, as Cloudflare makes it, served by the Worker
+      # in Cloudflare's own runtime (vite preview): code that only runs in
+      # production is checked here, which the dev server above never runs
       - run: npm run build
       - run: npm run test:prod
       - uses: actions/upload-artifact@v4

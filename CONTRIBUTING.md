@@ -31,7 +31,7 @@ docs/               architecture notes and README screenshots
 
 ## Setting up
 
-Node 24 or later (CI uses 24 and 26), and your own AniList API client: create one at [anilist.co/settings/developer](https://anilist.co/settings/developer) with the redirect URL `http://localhost:5173/api/callback`.
+Node 24 or later (CI uses 26), and your own AniList API client: create one at [anilist.co/settings/developer](https://anilist.co/settings/developer) with the redirect URL `http://localhost:5173/api/callback`.
 
 ```bash
 npm install
@@ -57,7 +57,7 @@ npm run lint
 npm test
 ```
 
-`npm test` runs the unit tests and the Playwright end-to-end tests, with AniList mocked (`npx playwright install` the first time). Fix formatting with `npm run format`. CI also builds for production and runs a smoke test against it (`npm run build && npm run test:prod`, on Node 24).
+`npm test` runs the unit tests and the Playwright end-to-end tests, with AniList mocked (`npx playwright install` the first time). Fix formatting with `npm run format`. CI also builds the Worker and runs a smoke test against it in Cloudflare's own runtime (`npm run build && npm run test:prod`).
 
 ## How the project works
 

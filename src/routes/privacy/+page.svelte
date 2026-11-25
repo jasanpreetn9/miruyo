@@ -5,8 +5,8 @@
 	// Adapted from General Legal's "Privacy Policy (GDPR Enhanced)" template
 	// (CC0, github.com/General-Legal/legal-templates), cut down to what Miruyo
 	// actually does: no servers of its own holding user data, no cookies, no
-	// ads, and only anonymous page counts and speed measurements (Vercel, see
-	// src/lib/analytics.ts; Cloudflare, see src/lib/untracked.ts). Keep it in
+	// ads, and only anonymous page counts and speed measurements (Cloudflare,
+	// see src/lib/untracked.ts). Keep it in
 	// step with the app — a new tracker,
 	// store or third party means a new paragraph here and on /cookies.
 
@@ -106,25 +106,15 @@
 	<p>When your browser loads {app}, a few services see the request, as with any website:</p>
 	<ul>
 		<li>
-			<strong>Our host, Vercel</strong>, serves the site and keeps short-lived request logs that may
-			include your IP address, browser type, the page requested and the time. We use these only to
-			keep the site running and secure.
+			<strong>Our host, Cloudflare</strong>, serves the site and keeps short-lived request logs that
+			may include your IP address, browser type, the page requested and the time. We use these only
+			to keep the site running and secure.
 		</li>
 		<li>
-			<strong>Vercel Web Analytics and Speed Insights</strong> count page views and measure how fast
-			pages load. For each visit they record the page (its address without anything after a
-			<code>?</code> or <code>#</code>, so nothing you type into a search is included), the site you
-			came from, your country, and your device, browser and operating system. They don't use cookies
-			or identify you: Vercel says it tells visits apart with a value worked out from the request
-			that changes every day and isn't stored. The sign-in page, whose address carries your AniList
-			access token, is never reported. They run only on the website, not in the iPhone app.
-		</li>
-		<li>
-			<strong>Cloudflare</strong> sits in front of the site and passes each request on to Vercel, so
-			it sees the same request details, and keeps short-lived logs of them. Its
-			<strong>Web Analytics</strong> also counts page views and measures how fast pages load: for each
-			visit it records the page, the site you came from, your country, and your device and browser. It
-			doesn't use cookies or fingerprint your browser, and it never runs on the sign-in page.
+			<strong>Cloudflare Web Analytics</strong> counts page views and measures how fast pages load: for
+			each visit it records the page, the site you came from, your country, and your device and browser.
+			It doesn't use cookies or fingerprint your browser, and it never runs on the sign-in page, whose
+			address carries your AniList access token. It runs only on the website, not in the iPhone app.
 		</li>
 		<li>
 			<strong>Google Fonts</strong> serves the site's typefaces, so Google receives your IP address and
@@ -186,10 +176,9 @@
 			>.
 		</li>
 		<li>
-			<strong>Service providers</strong> that help run the site: Vercel (hosting, page counts and speed
-			measurements), Cloudflare (delivering the site, page counts and speed measurements) and Google (fonts).
-			YouTube serves trailer thumbnails, and trailer links open on YouTube or Dailymotion, whose own policies
-			apply there.
+			<strong>Service providers</strong> that help run the site: Cloudflare (hosting, page counts and
+			speed measurements) and Google (fonts). YouTube serves trailer thumbnails, and trailer links open
+			on YouTube or Dailymotion, whose own policies apply there.
 		</li>
 		<li>
 			<strong>Authorities and others</strong>, if we believe in good faith that the law requires it
@@ -208,9 +197,7 @@
 			site's data in your browser.
 		</li>
 		<li>Data in the iPhone app stays until you sign out or delete the app.</li>
-		<li>
-			Vercel and Cloudflare keep request logs for a short period under their own retention settings.
-		</li>
+		<li>Cloudflare keeps request logs for a short period under its own retention settings.</li>
 		<li>Emails are kept as long as needed to deal with what you asked, then deleted.</li>
 		<li>
 			Your AniList data is kept by AniList until you change or delete it there. {app} doesn't keep a copy.

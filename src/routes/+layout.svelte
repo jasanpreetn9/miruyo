@@ -2,7 +2,6 @@
 	import './layout.css';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { startAnalytics } from '#lib/analytics.ts';
 	import favicon from '#lib/assets/favicon.svg';
 	import ListEditor from '#lib/components/shared/ListEditor.svelte';
 	import ToastHost from '#lib/components/shared/ToastHost.svelte';
@@ -11,9 +10,6 @@
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
-
-	// production only; see analytics.ts for what's sent
-	startAnalytics();
 
 	// an error page (a title that doesn't exist) stays out of the index
 	const meta = $derived(

@@ -12,7 +12,6 @@ Thumbs.db
 
 # Output
 .output
-.vercel
 .netlify
 .wrangler
 /.svelte-kit

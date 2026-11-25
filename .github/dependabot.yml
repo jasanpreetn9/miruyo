@@ -9,10 +9,7 @@ updates:
     groups:
       npm:
         patterns: ['*']
-    # pinned pre-releases for SvelteKit 3 support (see ROADMAP.md)
     ignore:
-      - dependency-name: '@vercel/analytics'
-      - dependency-name: '@vercel/speed-insights'
       # svelte-check's peer range stops at TypeScript 6
       - dependency-name: typescript
         update-types: ['version-update:semver-major']

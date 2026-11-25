@@ -17,7 +17,25 @@ const SECURITY_HEADERS = {
 	'Cross-Origin-Opener-Policy': 'same-origin'
 };
 
+/**
+ * Cloudflare's cache in front of the Worker. A Worker's own responses aren't
+ * cached by the CDN on their own, so public pages (a title, Seasonal,
+ * Schedule: the same for everyone, sent with `s-maxage`) are put here
+ * explicitly, and served from here until they expire. Absent in dev and in
+ * the tests, which run on Node.
+ */
+function edgeCache(): Cache | null {
+	const storage = (globalThis as { caches?: { default?: Cache } }).caches;
+	return storage?.default ?? null;
+}
+
+const SHARED_CACHE = /(^|,)\s*s-maxage=\d+/;
+
 export const handle: Handle = async ({ event, resolve }) => {
+	const cache = event.request.method === 'GET' ? edgeCache() : null;
+	const hit = await cache?.match(event.request);
+	if (hit) return hit;
+
 	const response = await resolve(event);
 	for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
 		if (!response.headers.has(name)) response.headers.set(name, value);
@@ -26,6 +44,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const csp = response.headers.get('content-security-policy');
 	if (csp && isUntracked(event.url.pathname)) {
 		response.headers.set('content-security-policy', withoutCloudflareAnalytics(csp));
+	}
+	if (
+		cache &&
+		response.status === 200 &&
+		SHARED_CACHE.test(response.headers.get('cache-control') ?? '')
+	) {
+		await cache.put(event.request, response.clone());
 	}
 	return response;
 };

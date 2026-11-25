@@ -98,9 +98,8 @@
 		there are no optional cookies, there's no cookie banner to accept.
 	</p>
 	<p>
-		{app} counts page views and measures how fast pages load with Vercel Web Analytics and Speed Insights,
-		and with Cloudflare Web Analytics. None of them use cookies or identify you; the
-		<a href="/privacy">Privacy Policy</a> lists what they record.
+		{app} counts page views and measures how fast pages load with Cloudflare Web Analytics, which doesn't
+		use cookies or identify you; the <a href="/privacy">Privacy Policy</a> lists what it records.
 	</p>
 	<p>
 		When you choose <strong>Log in with AniList</strong>, you go to anilist.co to approve access.
