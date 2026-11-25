@@ -1,11 +1,20 @@
 // What search engines and link previews (Discord, Reddit, X, iMessage…) see.
 // The root layout writes the tags from here, keyed by route id, so a page
 // needs no head tags of its own beyond its <title>. A server-rendered page
-// can return its own `meta` from its load (the title page: the show's name,
+// can return its own `meta` from its load (a title page: the show's name,
 // synopsis and art), which wins over its route's.
 
 import { stripHtml } from '#lib/anilist/humanize.ts';
-import type { DetailMedia } from '#lib/anilist/types.ts';
+import type {
+	CharacterPerson,
+	DetailMedia,
+	StaffPerson,
+	StudioPage,
+	UserAccount
+} from '#lib/anilist/types.ts';
+import { parseDescription } from '#lib/page-data/markdown.ts';
+import { bioText, createCharacterContent, createStaffContent } from '#lib/page-data/person.ts';
+import { createStudioContent } from '#lib/page-data/studio.ts';
 import { PUBLIC_SITE_URL } from '$app/env/public';
 
 /** The site's public origin (PUBLIC_SITE_URL); share cards and the sitemap need absolute URLs. */
@@ -198,6 +207,79 @@ export function titleMeta(media: DetailMedia): PageMeta {
 			url: `${SITE_URL}/title/${media.id}`,
 			sameAs: `https://anilist.co/${kind}/${media.id}`
 		}
+	};
+}
+
+/** A staff page's tags, from its signed-out details. */
+export function staffMeta(staff: StaffPerson): PageMeta {
+	const content = createStaffContent(staff, { titles: 'english' });
+	const occupation = staff.primaryOccupations?.join(', ');
+	const bio = bioText(content.bio);
+	const roles = content.voiceRoles.length ? 'voice roles' : 'credits';
+	return {
+		title: content.name,
+		description: bio
+			? summarize(bio)
+			: `${content.name}${occupation ? `, ${occupation}` : ''}: ${roles} and more on miruyo.`,
+		image: content.image ? { url: content.image, alt: content.name } : undefined,
+		jsonLd: {
+			'@context': 'https://schema.org',
+			'@type': 'Person',
+			name: content.name,
+			...(content.native && { alternateName: [content.native, ...content.altNames] }),
+			...(!!bio && { description: summarize(bio, 500) }),
+			...(!!content.image && { image: content.image }),
+			...(!!occupation && { jobTitle: occupation }),
+			url: `${SITE_URL}/staff/${staff.id}`,
+			sameAs: `https://anilist.co/staff/${staff.id}`
+		}
+	};
+}
+
+/** A studio page's tags: what it is and its best-known titles. */
+export function studioMeta(studio: StudioPage): PageMeta {
+	const content = createStudioContent(studio, { titles: 'english' });
+	const known = content.titles
+		.slice(0, 3)
+		.map((t) => t.media.title)
+		.join(', ');
+	return {
+		title: content.name,
+		description: `${content.name}, ${content.kind.toLowerCase()}${known ? `: ${known} and more` : ''}. Its titles on miruyo.`,
+		jsonLd: {
+			'@context': 'https://schema.org',
+			'@type': 'Organization',
+			name: content.name,
+			url: `${SITE_URL}/studio/${studio.id}`,
+			sameAs: `https://anilist.co/studio/${studio.id}`
+		}
+	};
+}
+
+/** A character page's tags. Their bio's spoilers are left out. */
+export function characterMeta(character: CharacterPerson): PageMeta {
+	const content = createCharacterContent(character, { titles: 'english' });
+	const bio = bioText(content.bio);
+	const from = content.appearances[0]?.media.title;
+	return {
+		title: content.name,
+		description: bio
+			? summarize(bio)
+			: `${content.name}${from ? `, from ${from}` : ''}: the titles they're in and who voices them.`,
+		image: content.image ? { url: content.image, alt: content.name } : undefined
+	};
+}
+
+/** A user page's share card: their name, bio and avatar. Never indexed. */
+export function userMeta(account: UserAccount): PageMeta {
+	const bio = bioText(parseDescription(account.about).paragraphs);
+	return {
+		title: account.name,
+		description: bio
+			? summarize(bio)
+			: `${account.name}’s anime and manga: favourites, stats and their list.`,
+		image: account.avatar?.large ? { url: account.avatar.large, alt: account.name } : undefined,
+		noindex: true
 	};
 }
 

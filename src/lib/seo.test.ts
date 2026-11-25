@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { makeDetail } from '#lib/anilist/fixtures.ts';
-import { routeMeta, SITE_URL, SITEMAP_PATHS, summarize, titleMeta } from './seo.ts';
+import { makeCharacter, makeDetail, makePersonMedia, makeStaff } from '#lib/anilist/fixtures.ts';
+import {
+	characterMeta,
+	routeMeta,
+	SITE_URL,
+	SITEMAP_PATHS,
+	staffMeta,
+	studioMeta,
+	summarize,
+	titleMeta
+} from './seo.ts';
 
 describe('routeMeta', () => {
 	it('uses the route’s headline and description', () => {
@@ -132,5 +141,70 @@ describe('titleMeta', () => {
 		const meta = titleMeta(makeDetail({ format: 'MOVIE', isAdult: true }));
 		expect(meta.jsonLd?.['@type']).toBe('Movie');
 		expect(meta.noindex).toBe(true);
+	});
+});
+
+describe('people', () => {
+	it('gives a staff page its own card and Person data', () => {
+		const meta = staffMeta(
+			makeStaff({
+				description:
+					'__Height:__ 157 cm\n\n[Twitter](https://twitter.com/x) | [Profile](https://x.jp)\n\nA Japanese voice actress.'
+			})
+		);
+		expect(meta.title).toBe('Atsumi Tanezaki');
+		expect(meta.description).toBe('A Japanese voice actress.');
+		expect(meta.image?.url).toBe('https://s4.anilist.co/staff.jpg');
+		expect(meta.jsonLd).toMatchObject({
+			'@type': 'Person',
+			name: 'Atsumi Tanezaki',
+			jobTitle: 'Voice Actor',
+			sameAs: 'https://anilist.co/staff/112215'
+		});
+		expect(routeMeta('/staff/[id]', meta).noindex).toBe(false);
+	});
+
+	it('keeps a character’s spoilers out of search results and share cards', () => {
+		const meta = characterMeta(
+			makeCharacter({ description: 'A thousand-year-old mage. ~!She outlives them all.!~' })
+		);
+		expect(meta.description).toBe('A thousand-year-old mage.');
+		expect(meta.title).toBe('Frieren');
+	});
+});
+
+describe('studioMeta', () => {
+	it('names the studio, what it is and its best-known titles, as an Organization', () => {
+		const meta = studioMeta({
+			id: 11,
+			name: 'MADHOUSE',
+			isAnimationStudio: true,
+			siteUrl: null,
+			favourites: 1,
+			isFavourite: false,
+			media: {
+				pageInfo: { total: 4, hasNextPage: false },
+				edges: ['Death Note', 'Hunter x Hunter', 'One-Punch Man', 'Overlord'].map((t, i) => ({
+					isMainStudio: true,
+					node: makePersonMedia({
+						id: i + 1,
+						title: { romaji: t, english: t, native: null, userPreferred: t }
+					})
+				}))
+			}
+		});
+		expect(meta.title).toBe('MADHOUSE');
+		expect(meta.description).toBe(
+			'MADHOUSE, animation studio: Death Note, Hunter x Hunter, One-Punch Man and more. Its titles on miruyo.'
+		);
+		expect(meta.jsonLd).toMatchObject({
+			'@type': 'Organization',
+			url: `${SITE_URL}/studio/11`,
+			sameAs: 'https://anilist.co/studio/11'
+		});
+	});
+
+	it('is indexed, like the staff and character pages', () => {
+		expect(routeMeta('/studio/[id]').noindex).toBe(false);
 	});
 });

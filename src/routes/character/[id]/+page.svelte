@@ -18,9 +18,12 @@
 	import { PagedResults } from '#lib/state/paged.svelte.ts';
 	import { Resource } from '#lib/state/resource.svelte.ts';
 	import { session } from '#lib/state/session.svelte.ts';
+	import type { PageProps } from './$types';
 
 	// A character (the title page's layout): who they are, then every title
 	// they're in with who voices them, one language at a time.
+
+	let { data }: PageProps = $props();
 
 	type Edge = CharacterAppearances['edges'][number];
 
@@ -46,7 +49,10 @@
 		appearances.reset();
 	});
 
-	const loaded = $derived(character.data?.id === id ? character.data : null);
+	// the server's signed-out copy (first load only) shows until the browser's own arrives
+	const loaded = $derived(
+		character.data?.id === id ? character.data : data.character?.id === id ? data.character : null
+	);
 
 	// the first page of appearances comes with the character
 	$effect(() => {
