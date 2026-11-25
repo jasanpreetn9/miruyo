@@ -2,12 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { makeMedia } from '#lib/anilist/fixtures.ts';
 import type { SeasonMedia } from '#lib/anilist/types.ts';
 import {
+	buildCard,
 	buildSeasonChart,
 	longDuration,
 	parseSeasonParams,
 	scoreFace,
 	seasonHref,
 	seasonWindow,
+	SERVER_LEFTOVERS,
+	SERVER_TITLES,
+	serverChart,
 	shiftSeason
 } from './season-chart.ts';
 
@@ -195,5 +199,56 @@ describe('buildSeasonChart', () => {
 		expect(ids('airing')).toEqual([11, 10]);
 		expect(ids('popularity', 'brav')).toEqual([10]);
 		expect(ids('popularity', 'zzz')).toBeUndefined();
+	});
+});
+
+describe('serverChart', () => {
+	const title = (english: string) => ({ romaji: english, english, userPreferred: english });
+	const full = seasonMedia({
+		id: 7,
+		description: `<i>Frieren</i> ${'walks on. '.repeat(60)}`,
+		bannerImage: 'https://img/banner.jpg',
+		rankings: [
+			{ rank: 3, type: 'POPULAR', season: 'FALL', year: 2026, allTime: false },
+			{ rank: 90, type: 'RATED', season: null, year: null, allTime: true }
+		],
+		relations: {
+			edges: [
+				{ relationType: 'ADAPTATION', node: { id: 1, type: 'MANGA', title: title('The manga') } },
+				{ relationType: 'PREQUEL', node: { id: 2, type: 'ANIME', title: title('Season 1') } },
+				{ relationType: 'SIDE_STORY', node: { id: 3, type: 'ANIME', title: title('A special') } }
+			]
+		}
+	});
+
+	it('keeps what a card shows and drops the rest', () => {
+		const [slim] = serverChart({ media: [full], leftovers: [] }, FALL_2026).media;
+		expect(slim.bannerImage).toBeNull();
+		expect(slim.relations?.edges.map((e) => e.node.id)).toEqual([2]);
+		expect(slim.rankings?.map((r) => r.rank)).toEqual([3]);
+		expect(slim.description?.startsWith('Frieren walks on.')).toBe(true);
+		expect(slim.description?.length).toBeLessThanOrEqual(301);
+		expect(slim.description?.endsWith('on.…')).toBe(true);
+		// the card reads the same, synopsis and the (unshown) banner aside
+		const options = { season: FALL_2026, now: NOW };
+		const { synopsis, ...card } = buildCard(slim, options);
+		const { synopsis: fullSynopsis, ...fullCard } = buildCard(full, options);
+		expect(card).toEqual({
+			...fullCard,
+			title: { ...fullCard.title, synopsis: card.title.synopsis, banner: undefined }
+		});
+		expect(fullSynopsis.startsWith(synopsis.slice(0, -1))).toBe(true);
+		expect(card.origin).toBe('Sequel to Season 1');
+		expect(card.popularRank).toBe(3);
+	});
+
+	it("renders the season's best-known titles, with the whole chart's counts", () => {
+		const media = Array.from({ length: 40 }, (_, i) => seasonMedia({ id: i + 1 }));
+		const leftovers = Array.from({ length: 20 }, (_, i) => seasonMedia({ id: i + 100 }));
+		const chart = serverChart({ media, leftovers }, FALL_2026);
+		expect(chart.media.map((m) => m.id)).toEqual(media.slice(0, SERVER_TITLES).map((m) => m.id));
+		expect(chart.leftovers).toHaveLength(SERVER_LEFTOVERS);
+		expect(chart.total).toBe(40);
+		expect(chart.leftoverTotal).toBe(20);
 	});
 });

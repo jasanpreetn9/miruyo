@@ -4,6 +4,8 @@ What changed on the website, newest first. Add a line under **Unreleased** with 
 
 ## Unreleased
 
+- Seasonal opens faster: the first view shows the season's best-known titles, and the rest fill in a moment later.
+
 ## Nov 19, 2026: first public release
 
 The source is now open, under the MIT licence. What the site does at this point:

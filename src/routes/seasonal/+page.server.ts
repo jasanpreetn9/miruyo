@@ -1,10 +1,16 @@
 import { fetchSeasonChart } from '#lib/anilist/client.ts';
-import { parseSeasonParams, SEASON_NAMES, seasonHref } from '#lib/page-data/season-chart.ts';
+import {
+	parseSeasonParams,
+	SEASON_NAMES,
+	seasonHref,
+	serverChart
+} from '#lib/page-data/season-chart.ts';
 import { loadPublic } from '#lib/server/public-load.ts';
 import type { PageServerLoad } from './$types';
 
-// The season's signed-out chart, for the first render and search engines.
-// The page fetches the viewer's own (18+, list state) in the browser.
+// The season's signed-out chart, for the first render and search engines:
+// its best-known titles, slimmed to what a card shows (serverChart). The page
+// fetches the whole chart, and the viewer's own (18+, list state), in the browser.
 export const load: PageServerLoad = async (event) => {
 	const now = new Date();
 	const { season, year } = parseSeasonParams(event.url.searchParams, now);
@@ -13,7 +19,7 @@ export const load: PageServerLoad = async (event) => {
 		fetchSeasonChart(season, year, { signedIn: false, showAdult: false })
 	);
 	return {
-		chart: chart && { season, year, ...chart },
+		chart: chart && { season, year, ...serverChart(chart, { season, year }) },
 		meta: {
 			title: `${name} anime chart`,
 			description: chart?.media.length
