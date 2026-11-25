@@ -14,9 +14,6 @@ import { isAniListError } from '#lib/anilist/client.ts';
  */
 export const PUBLIC_CACHE = 'public, max-age=0, s-maxage=600, stale-while-revalidate=86400';
 
-/** A navigation's data request: always null here, so it can be kept for a day. */
-export const DATA_REQUEST_CACHE = 'public, max-age=0, s-maxage=86400';
-
 /**
  * Fetches a page's public data for the first render, or null when there's
  * nothing to add: on client-side navigation (the page fetches in the browser,
@@ -29,13 +26,7 @@ export async function loadPublic<T>(
 	event: Pick<ServerLoadEvent, 'isDataRequest' | 'setHeaders'>,
 	fetch: () => Promise<T>
 ): Promise<T | null> {
-	// a client-side navigation's data request answers the same null to everyone,
-	// so the CDN keeps it rather than waking the server each time
-	if (event.isDataRequest) {
-		event.setHeaders({ 'cache-control': DATA_REQUEST_CACHE });
-		return null;
-	}
-	if (!SSR_ANILIST) return null;
+	if (event.isDataRequest || !SSR_ANILIST) return null;
 	try {
 		const data = await fetch();
 		event.setHeaders({ 'cache-control': PUBLIC_CACHE });
