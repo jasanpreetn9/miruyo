@@ -4,7 +4,7 @@ What changed on the website, newest first. Add a line under **Unreleased** with 
 
 ## Unreleased
 
-- Seasonal opens faster: the first view shows the season's best-known titles, and the rest fill in a moment later.
+- Seasonal and Schedule open faster: the first view shows the season's best-known titles, or the next few days of airings, and the rest fill in a moment later.
 
 ## Nov 19, 2026: first public release
 

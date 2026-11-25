@@ -138,6 +138,50 @@ export interface CalendarOptions {
 
 const WATCHING: MediaListStatus[] = ['CURRENT', 'REPEATING'];
 
+/**
+ * A week's airings as the server sends them. An airing card shows the title,
+ * its cover and its episode count, so the rest of each title (genres,
+ * studios, scores, dates, the next episode) is left out. The page carries
+ * this data twice (as HTML and for the browser to take over), so every field
+ * left out counts twice; the browser's own copy has them all.
+ */
+export function slimForSchedule(slots: AiringSlot[]): AiringSlot[] {
+	return slots.map((slot) => ({
+		...slot,
+		media: {
+			...slot.media,
+			season: null,
+			seasonYear: null,
+			duration: null,
+			chapters: null,
+			volumes: null,
+			averageScore: null,
+			popularity: null,
+			genres: [],
+			countryOfOrigin: null,
+			startDate: null,
+			studios: { nodes: [] },
+			nextAiringEpisode: null
+		}
+	}));
+}
+
+/** How many airings the server renders; the browser loads the rest of the week. */
+export const SERVER_AIRINGS = 40;
+
+/**
+ * The airings the server renders: the next 40 from a day ago (the server
+ * doesn't know the viewer's timezone, so "today" could have started up to a
+ * day earlier), or a past week's first 40, slimmed to what a card shows. A
+ * whole week (well over 100 cards, sent twice over) was about 290 KB a
+ * visit; the browser's own copy fills in the rest.
+ */
+export function serverWeek(slots: AiringSlot[], now: Date): AiringSlot[] {
+	const from = Math.floor(now.getTime() / 1000) - 86400;
+	const upcoming = slots.filter((s) => s.airingAt >= from);
+	return slimForSchedule((upcoming.length ? upcoming : slots).slice(0, SERVER_AIRINGS));
+}
+
 /** Seven days from `monday`, each with its airings in local time. */
 export function buildCalendar(
 	slots: AiringSlot[],
