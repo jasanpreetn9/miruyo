@@ -20,13 +20,10 @@
 	import { Resource } from '#lib/state/resource.svelte.ts';
 	import { session } from '#lib/state/session.svelte.ts';
 	import { studioSort } from './sort.ts';
-	import type { PageProps } from './$types';
 
 	// A studio: what it is, then the titles it made, most popular or newest
 	// first (?sort=newest), as the staff page lists someone's credits. Studios
 	// have no picture or bio on AniList, so the header is the name alone.
-
-	let { data }: PageProps = $props();
 
 	type Edge = StudioMedia['edges'][number];
 	/** The studio, and the sort its first page of titles came in. */
@@ -61,14 +58,7 @@
 		titles.reset();
 	});
 
-	// the server's signed-out copy (first load only) shows until the browser's own arrives
-	const loaded = $derived<Loaded | null>(
-		studio.data?.studio.id === id
-			? studio.data
-			: data.studio?.id === id
-				? { studio: data.studio, sort: data.sort }
-				: null
-	);
+	const loaded = $derived<Loaded | null>(studio.data?.studio.id === id ? studio.data : null);
 
 	const toPage = (m: StudioMedia): Page<Edge> => ({
 		items: m.edges,

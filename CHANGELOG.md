@@ -4,6 +4,8 @@ What changed on the website, newest first. Add a line under **Unreleased** with 
 
 ## Unreleased
 
+- Character, staff, studio and user pages now load in your browser, so their shared links show the site's own card rather than the page's. Links load ahead when you tap them, not when you hover.
+
 ## Nov 19, 2026: first public release
 
 The source is now open, under the MIT licence. What the site does at this point:

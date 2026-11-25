@@ -11,7 +11,6 @@
 	import { userHeader } from '#lib/page-data/user.ts';
 	import { mediaTypeFor, session } from '#lib/state/session.svelte.ts';
 	import { setUserPage, UserPage } from '#lib/state/user-page.svelte.ts';
-	import type { LayoutProps } from './$types';
 
 	// Someone's page, in the title and staff pages' layout (PersonLayout): the
 	// avatar, Follow and a facts card in the left column; the name, bio and the
@@ -22,15 +21,12 @@
 	// addresses open it). The tabs share one load of the profile (UserPage);
 	// their lists load as a tab needs them.
 
-	let { data, children }: LayoutProps = $props();
+	let { children } = $props();
 
 	const name = $derived(page.params.name ?? '');
 	const signedIn = $derived(session.authState === 'in');
 
-	const user = new UserPage(
-		() => name,
-		() => data.profile
-	);
+	const user = new UserPage(() => name);
 	setUserPage(user);
 
 	$effect(() => {
