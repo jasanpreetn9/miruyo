@@ -69,11 +69,12 @@
 		if (authSettled) void loadChart();
 	});
 
-	// the server's signed-out chart (first load only) shows until the browser's own arrives
-	const chartData = $derived(
-		chart.data ??
-			(data.chart?.season === season.season && data.chart.year === season.year ? data.chart : null)
+	// the server's signed-out chart (first load only: the season's best-known
+	// titles) shows until the browser's own, whole chart arrives
+	const serverChart = $derived(
+		data.chart?.season === season.season && data.chart.year === season.year ? data.chart : null
 	);
+	const chartData = $derived(chart.data ?? serverChart);
 	$effect(() => () => chart.reset());
 
 	let sort = $state<ChartSort>('popularity');
@@ -99,7 +100,8 @@
 				})
 			: null
 	);
-	const total = $derived(chartData?.media.length ?? 0);
+	const total = $derived(chart.data?.media.length ?? serverChart?.total ?? 0);
+	const leftoverTotal = $derived(chart.data?.leftovers.length ?? serverChart?.leftoverTotal ?? 0);
 
 	/** The season's kanji for the masthead (秋, autumn), as in a Japanese magazine's season issue. */
 	const KANJI: Record<string, string> = {
@@ -146,9 +148,9 @@
 				<p class="m-0 max-w-[56ch] rise text-[15px] leading-relaxed text-muted [--d:160ms]">
 					{#if chartData}
 						<b class="font-semibold text-ink">{total} {total === 1 ? 'title' : 'titles'}</b>
-						premiering{#if chartData.leftovers.length},
-							<b class="font-semibold text-ink">{chartData.leftovers.length} still airing</b> from earlier
-							seasons{/if}. Ranked by how many people on AniList are watching.
+						premiering{#if leftoverTotal},
+							<b class="font-semibold text-ink">{leftoverTotal} still airing</b> from earlier seasons{/if}.
+						Ranked by how many people on AniList are watching.
 					{:else}&nbsp;{/if}
 				</p>
 			</div>
@@ -274,6 +276,16 @@
 						: `Nothing announced for ${seasonName} yet.`}
 				</p>
 			{/each}
+			<!-- the server's first titles are showing, but the rest didn't load -->
+			{#if !chart.data && chart.failed}
+				<SectionError
+					title="Couldn't load the rest of {seasonName}"
+					onRetry={loadChart}
+					detail={chart.error}
+					retryIn={chart.retry.active ? chart.retry.label : undefined}
+					rateLimited={chart.rateLimited}
+				/>
+			{/if}
 		{/if}
 	</div>
 </PageShell>

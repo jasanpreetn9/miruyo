@@ -1,4 +1,5 @@
 import { adaptMedia, type AdaptOptions } from '#lib/anilist/adapt.ts';
+import { stripHtml } from '#lib/anilist/humanize.ts';
 import type { MediaListStatus, MediaSeason, SeasonMedia } from '#lib/anilist/types.ts';
 import type { Title } from '#lib/catalog/types.ts';
 import { seasonOf, type SeasonRef } from './seasonal.ts';
@@ -285,4 +286,62 @@ export function buildSeasonChart(
 			.filter((c) => matches(c, filter));
 		return { key, label, cards: sortCards(cards, sort) };
 	}).filter((s) => s.cards.length);
+}
+
+/** How many of the season's titles, and of its leftovers, the server renders; the browser loads the rest. */
+export const SERVER_TITLES = 24;
+export const SERVER_LEFTOVERS = 8;
+/** A card shows two lines of synopsis, so the server sends about this much of it. */
+const SERVER_SYNOPSIS = 300;
+
+/** The server's first render of a chart: its best-known titles, and the full counts. */
+export interface ServerChart {
+	media: SeasonMedia[];
+	leftovers: SeasonMedia[];
+	/** How many titles premiere, and how many are left over, in the whole chart. */
+	total: number;
+	leftoverTotal: number;
+}
+
+/**
+ * Only what a card shows: the synopsis cut to a card's length, no banner, and
+ * of its relations and rankings only the prequel and the season's popularity
+ * rank. The page carries this data twice (as HTML and for the browser to take
+ * over), so every field left out counts twice.
+ */
+function slimForCard(m: SeasonMedia, season: SeasonRef): SeasonMedia {
+	const synopsis = m.description ? stripHtml(m.description) : null;
+	const cut = synopsis && synopsis.length > SERVER_SYNOPSIS;
+	return {
+		...m,
+		description: cut ? `${synopsis.slice(0, SERVER_SYNOPSIS).replace(/\s+\S*$/, '')}…` : synopsis,
+		bannerImage: null,
+		relations: m.relations && {
+			edges: m.relations.edges
+				.filter((e) => e.relationType === 'PREQUEL' && e.node.type === 'ANIME')
+				.slice(0, 1)
+		},
+		rankings: m.rankings?.filter(
+			(r) =>
+				r.type === 'POPULAR' && !r.allTime && r.season === season.season && r.year === season.year
+		)
+	};
+}
+
+/**
+ * The chart the server renders: the season's most popular titles and
+ * leftovers, slimmed to what a card shows. Rendering the whole season (well
+ * over 100 cards, sent twice over) cost about 25 ms of CPU and 800 KB a
+ * visit; the browser's own copy fills in the rest.
+ */
+export function serverChart(
+	chart: { media: SeasonMedia[]; leftovers: SeasonMedia[] },
+	season: SeasonRef
+): ServerChart {
+	return {
+		media: chart.media.slice(0, SERVER_TITLES).map((m) => slimForCard(m, season)),
+		leftovers: chart.leftovers.slice(0, SERVER_LEFTOVERS).map((m) => slimForCard(m, season)),
+		total: chart.media.length,
+		leftoverTotal: chart.leftovers.length
+	};
 }
