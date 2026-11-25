@@ -8,6 +8,9 @@ import {
 	parseWeekParam,
 	seasonOf,
 	seasonStart,
+	SERVER_AIRINGS,
+	serverWeek,
+	slimForSchedule,
 	timezoneLabel,
 	toWeekParam,
 	weekLabel
@@ -126,5 +129,61 @@ describe('buildCalendar', () => {
 
 		const mine = buildCalendar(slots, monday, { now, entry, mineOnly: true });
 		expect(mine.flatMap((d) => d.slots).map((s) => s.title.id)).toEqual([101, 100]);
+	});
+});
+
+describe('slimForSchedule', () => {
+	it('keeps every airing card the same, leaving out what a card never shows', () => {
+		const monday = mondayOf(at(2026, 10, 7));
+		const now = at(2026, 10, 7, 18, 20);
+		const slots: AiringSlot[] = [
+			{ id: 1, episode: 9, airingAt: unix(at(2026, 10, 7, 23)), media: makeMedia({ id: 100 }) },
+			{ id: 2, episode: 4, airingAt: unix(at(2026, 10, 9, 12)), media: makeMedia({ id: 101 }) }
+		];
+		const slim = slimForSchedule(slots);
+		expect(slim[0].media.genres).toEqual([]);
+		expect(slim[0].media.studios.nodes).toEqual([]);
+		// what an airing card reads (+page.svelte's airingCard and CoverImage)
+		const shown = (s: AiringSlot[]) =>
+			buildCalendar(s, monday, { now, titles: 'english' }).flatMap((d) =>
+				d.slots.map(({ title, ...slot }) => ({
+					...slot,
+					title: {
+						id: title.id,
+						title: title.title,
+						total: title.total,
+						accent: title.accent,
+						placeholder: title.placeholder,
+						coverUrl: title.coverUrl,
+						thumbUrl: title.thumbUrl,
+						thumbSmallUrl: title.thumbSmallUrl
+					}
+				}))
+			);
+		expect(shown(slim)).toEqual(shown(slots));
+	});
+});
+
+describe('serverWeek', () => {
+	const now = at(2026, 10, 7, 18, 20);
+	const week = Array.from({ length: 120 }, (_, i) => ({
+		id: i,
+		episode: 1,
+		airingAt: unix(at(2026, 10, 5)) + i * 3600,
+		media: makeMedia({ id: 1000 + i })
+	}));
+
+	it('renders the next airings from a day ago, slimmed', () => {
+		const slots = serverWeek(week, now);
+		expect(slots).toHaveLength(SERVER_AIRINGS);
+		expect(slots[0].airingAt).toBeGreaterThanOrEqual(unix(now) - 86400);
+		expect(slots[0].airingAt - 3600).toBeLessThan(unix(now) - 86400);
+		expect(slots[0].media.genres).toEqual([]);
+	});
+
+	it("renders a past week's first airings", () => {
+		expect(serverWeek(week, at(2026, 11, 1)).map((s) => s.id)).toEqual(
+			week.slice(0, SERVER_AIRINGS).map((s) => s.id)
+		);
 	});
 });

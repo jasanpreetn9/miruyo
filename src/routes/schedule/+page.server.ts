@@ -1,11 +1,12 @@
 import { fetchAiringWeek } from '#lib/anilist/client.ts';
-import { addDays, parseWeekParam, toWeekParam } from '#lib/page-data/seasonal.ts';
+import { addDays, parseWeekParam, serverWeek, toWeekParam } from '#lib/page-data/seasonal.ts';
 import { parseSeasonParams, SEASON_NAMES } from '#lib/page-data/season-chart.ts';
 import { loadPublic } from '#lib/server/public-load.ts';
 import type { PageMeta } from '#lib/seo.ts';
 import type { PageServerLoad } from './$types';
 
-// The week's signed-out airings, for the first render and search engines.
+// The week's signed-out airings, for the first render and search engines,
+// the next few days' worth, slimmed to what an airing card shows (serverWeek).
 // The week is the server's (UTC); the page fetches the viewer's own week, in
 // their timezone, in the browser.
 export const load: PageServerLoad = async (event) => {
@@ -18,7 +19,7 @@ export const load: PageServerLoad = async (event) => {
 	);
 	const { season, year } = parseSeasonParams(new URLSearchParams(), monday);
 	return {
-		week: slots && { start, slots },
+		week: slots && { start, slots: serverWeek(slots, new Date()) },
 		meta: {
 			headline: `${SEASON_NAMES[season]} ${year} Anime Schedule: Episode Release Times`,
 			canonical: week ? `/schedule?week=${toWeekParam(monday)}` : '/schedule'

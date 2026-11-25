@@ -487,6 +487,16 @@
 							</div>
 						</details>
 					{/if}
+					<!-- the server's first airings are showing, but the rest of the week didn't load -->
+					{#if !week.data && week.failed}
+						<SectionError
+							title="Couldn't load the rest of the week"
+							onRetry={loadWeek}
+							detail={week.error}
+							retryIn={week.retry.active ? week.retry.label : undefined}
+							rateLimited={week.rateLimited}
+						/>
+					{/if}
 				</div>
 			{/if}
 		</div>
