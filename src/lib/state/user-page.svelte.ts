@@ -34,20 +34,16 @@ export class UserPage {
 	readonly history = new Resource<ActivityDay[]>();
 
 	readonly #name: () => string;
-	readonly #server: () => Profile<UserAccount> | null | undefined;
 
-	/** `server`: the signed-out copy rendered on the server, shown until the browser's own arrives. */
-	constructor(name: () => string, server: () => Profile<UserAccount> | null | undefined) {
+	constructor(name: () => string) {
 		this.#name = name;
-		this.#server = server;
 	}
 
 	/** Their profile, as long as it's the one in the URL. */
 	get loaded(): Profile<UserAccount> | null {
 		const name = this.#name().toLowerCase();
-		const mine = (p: Profile<UserAccount> | null | undefined) =>
-			p?.account.name.toLowerCase() === name ? p : null;
-		return mine(this.profile.data) ?? mine(this.#server());
+		const p = this.profile.data;
+		return p?.account.name.toLowerCase() === name ? p : null;
 	}
 
 	get account(): UserAccount | null {

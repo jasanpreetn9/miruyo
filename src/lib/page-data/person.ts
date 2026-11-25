@@ -166,24 +166,6 @@ function header(
 	};
 }
 
-/**
- * A bio as plain text for search results and share cards: without its
- * spoilers, or lines that are only links ("Twitter | Official site").
- */
-export function bioText(bio: Paragraph[]): string {
-	return bio
-		.filter((p) => p.some((s) => !s.href && !/^[\s|·•,/-]*$/.test(s.text)))
-		.map((p) =>
-			p
-				.filter((s) => !s.spoiler)
-				.map((s) => s.text)
-				.join('')
-				.trim()
-		)
-		.filter(Boolean)
-		.join(' ');
-}
-
 export function createStaffContent(
 	staff: StaffPerson,
 	{ titles = 'userPreferred', adult = false }: PersonOptions = {}

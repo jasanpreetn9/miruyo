@@ -22,13 +22,10 @@
 	import { Resource } from '#lib/state/resource.svelte.ts';
 	import { session } from '#lib/state/session.svelte.ts';
 	import { staffSort } from './sort.ts';
-	import type { PageProps } from './$types';
 
 	// A staff member (design: the title page's layout): who they are, then their
 	// voice roles and credits, most popular or newest first (?sort=newest).
 	// "What else has this voice actor done" is the point of the page.
-
-	let { data }: PageProps = $props();
 
 	type VoiceEdge = StaffVoiceRoles['edges'][number];
 	type CreditEdge = StaffCredits['edges'][number];
@@ -67,14 +64,7 @@
 		credits.reset();
 	});
 
-	// the server's signed-out copy (first load only) shows until the browser's own arrives
-	const loaded = $derived<Loaded | null>(
-		staff.data?.person.id === id
-			? staff.data
-			: data.staff?.id === id
-				? { person: data.staff, sort: data.sort }
-				: null
-	);
+	const loaded = $derived<Loaded | null>(staff.data?.person.id === id ? staff.data : null);
 
 	const toPage = <E,>(c: {
 		pageInfo: { total: number | null; hasNextPage: boolean };
