@@ -24,11 +24,6 @@ From PageSpeed's mobile report:
 - [ ] Self-host the fonts: Google Fonts' CSS blocks rendering for about 0.75s.
 - [ ] Covers are AniList's PNGs (up to 560 KB), which only an image resizer would shrink.
 
-## Maintenance
-
-- [ ] **Move Vercel analytics to stable releases.** `@vercel/analytics` and `@vercel/speed-insights` are pinned to pre-releases (`2.1.0-canary.5`, `2.1.0-canary`), the first to declare SvelteKit 3 support. When a stable release lists `^3` (`npm view @vercel/analytics peerDependencies`), switch both to it. Keep using the plain `inject()` / `injectSpeedInsights()`: the `/sveltekit` entry points use `$app/stores`, which throws in SvelteKit 3. `src/lib/analytics.test.ts` fails if either comes back.
-- [ ] **Cloudflare:** turn off Cloudflare's Web Analytics on miruyo.jnagra.com. Its injected beacon is blocked by the CSP, which adds a hop and console errors.
-
 ## Later
 
 - [ ] **An installable app.** The manifest's `display` is `browser`, so the site can't be installed as a PWA yet.
@@ -43,7 +38,8 @@ Settled, so they don't get reopened by accident:
 - **Sharing a list** shares your page at `/user/[name]`, which has Overview, Anime list and Manga list, each at its own address.
 - **For You** is a row on Home with "See all" opening `/for-you`; it has no nav item.
 - **Settings** holds only what changes what miruyo shows, saved to AniList.
-- **Server-side rendering** is for the first load of the title page, Seasonal and Schedule. Each has a `+page.server.ts` that fetches the signed-out data (`src/lib/server/public-load.ts`); the browser's own copy (your list state, 18+) replaces it once it loads. Client-side navigation skips the server fetch. The pages are the same for everyone, so the CDN caches them (`s-maxage=600, stale-while-revalidate=86400`), and the CSP uses hashes rather than nonces for that reason. `SSR_ANILIST=off` turns the server fetch off (e2e does, since its mocks reach only the browser).
+- **Hosting:** Cloudflare Workers (`wrangler.jsonc`, `@sveltejs/adapter-cloudflare`), moved from Vercel in November 2026 after a scraper used up Vercel's free transfer and the site was paused for a month. On Workers, static files are free and unlimited, page renders count toward 100,000 requests a day, and going over stops the site only until the next day. Bot Fight Mode and Cloudflare's AI-crawler rules sit in front. Analytics are Cloudflare Web Analytics, which Cloudflare injects; there's no analytics code in the app.
+- **Server-side rendering** is for the first load of the title page, Seasonal and Schedule. Each has a `+page.server.ts` that fetches the signed-out data (`src/lib/server/public-load.ts`); the browser's own copy (your list state, 18+) replaces it once it loads. Client-side navigation skips the server fetch. The pages are the same for everyone, so Cloudflare's edge cache keeps them for ten minutes (`s-maxage=600`, put there by `src/hooks.server.ts`), and the CSP uses hashes rather than nonces for that reason. Seasonal and Schedule render only their first titles on the server, slimmed to what a card shows, and the browser fills in the rest. `SSR_ANILIST=off` turns the server fetch off (e2e does, since its mocks reach only the browser).
 
 Still open:
 

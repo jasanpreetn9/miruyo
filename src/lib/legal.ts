@@ -20,7 +20,7 @@ export const LEGAL = {
 	/** The iOS app's App Store page; the footer shows a link once it's set. */
 	appStore: null as string | null,
 	/** When the documents last changed; bump it with every edit. */
-	updated: 'November 9, 2026'
+	updated: 'November 25, 2026'
 } as const;
 
 export const LEGAL_PAGES = [

@@ -1,6 +1,6 @@
 /// <reference types="vitest/config" />
 import tailwindcss from '@tailwindcss/vite';
-import adapter from '@sveltejs/adapter-vercel';
+import adapter from '@sveltejs/adapter-cloudflare';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig, loadEnv } from 'vite';
 
@@ -15,11 +15,10 @@ export default defineConfig(({ mode }) => ({
 			},
 			adapter: adapter(),
 			// one JS and one CSS file rather than a chunk per route: a first visit
-			// is a few requests instead of ~38, and every request counts toward
-			// Vercel's CDN quota (crawlers that run JS cache nothing)
+			// is a few requests instead of ~38 (crawlers that run JS cache nothing)
 			output: { bundleStrategy: 'single' },
 			// SvelteKit hashes its own inline scripts. Hashes, not nonces: public
-			// pages are cached by the CDN (src/lib/server/public-load.ts), and a
+			// pages are cached at the edge (src/hooks.server.ts), and a
 			// nonce shared by every visitor protects nothing. Inline styles stay
 			// allowed: covers and accents are style attributes. The other security
 			// headers are set in src/hooks.server.ts.

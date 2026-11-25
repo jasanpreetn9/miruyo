@@ -4,6 +4,7 @@ What changed on the website, newest first. Add a line under **Unreleased** with 
 
 ## Unreleased
 
+- The site now runs on Cloudflare Workers instead of Vercel. Page counts come from Cloudflare Web Analytics alone, and the Privacy Policy and Cookie Policy say so.
 - Seasonal and Schedule open faster: the first view shows the season's best-known titles, or the next few days of airings, and the rest fill in a moment later.
 
 ## Nov 19, 2026: first public release

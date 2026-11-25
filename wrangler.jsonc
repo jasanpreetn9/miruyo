@@ -1,0 +1,10 @@
+// The Worker that serves the site (Cloudflare Workers, with static assets).
+// The SvelteKit adapter fills in the entry point and the assets directory.
+// The custom domain is set in the Cloudflare dashboard, so a copy of the repo
+// deploys under its own (see README.md).
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "miruyo",
+	"compatibility_date": "2026-11-01",
+	"observability": { "enabled": true }
+}

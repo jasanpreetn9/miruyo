@@ -1,14 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
 // The production smoke test (e2e-prod/): the real build, served by SvelteKit's
-// preview, so code that only runs in production (analytics) runs too. The
-// dev-server e2e suite can't see that code; a crash in it took production
-// down on Nov 2, 2026 (app_stores_removed).
+// preview, which runs the Worker in Cloudflare's own runtime (workerd), so
+// code that only runs in production runs too. The dev-server e2e suite can't
+// see that code; a crash in it took production down on Nov 2, 2026
+// (app_stores_removed).
 //
-// Build first: `npm run build`, then `npm run test:prod`. Vercel's adapter
-// needs Node 22 or 24 to finish (CI switches to 24); on newer Node its last
-// step fails, but the build the preview serves is already written, so this
-// still runs.
+// Build first: `npm run build`, then `npm run test:prod`.
 export default defineConfig({
 	testDir: 'e2e-prod',
 	webServer: {

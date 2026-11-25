@@ -1,9 +1,10 @@
 import { test, expect, type Page } from '@playwright/test';
 
 // Does the production build start? Every page must hydrate without an
-// uncaught error, on a first load and after a client-side navigation. This
-// is the check that would have caught Nov 2, 2026's outage: the dev server
-// never runs production-only code (analytics), and a stub that throws in it
+// uncaught error, on a first load and after a client-side navigation, served
+// by the Worker itself (Cloudflare's runtime, through `vite preview`). This is
+// the check that would have caught Nov 2, 2026's outage: the dev server never
+// runs production-only code, and a stub that throws in it
 // (app_stores_removed) stopped every page from starting.
 //
 // AniList is blocked, so pages show their own "couldn't load" states; that
@@ -56,12 +57,11 @@ test('client-side navigation works', async ({ page }) => {
 	expect(errors).toEqual([]);
 });
 
-test('analytics load in production', async ({ page }) => {
-	const errors = await watch(page);
-	await page.goto('/');
-	await hydrated(page);
-	// served by Vercel only (404 here), but they're asked for: the production-only code ran
-	await expect(page.locator('script[src="/_vercel/insights/script.js"]')).toBeAttached();
-	await expect(page.locator('script[src="/_vercel/speed-insights/script.js"]')).toBeAttached();
-	expect(errors).toEqual([]);
+test('public pages carry the cache header the edge cache keys on', async ({ request }) => {
+	// SSR_ANILIST is off here, so pages render without AniList: what matters is
+	// that a personal page is never marked shareable
+	for (const path of ['/list', '/settings', '/login']) {
+		const cc = (await request.get(path)).headers()['cache-control'] ?? '';
+		expect(cc, path).not.toMatch(/s-maxage/);
+	}
 });
