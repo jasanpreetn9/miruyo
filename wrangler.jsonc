@@ -6,5 +6,10 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "miruyo",
 	"compatibility_date": "2026-11-01",
-	"observability": { "enabled": true }
+	"observability": { "enabled": true },
+	// AniList has blocked this Worker's requests, so the server doesn't ask it
+	// for anything: public pages load their data in the browser, and the title
+	// sitemaps answer 503. Remove this once the block is lifted. It lives here,
+	// not in the dashboard, because each deploy replaces the dashboard's values.
+	"vars": { "SSR_ANILIST": "off" }
 }
