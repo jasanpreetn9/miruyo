@@ -54,8 +54,8 @@ export const variables = defineEnvVars({
 	/**
 	 * Set to `off` to skip the server's AniList fetch on public pages (see
 	 * src/lib/server/public-load.ts): they then render as skeletons and load in
-	 * the browser. The e2e server sets it, since its tests mock AniList in the
-	 * browser only.
+	 * the browser, and the AniList sitemaps answer 503. The e2e server sets it,
+	 * since its tests mock AniList in the browser only.
 	 */
 	SSR_ANILIST: {
 		schema: (value) => value?.trim() !== 'off'
